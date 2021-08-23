@@ -1,15 +1,15 @@
-var express = require("express");//la framework cua nodejs
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-var bodyParser = require("body-parser");
+const express = require("express");//la framework cua nodejs
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const bodyParser = require("body-parser");
 const route = require("./routes");
 const db = require("./config/db");
 const fileUpload = require("express-fileupload");
 
 db.connect();
 
-var app = express();
+const app = express();
 
 app.use(bodyParser.json());//nhan data tu stream khoi tao req.body
 app.use(logger("dev"));//log ra request
