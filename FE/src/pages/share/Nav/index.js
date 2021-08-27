@@ -31,7 +31,7 @@ function NavBar(props) {
                 <Link
                     to="/User"
                     style={{
-                        margin:'auto 3vw auto 0'
+                        margin: 'auto 3vw auto 0'
                     }}
                 >
                     {props.user.user_gmail}
@@ -51,15 +51,15 @@ function NavBar(props) {
         );
         return tag;
     };
-    const listNav = ['Home', 'Map', 'User']
+    const listNav = [{ name: 'Home', path: '' }, { name: 'Map', path: 'Map' }, { name: 'User', path: 'User' }]
     return (
         <>
             <div id={nav && props.nav ? 'Nav' : 'Nav-Active'}>
                 <div className="row left-nav">
                     {listNav.map((value, index) => {
                         return (
-                            <NavLink to={'/'+value} activeClassName="active">
-                                {value}
+                            <NavLink to={'/' + value.path} activeClassName="active">
+                                {value.name}
                             </NavLink>
                         )
                     })}

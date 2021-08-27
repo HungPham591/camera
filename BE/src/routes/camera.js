@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const CameraModel = require("../models/CameraModel");
 const fs = require("fs");
-const drive = require("../googledrive");
+const drive = require("../modules/googledrive");
 const UserModel = require("../models/UserModel");
 
 const cameraRouter = (app, listCamera) => {

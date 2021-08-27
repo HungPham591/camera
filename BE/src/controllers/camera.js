@@ -3,12 +3,12 @@ const fs = require("fs");
 const drive = require("../googledrive");
 const UserModel = require("../models/UserModel");
 
-exports.getCamera = (req, res) => {
+exports.getCamera = async (req, res) => {
     let query = req.body;
     let listCamera = await CameraModel.find(query);
     res.send(listCamera);
 }
-exports.createCamera = (req, res) => {
+exports.createCamera = async (req, res) => {
     const camera = new CameraModel(req.body);
     let data = await camera.save();
     let user = await UserModel.findById(data.user);
@@ -22,17 +22,17 @@ exports.createCamera = (req, res) => {
 
     res.send(data);
 }
-exports.updateCamera = (req, res) => {
+exports.updateCamera = async (req, res) => {
     let camera = await CameraModel.findByIdAndUpdate(req.body._id, req.body);
     res.send(camera);
 }
-exports.deleteCamera = (req, res) => {
+exports.deleteCamera = async (req, res) => {
     let camera_id = req.body._id;
 
     let result = await CameraModel.findByIdAndRemove(camera_id);
     res.send(result)
 }
-exports.createFace = (req, res) => {
+exports.createFace = async (req, res) => {
     let id = req.body._id;
     let fileImage = req.files.img;
     let dir = "../BE/src/public/detect/" + id + "/";

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./css/style.scss";
-import Nav from "../share/Nav";
-import Footer from "../share/Footer";
 import Aos from 'aos'
 import 'aos/dist/aos.css'
 import supportIcon from './css/support.svg'
@@ -16,7 +14,6 @@ export default function Home(props) {
 
     return (
         <div id="Home">
-            <Nav nav={true} />
             <div id='panel' className='panel'>
                 <div>
                     <p className='title'>
@@ -107,7 +104,6 @@ export default function Home(props) {
                     </div>
                 </div>
             </div>
-            <Footer />
         </div>
     );
 }

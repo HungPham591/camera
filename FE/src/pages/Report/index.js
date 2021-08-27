@@ -26,12 +26,8 @@ export default function Report(props) {
         report_path = `http://localhost:4000/report/${report.camera_id}/${report.report_id}.jpg`;
     };
     return (
-        <>
-            <Nav />
-            <div id='Report'>
-                <img src={report_path} style={img_style} alt=""></img>
-            </div>
-            <Footer />
-        </>
+        <div id='Report'>
+            <img src={report_path} style={img_style} alt=""></img>
+        </div>
     );
 }

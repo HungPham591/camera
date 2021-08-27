@@ -32,42 +32,38 @@ export default function CameraStream(props) {
     };
 
     return (
-        <>
-            <Nav />
-            <div id="Camera">
-                <div className="container-fluid  px-0">
-                    <div className="row">
-                        <div className="col-lg-9 px-0">
-                            <div style={{ padding: '2vh 0 0 2vw' }}>
-                                <canvas
-                                    id="videoWrapper"
-                                />
-                            </div>
+        <div id="Camera">
+            <div className="container-fluid  px-0">
+                <div className="row">
+                    <div className="col-lg-9 px-0">
+                        <div style={{ padding: '2vh 0 0 2vw' }}>
+                            <canvas
+                                id="videoWrapper"
+                            />
                         </div>
-                        <div className="col-lg-3 overflow-auto">
-                            <p className='title'>Camera {id}</p>
-                            <a
-                                href="/#"
-                                id="download"
-                                className="btn btn-primary"
-                                onClick={setHref}
-                                download="camera"
-                            >
-                                Download
-                            </a>
-                            <Tabs defaultActiveKey="video">
-                                <Tab eventKey="video" title="Video">
-                                    <ListVideo />
-                                </Tab>
-                                <Tab eventKey="report" title="Report">
-                                    <ListReport />
-                                </Tab>
-                            </Tabs>
-                        </div>
+                    </div>
+                    <div className="col-lg-3 overflow-auto">
+                        <p className='title'>Camera {id}</p>
+                        <a
+                            href="/#"
+                            id="download"
+                            className="btn btn-primary"
+                            onClick={setHref}
+                            download="camera"
+                        >
+                            Download
+                        </a>
+                        <Tabs defaultActiveKey="video">
+                            <Tab eventKey="video" title="Video">
+                                <ListVideo />
+                            </Tab>
+                            <Tab eventKey="report" title="Report">
+                                <ListReport />
+                            </Tab>
+                        </Tabs>
                     </div>
                 </div>
             </div>
-            <Footer />
-        </>
+        </div>
     );
 }

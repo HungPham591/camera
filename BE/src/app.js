@@ -7,6 +7,8 @@ const route = require("./routes");
 const db = require("./config/db");
 const fileUpload = require("express-fileupload");
 
+require('dotenv').config();
+
 db.connect();
 
 const app = express();
@@ -19,17 +21,17 @@ app.use(cookieParser());//xu ly cookie gui tu client
 app.use(express.static(path.join(__dirname, "public")));//
 app.use(fileUpload());
 
+console.log(process.env.HOME_PATH)
 
-let listCamera = require("./Run");
-listCamera.start();
-route(app, listCamera);
+// let listCamera = require("./modules/run");
+// listCamera.start();
+// route(app, listCamera);
 
-// process.env.controlCamera = db;
 
-// const workerFarm = require('worker-farm')
-// const service = workerFarm(require.resolve(__dirname + '\\test.js'))
-// service(null, function (err, output) {
-// })
+const workerFarm = require('worker-farm')
+const service = workerFarm(require.resolve(__dirname + '\\modules\\test.js'))
+service(null, function (err, output) {
+})
 
 
 module.exports = app;

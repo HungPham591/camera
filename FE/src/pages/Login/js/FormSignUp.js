@@ -35,7 +35,7 @@ function FormSignUp(props) {
             onsuccess: onSuccess,
             onfailure: onFailure,
         });
-    });
+    }, []);
 
     const btnCreateAccountClick = () => {
         let { user_gmail, user_pass } = data;

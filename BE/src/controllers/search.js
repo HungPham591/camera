@@ -1,7 +1,7 @@
 const fs = require("fs");
 const workerFarm = require('worker-farm')
 
-exports.faceInVideo = (req, res) => {
+exports.faceInVideo = async (req, res) => {
     const fileImage = req.files.img;
 
     const video = req.body;

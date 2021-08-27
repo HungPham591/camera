@@ -2,23 +2,6 @@ const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const workerFarm = require('worker-farm')
+const { faceInVideo } = require('../controller/search');
 
-router.post('/faceInVideo', (req, res, next) => {
-    const fileImage = req.files.img;
-
-    const video = req.body;
-    const uriVideo = `../BE/src/public/data/${video.camera}/${video._id}.mp4`;
-
-    if (!fs.existsSync(uriVideo)) {
-        res.sendStatus(404);
-        return;
-    }
-
-    //xu ly img thanh base64
-    let faceBase64;
-
-    const service = workerFarm(require.resolve('D:/js_project/QL_CAMERA/BE/src/rtsp.js'))
-    service({ uriVideo, faceBase64 }, function (err, output) {
-        res.send(output)
-    })
-})
+router.post('/faceInVideo', faceInVideo)

@@ -17,7 +17,7 @@ export default function ListVideo(props) {
     const fetchVideo = async () => {
         let BODY = { _id: id };
         let listVideo = await apiCaller("/video/", "GET", BODY);
-        setDataVideo([...dataVideo, ...listVideo.data]);
+        setDataVideo([...dataVideo, ...listVideo?.data]);
     };
 
     const openVideo = (id) => {

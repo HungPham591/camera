@@ -16,14 +16,10 @@ export default function Video(props) {
     };
 
     return (
-        <>
-            <Nav />
-            <div className="video-component">
-                <video style={video_style} controls autoPlay>
-                    <source src={video_path} type="video/mp4" />
-                </video>
-            </div>
-            <Footer />
-        </>
+        <div className="video-component">
+            <video style={video_style} controls autoPlay>
+                <source src={video_path} type="video/mp4" />
+            </video>
+        </div>
     );
 }

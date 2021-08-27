@@ -17,8 +17,7 @@ export default function ListReport(props) {
     const fetchReport = async () => {
         let BODY = { _id: id };
         let listReport = await apiCaller("/report/", "GET", BODY);
-        setDataReport([...dataReport, ...listReport.data]);
-        console.log(dataReport)
+        setDataReport([...dataReport, ...listReport?.data]);
     };
 
     const openReport = (id) => {

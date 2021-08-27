@@ -35,7 +35,7 @@ function FormSignIp(props) {
             onsuccess: onSuccess,
             onfailure: onFailure,
         });
-    });
+    }, []);
 
     const submitLogin = () => {
         let { user_gmail, user_pass } = data;
