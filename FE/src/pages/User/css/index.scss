@@ -1,38 +1,115 @@
-#User{
-    margin-top: 8vh;
-    .title{
-        font-weight: 600;
-        font-size: 32px;
+#User {
+  margin-top: 8vh;
+  width: 100vw;
+  height: 92vh;
+  display: flex;
+  .left-pane {
+    width: 25%;
+    height: 100%;
+    padding: 2vh 2%;
+    background-color: white;
+  }
+  .right-pane {
+    display: flex;
+    overflow-y: scroll;
+    width: 75%;
+    height: 100%;
+    padding: 2vh 2vw 2vh 2vw;
+    background-color: #f9f9f9;
+  }
+  .title {
+    font-weight: 600;
+    font-size: 32px;
+  }
+  .custom-card {
+    margin: 1vh 0 1vh 0;
+    border: 0;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+    display: flex;
+    padding: 1vh 0.5vw 1vh 0.5vw;
+    border-radius: 10px;
+    img {
+      width: 30%;
+      height: 10vh;
+      object-fit: contain;
     }
-    .custom-card {
-        margin: 1vh 0 1vh 0;
-        border: 0;
-        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1);
-        display: flex;
-        padding: 1vh 0.5vw 1vh 0.5vw;
-        border-radius: 10px;
-        img{
-            width: 30%;
-            height: 10vh;
-            object-fit: contain;
-        }
-        .info{
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+    .info {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+  .list-item {
+    margin: 0;
+    padding: 1.8vh 0 1.8vh 1vw;
+    font-weight: 300;
+    font-size: 18px;
+    color: black;
+    cursor: pointer;
+    border: 0;
+    border-radius: 10px;
+    &:hover {
+      background-color: #b9dbe2;
+    }
+  }
+  .modal {
+    opacity: 1;
+    display: block;
+    margin: 15vh 30vw;
+    width: 40vw;
+    height: fit-content;
+    padding: 2.5rem 1.5rem;
+    border-radius: 20px;
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(172, 172, 172, 0.2);
+    transition: 0.2s;
+    .title {
+      text-align: center;
+    }
+    .label {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .label-checkbox {
+      font-weight: 500;
+      margin-bottom: 0;
+      margin-left: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      margin-bottom: 0.5rem;
+      border-radius: 5px;
+      padding: 0.5rem;
+      outline: none;
+      border: 1.8px solid #eee;
+      background-color: #eee;
+      &::placeholder {
+        font-weight: 400;
       }
-      .list-item{
-          margin: 0;
-          padding: 1.8vh 0 1.8vh 1vw;
-          font-weight: 300;
-          font-size: 18px;
-          color: black;
-          cursor: pointer;
-          border: 0;
-          border-radius: 10px;
-          &:hover{
-            background-color: #B9DBE2;
-          }
+      &:focus {
+        background-color: white;
       }
+    }
+    input[type="checkbox"] {
+      padding: 0%;
+      width: fit-content;
+    }
+    .footer {
+      padding: 5% 0 0 0;
+      display: flex;
+      justify-content: space-around;
+    }
+    button {
+      border: 0;
+      border-radius: 10px;
+      width: 25%;
+      height: 50px;
+      background-color: #00aefd;
+      color: white;
+      font-weight: 500;
+    }
+  }
+  .modal-hide {
+    opacity: 0;
+  }
 }

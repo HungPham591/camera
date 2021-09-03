@@ -1,5 +1,6 @@
 const CameraModel = require("../models/CameraModel");
 const Camera = require("./camera");
+const Events = require('../Events/Camera').eventBus;
 
 let listCamera = [];
 let timeBackUp = 60 * 1000;
@@ -37,10 +38,17 @@ const start = async () => {
     await initListCamera();
     listCamera.forEach((camera) => {
         camera.startStream();
-        camera.detect();
+        // camera.detect();
         // camera.backUp();
     });
 };
+
+Events.on("INSERT_CAMERA", function (doc) {
+    console.log('new camera ' + doc._id);
+});
+Events.on("DELETE_CAMERA", function (doc) {
+    console.log('remove camera ' + doc._id);
+});
 
 module.exports = {
     start,

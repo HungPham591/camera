@@ -1,5 +1,17 @@
 #Map {
   margin-top: 8vh;
+  width: 100vw;
+  height: 92vh;
+  display: flex;
+  .left-pane {
+    overflow-y: scroll;
+    width: 50%;
+    height: 100%;
+    padding: 3vh 2% 1vh 2%;
+  }
+  .right-pane {
+    width: 50%;
+  }
   .custom-card {
     padding: 1vh 0 1vh 0;
     border-top: 1px solid rgb(235, 235, 235);
@@ -39,6 +51,7 @@
     width: 100%;
   }
   #map {
+    z-index: 0;
   }
   .title {
     font-size: 32px;
@@ -79,12 +92,12 @@
       }
     }
     .btn-img {
-        border: 0;
-        border-radius: 10px;
-        color: white;
-        width: 20%;
-        height: 50px;
-        background-color: #d7000f;
-      }
+      border: 0;
+      border-radius: 10px;
+      color: white;
+      width: 20%;
+      height: 50px;
+      background-color: #d7000f;
+    }
   }
 }

@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { gapi } from "gapi-script";
 import { actLoginRequest } from "../../../actions/loginAction";
 import { Link, useHistory } from "react-router-dom";
+import { GoogleLogin } from 'react-google-login';
 
 function FormSignIp(props) {
     let history = useHistory();
@@ -17,26 +17,13 @@ function FormSignIp(props) {
             google_id: googleUser.getBasicProfile().getId(),
             google_token: token.access_token,
         };
-        let account = (await axios.post("/user/insert", user)).data;
+        let account = (await axios.post("http://localhost:4000/user/insert", user)).data;
         props.setUser(account);
-        // history.push('/')
+        history.replace('/')
     };
     const onFailure = (error) => {
         console.log(error);
     };
-    useEffect(() => {
-        gapi.signin2.render("btnGoogle", {
-            scope:
-                "profile email https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/drive",
-            width: 240,
-            height: 50,
-            longtitle: true,
-            theme: "dark",
-            onsuccess: onSuccess,
-            onfailure: onFailure,
-        });
-    }, []);
-
     const submitLogin = () => {
         let { user_gmail, user_pass } = data;
         let user = { user_gmail, user_pass };
@@ -66,9 +53,14 @@ function FormSignIp(props) {
                         Sign Up
                     </button>
                 </div>
-                <div className="btnGG">
-                    <div id="btnGoogle"></div>
-                </div>
+                <GoogleLogin
+                    clientId={process.env.REACT_APP_GG_SIGNIN_CLIENT_ID}
+                    render={renderProps => (
+                        <button id="btnGoogle" onClick={renderProps.onClick} disabled={renderProps.disabled}>Google button</button>
+                    )}
+                    onSuccess={onSuccess}
+                    onFailure={onFailure}
+                />
             </div>
         </div>
     );

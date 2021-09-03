@@ -1,10 +1,10 @@
 import axios from "axios";
 
-
 export default function callApi(endpoint, method, body) {
-  return axios({
-    method: method,
-    url: endpoint,
-    data: body,
-  }).catch((err) => console.log(err));
+    const DOMAIN = process.env.REACT_APP_DOMAIN;
+    return axios({
+        method: method,
+        url: DOMAIN + endpoint,
+        data: body,
+    }).catch((err) => console.log(err));
 }

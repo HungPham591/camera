@@ -1,6 +1,6 @@
 const CameraModel = require("../models/CameraModel");
 const fs = require("fs");
-const drive = require("../googledrive");
+const drive = require("../modules/googledrive");
 const UserModel = require("../models/UserModel");
 
 exports.getCamera = async (req, res) => {
@@ -15,7 +15,6 @@ exports.createCamera = async (req, res) => {
     let folder_name;
 
     folder_name = "camera " + data._id;
-    listCamera.newCamera(data);
 
     data.camera_drive = await drive.createFolder(folder_name, user);
     await CameraModel.findByIdAndUpdate(data._id, data)

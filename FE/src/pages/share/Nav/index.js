@@ -51,21 +51,23 @@ function NavBar(props) {
         );
         return tag;
     };
-    const listNav = [{ name: 'Home', path: '' }, { name: 'Map', path: 'Map' }, { name: 'User', path: 'User' }]
+    const listNav = [{ name: 'Home', path: '' }, { name: 'Map', path: 'Map' }, { name: 'Report', path: 'Report' }, { name: 'Video', path: 'Video' }]
     return (
         <>
-            <div id={nav && props.nav ? 'Nav' : 'Nav-Active'}>
-                <div className="row left-nav">
-                    {listNav.map((value, index) => {
-                        return (
-                            <NavLink to={'/' + value.path} activeClassName="active">
-                                {value.name}
-                            </NavLink>
-                        )
-                    })}
+            <div className={'Nav ' + (nav && props.nav ? '' : 'Nav-Active')}>
+                <div className="left-nav">
+                    {
+                        listNav.map((value, index) => {
+                            return (
+                                <NavLink to={'/' + value.path} activeClassName="active">
+                                    {value.name}
+                                </NavLink>
+                            )
+                        })
+                    }
                 </div>
 
-                <div className="row right-nav">
+                <div className="right-nav">
                     {logginButton()}
                     <a
                         href=""

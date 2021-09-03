@@ -1,8 +1,6 @@
 const UserModel = require("../models/UserModel");
 const jwt = require("jsonwebtoken");
 
-// require("dotenv").config();
-
 exports.login = async (req, res) => {
     let user = await UserModel.findById(req.body);
     if (!user) return res.sendStatus(401);

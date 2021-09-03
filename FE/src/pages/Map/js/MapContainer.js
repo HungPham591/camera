@@ -2,8 +2,8 @@ import L from "leaflet";
 import React, { useState, useEffect, useMemo } from "react";
 import "leaflet/dist/leaflet.css";
 import { useHistory } from "react-router-dom";
-import callApi from "../../../api/apiCaller";
 import { connect } from "react-redux";
+import { getCamera } from '../../../services/camera'
 
 function Map(props) {
     const [dataCamera, setDataCamera] = useState([]);
@@ -26,8 +26,8 @@ function Map(props) {
         loadMarker();
     }, [dataCamera]);
     const fetchCamera = async () => {
-        let listCamera = await callApi("/camera/", "GET", null);
-        setDataCamera(listCamera.data);
+        let listCamera = await getCamera({});
+        setDataCamera(listCamera);
     };
 
     const openStream = (e) => {

@@ -1,15 +1,16 @@
 const canvas = require('canvas')
 const faceapi = require("face-api.js");
 const fs = require('fs');
-const cv = require('opencv4nodejs');
-// require('@tensorflow/tfjs-node')
+const Rtsp = require('./rtsp')
+require('@tensorflow/tfjs-node')
 
-const url1 = 'rtsp://admin:ASIXNW@192.168.1.8:554/H.264';
+const url1 = 'rtsp://admin:ASIXNW@192.168.1.6:554/H.264';
 const url2 = 'https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/1080/Big_Buck_Bunny_1080_10s_1MB.mp4'
 const { Canvas, Image, ImageData } = canvas;
 
 let listDetect = [];
 let loop = 0;
+const rtsp = new Rtsp(url1);
 
 module.exports = async (input, callback) => {
 
@@ -21,8 +22,10 @@ module.exports = async (input, callback) => {
         faceapi.nets.faceLandmark68Net.loadFromDisk("./src/weights")
     ])
 
-
-    test1()
+    // while (true) {
+    //     rtsp.getFrame()
+    // }
+    testDetect()
 }
 
 const test1 = async () => {
@@ -127,58 +130,45 @@ const test4 = () => {
     const array = [1, 2];
     console.log([...array])
 }
-const detect = async () => {
-    cap = new cv.VideoCapture(url)
 
-    while (true) {
-        try {
-            const frame = cap.read()
-            let base64 = 'data:image/png;base64,' + cv.imencode('.jpg', frame).toString('base64');
+const testDetect = async () => {
+    setInterval(() => {
+        if (rtsp.getFrame() !== '') {
+            let base64 = 'data:image/png;base64,' + rtsp.getFrame().toString('base64');
+            detect(base64);
+        }
+    }, 100);
+}
+const detect = async (base64) => {
+    try {
+        const img = new Image()
+        img.src = base64;
 
-            const img = new Image()
-            img.src = base64;
+        const resultDetect = await faceapi
+            .detectAllFaces(img)
+            .withFaceLandmarks()
+            .withFaceDescriptors()
 
-            const resultDetect = await faceapi
-                .detectAllFaces(img)
-                .withFaceLandmarks()
-                .withFaceDescriptors()
-
-            if (!resultDetect.length) {
-                console.log('khong co nguoi nao')
-                continue;
-            }
-            let descriptions = [];
-
-            // danh sach so sanh
-            descriptions = [...descriptions, ...listDetect];
-
-            const faceMatcher = new faceapi.FaceMatcher(resultDetect);
-
-            let bestMatch = 'unknown';
-            descriptions.forEach(face => {
-                if (faceMatcher.findBestMatch(face.descriptor).label !== "unknown")
-                    bestMatch = '';
-            })
-
-            if (bestMatch === 'unknown') {
-                console.error('co nguoi la');
-                listDetect = [...listDetect, ...resultDetect]
-            } else {
-                console.warn('co nguoi quen');
-            }
-
-            loop++;
-            console.log(loop)
-            if (loop === 150) {
-                console.log('reset');
-                loop = 0
-                listDetect = []
-            }
-        } catch (err) {
-            detect();
-            console.log(err);
+        if (!resultDetect.length) {
+            console.log('khong co nguoi nao')
             return;
         }
+
+        const faceMatcher = new faceapi.FaceMatcher(resultDetect);
+
+        let bestMatch = 'unknown';
+        //danh sach so sanh
+        listDetect.forEach(face => {
+            if (faceMatcher.findBestMatch(face.descriptor).label !== "unknown")
+                bestMatch = '';
+        })
+
+        if (bestMatch === 'unknown') {
+            //nguoi la
+            listDetect = [...listDetect, ...resultDetect]
+            console.log('co nguoi la')
+        }
+    } catch (err) {
     }
 }
 //  neu co GPU

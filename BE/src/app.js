@@ -6,6 +6,8 @@ const bodyParser = require("body-parser");
 const route = require("./routes");
 const db = require("./config/db");
 const fileUpload = require("express-fileupload");
+const cors = require('cors');
+const listCamera = require("./modules/run");
 
 require('dotenv').config();
 
@@ -20,18 +22,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());//xu ly cookie gui tu client
 app.use(express.static(path.join(__dirname, "public")));//
 app.use(fileUpload());
+app.use(cors());// enable cors
 
-console.log(process.env.HOME_PATH)
-
-// let listCamera = require("./modules/run");
-// listCamera.start();
-// route(app, listCamera);
+listCamera.start();
+route(app);
 
 
-const workerFarm = require('worker-farm')
-const service = workerFarm(require.resolve(__dirname + '\\modules\\test.js'))
-service(null, function (err, output) {
-})
+// const workerFarm = require('worker-farm')
+// const service = workerFarm(require.resolve(__dirname + '\\modules\\test.js'))
+// service(null, function (err, output) {
+// })
 
 
 module.exports = app;

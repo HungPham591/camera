@@ -4,11 +4,11 @@ const videoRouter = require("./video");
 const reportRouter = require("./report");
 
 
-const route = (app, listCamera) => {
-  app.use("/user", userRouter);
-  app.use("/video", videoRouter);
-  app.use("/report", reportRouter);
-  cameraRouter(app, listCamera);
+const route = (app) => {
+    app.use("/user", userRouter);
+    app.use("/video", videoRouter);
+    app.use("/report", reportRouter);
+    app.use("/camera", cameraRouter);
 };
 
 module.exports = route;

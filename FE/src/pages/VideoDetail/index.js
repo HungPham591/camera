@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { connect } from "react-redux";
-import apiCaller from "../../api/apiCaller";
-import Nav from "../share/Nav";
-import Footer from "../share/Footer";
 
 export default function Video(props) {
     const { id } = useParams();
-    let video_path = `/video/playVideo/${id}`;
+    let video_path = `${process.env.REACT_APP_DOMAIN}\\video\\playVideo\\${id}`;
 
     const video_style = {
         width: "100vw",

@@ -10,7 +10,6 @@ exports.getVideo = async (req, res) => {
 }
 exports.playVideo = async (req, res) => {
     let video_id = req.params.id;
-    //   let video = await VideoModel.findById(video_id);
     let video = await VideoModel.findOne({ _id: video_id });
     const range = req.headers.range;
     if (!range) {

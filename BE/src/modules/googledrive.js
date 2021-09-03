@@ -1,9 +1,7 @@
 const Promise = require("promise");
-//const FileHandler = require("node-rtsp-recorder/src/helpers/fileHandler");
 const async = require("async");
 
 const fs = require("fs");
-//const readline = require("readline");
 const { google } = require("googleapis");
 
 const credentials = {

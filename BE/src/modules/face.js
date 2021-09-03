@@ -6,7 +6,6 @@ const cv = require('opencv4nodejs');
 const faceapi = require("face-api.js");
 require('@tensorflow/tfjs-node')
 
-
 const { Canvas, Image, ImageData } = canvas;
 
 //danh sach nguoi quen
@@ -15,16 +14,19 @@ let descriptions = []
 let listDetect = [];
 let camera;
 let url;
-let loop = 0;
+let base64;
 
 module.exports = async (input, callback) => {
     camera = input;
     url = camera.camera_link;
-    createReport = callback;
 
     await loadEnvironment();
     await loadImage()
     captureFrame();
+    setInterval(() => {
+        detect();
+    }, 200);
+    saveImage()
 }
 const loadEnvironment = async () => {
     faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
@@ -40,7 +42,7 @@ const loadEnvironment = async () => {
 const loadImage = async () => {
     //khoi tao danh sach nguoi quen
 
-    const dirPath = __dirname + '\\public\\face\\' + camera._id;
+    const dirPath = process.env.HOME_PATH + '\\src\\public\\face\\' + camera._id;
     let listFile = fs.readdirSync(dirPath)
 
     listFile = listFile.map((value, index) => {
@@ -64,24 +66,14 @@ const captureFrame = async () => {
     setInterval(() => {
         try {
             const frame = cap.read()
-            let base64 = 'data:image/png;base64,' + cv.imencode('.jpg', frame).toString('base64');
-
-            detect(base64);
-            loop++;
-            if (loop === 10) {
-                loop = 0
-                listDetect = [...descriptions]
-            }
-
+            base64 = 'data:image/png;base64,' + cv.imencode('.jpg', frame).toString('base64');
         } catch (err) {
-            //neu khong co base64
             captureFrame();
-            console.log(err);
             return;
         }
     }, 100);
 }
-const detect = async (base64) => {
+const detect = async () => {
     const img = new Image()
     img.src = base64;
 
@@ -90,29 +82,50 @@ const detect = async (base64) => {
         .withFaceLandmarks()
         .withFaceDescriptors()
 
-    if (!resultDetect.length) return;
+    if (!resultDetect.length) {
+        console.log('khong co nguoi nao')
+        return;
+    }
 
     const faceMatcher = new faceapi.FaceMatcher(resultDetect);
 
     let bestMatch = 'unknown';
-    //danh sach so sanh
+
     listDetect.forEach(face => {
         if (faceMatcher.findBestMatch(face.descriptor).label !== "unknown")
             bestMatch = '';
     })
 
     if (bestMatch === 'unknown') {
-        //nguoi la
         listDetect = [...listDetect, ...resultDetect]
+        createReport(base64)
+    } else {
+        console.log('co nguoi quen')
+    }
+}
 
-        const time = new Date().getTime();
-        let report = await new ReportModel({ camera: camera._id, report_time: time }).save();
+const createReport = async (base64) => {
+    console.log('co nguoi la')
+    const time = new Date().getTime();
+    let report = await new ReportModel({ camera: camera._id, report_time: time }).save();
+    let base64Data = base64.replace(/^data:image\/png;base64,/, "");
+    let path = `${process.env.HOME_PATH}\\src\\public\\report\\${report._id}.png`
+    fs.writeFile(
+        path,
+        base64Data,
+        'base64',
+        (err) => { console.log(err) }
+    )
+}
+const saveImage = () => {
+    setInterval(() => {
         let base64Data = base64.replace(/^data:image\/png;base64,/, "");
+        let path = `${process.env.HOME_PATH}\\src\\public\\current\\${camera._id}.png`
         fs.writeFile(
-            __dirname + '\\public\\report\\' + report._id + ".png",
+            path,
             base64Data,
             'base64',
             (err) => { console.log(err) }
         )
-    }
+    }, 60000);
 }

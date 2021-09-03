@@ -27,7 +27,7 @@ export default function ListReport(props) {
         let date = new Date(value.report_time);
         let datetime =
             date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-        let fullPath = `http://localhost:4000/report/${value.camera}/${value._id}.jpg`;
+        let fullPath = `${process.env.REACT_APP_DOMAIN}\\report\\${value._id}.png`;
         return (
             <div key={index} className="card">
                 <img className="card-img-top" src={fullPath} alt="" />

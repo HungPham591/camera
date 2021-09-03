@@ -6,7 +6,6 @@ const VideoModel = require("../models/VideoModel");
 const UserModel = require("../models/UserModel");
 const fs = require("fs");
 const workerFarm = require('worker-farm')
-const path = require('path');
 
 let timeBackUp = 60 * 1000;
 
@@ -20,8 +19,8 @@ const initStream = (link, id) => {
         streamUrl: link,
         wsPort: 9999 + port,
         ffmpegOptions: {
-            "-stats": "",
-            "-r": 30,
+            "-nostats": "",
+            "-r": 20,
         },
     });
 };

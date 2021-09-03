@@ -11,9 +11,9 @@ import Loader from "../pages/share/Loader";
 const Camera = React.lazy(() => import("../pages/Camera"));
 const Home = React.lazy(() => import("../pages/Home"));
 const Map = React.lazy(() => import("../pages/Map"));
-const Report = React.lazy(() => import("../pages/Report"));
+const ReportDetail = React.lazy(() => import("../pages/ReportDetail"));
 const User = React.lazy(() => import("../pages/User"));
-const Video = React.lazy(() => import("../pages/Video"));
+const VideoDetail = React.lazy(() => import("../pages/VideoDetail"));
 
 export default function MainNavigation(props) {
     const LoginContainer = () => (
@@ -42,10 +42,10 @@ export default function MainNavigation(props) {
                 <Camera />
             </Route>
             <Route path="/Report/:id">
-                <Report />
+                <ReportDetail />
             </Route>
             <Route path="/Video/:id">
-                <Video />
+                <VideoDetail />
             </Route>
             <Route path="/User">
                 <User />
