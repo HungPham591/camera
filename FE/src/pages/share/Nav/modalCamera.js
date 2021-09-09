@@ -3,6 +3,7 @@ import callApi from "../../../api/apiCaller";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
+import { createCamera } from '../../../services/camera'
 
 function ModalCamera(props) {
     const [data, setData] = useState({ camera_public: false })
@@ -24,15 +25,14 @@ function ModalCamera(props) {
     const submitCamera = () => {
         let { camera_link, camera_public, camera_name } = data;
         let BODY = {
-            user: props.user._id,
             camera_name: camera_name,
             camera_link: camera_link,
-            camera_drive: -1,
             camera_location: props.location,
             camera_public: camera_public,
         };
-        if (props.user._id !== -1) {
-            callApi("/camera/", "POST", BODY);
+        if (props.user.isSignIn) {
+            createCamera(BODY)
+            // callApi("/camera/", "POST", BODY);
             props.handleCloseCamera();
         } else {
             history.push('/login')

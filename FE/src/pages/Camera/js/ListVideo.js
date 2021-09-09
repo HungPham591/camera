@@ -15,33 +15,33 @@ export default function ListVideo(props) {
     }, []);
 
     const fetchVideo = async () => {
-        let BODY = { _id: id };
-        let listVideo = await apiCaller("/video/", "GET", BODY);
-        setDataVideo([...dataVideo, ...listVideo?.data]);
+        let BODY = { camera: id };
+        let listVideo = await apiCaller("/video/", "POST", BODY);
+        setDataVideo(listVideo?.data ? listVideo.data : []);
     };
 
     const openVideo = (id) => {
         history.push("/Video/" + id);
     };
-
-    return dataVideo.map((value, index) => {
-        let date = new Date(value.video_time);
-        let datetime =
-            date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-        let fullPath = `${process.env.REACT_APP_DOMAIN}\\data\\${value.camera}\\${value._id}.mp4`;
-        return (
-            <div key={index} className="card">
-                <video className="card-img-top" src={fullPath} alt="Card image cap" />
-                <div className="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">{datetime}</h6>
-                    <button
-                        className="btn btn-primary"
-                        onClick={() => openVideo(value._id)}
-                    >
-                        Xem
-                    </button>
-                </div>
-            </div>
-        );
-    });
+    return (
+        <div id='list-video'>
+            {
+                dataVideo?.map((value, index) => {
+                    let date = new Date(value.video_time);
+                    let datetime =
+                        date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+                    let fullPath = `${process.env.REACT_APP_DOMAIN}\\data\\${value.camera}\\${value._id}.mp4`;
+                    return (
+                        <div key={index} className='custom-card'>
+                            <video src={fullPath} alt='thumb' />
+                            <div className='body'>
+                                <p className='title'>{datetime}</p>
+                                <button onClick={() => openVideo(value._id)}>Xem</button>
+                            </div>
+                        </div>
+                    );
+                })
+            }
+        </div>
+    )
 }

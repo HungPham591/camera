@@ -14,6 +14,6 @@ async function connect() {
     }
 }
 
-// mongoose.set('debug', true);
+mongoose.set('debug', true);
 
 module.exports = { connect };

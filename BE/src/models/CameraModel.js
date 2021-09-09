@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const drive = require("../modules/googledrive");
+const UserModel = require("./UserModel");
 const Schema = mongoose.Schema;
 const Event = require('../Events/Camera').eventBus;
 
@@ -10,10 +12,17 @@ const CameraSchema = new Schema(
         camera_link: { type: String },
         camera_location: { type: Array },
         camera_public: { type: Boolean },
-        listFace: [String]
     },
     { timestamps: true }
 );
+
+CameraSchema.pre('save', async function (next) {
+    const self = this;
+    let user = await UserModel.findById(self.user);
+    let folder_name = "camera " + self._id;
+    self.camera_drive = await drive.createFolder(folder_name, user);
+    next();
+})
 
 CameraSchema.post('deleteOne', (doc) => {
     Event.emit('DELETE_CAMERA', doc);

@@ -26,7 +26,7 @@ function NavBar(props) {
 
     const logginButton = () => {
         let tag = [];
-        if (props.user._id !== -1) {
+        if (props.user.isSignIn) {
             tag.push(
                 <Link
                     to="/User"
@@ -51,7 +51,7 @@ function NavBar(props) {
         );
         return tag;
     };
-    const listNav = [{ name: 'Home', path: '' }, { name: 'Map', path: 'Map' }, { name: 'Report', path: 'Report' }, { name: 'Video', path: 'Video' }]
+    const listNav = [{ name: 'Home', path: '' }, { name: 'Map', path: 'Map' }, { name: 'Video', path: 'Video' }]
     return (
         <>
             <div className={'Nav ' + (nav && props.nav ? '' : 'Nav-Active')}>
@@ -59,7 +59,7 @@ function NavBar(props) {
                     {
                         listNav.map((value, index) => {
                             return (
-                                <NavLink to={'/' + value.path} activeClassName="active">
+                                <NavLink key={index} exact to={'/' + value.path} activeClassName="active">
                                     {value.name}
                                 </NavLink>
                             )

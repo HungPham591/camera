@@ -6,5 +6,6 @@ export default function callApi(endpoint, method, body) {
         method: method,
         url: DOMAIN + endpoint,
         data: body,
+        withCredentials: true
     }).catch((err) => console.log(err));
 }

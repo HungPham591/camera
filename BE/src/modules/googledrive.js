@@ -12,7 +12,7 @@ const credentials = {
         auth_uri: "https://accounts.google.com/o/oauth2/auth",
         token_uri: "https://oauth2.googleapis.com/token",
         auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-        client_secret: "QhWMh2uZylDE0feDwSsVvHL4",
+        client_secret: "WTefcVilu_G25rJyrce7vtHy",
         redirect_uris: ["http://localhost:4000/auth/google/callback"],
         javascript_origins: ["http://localhost:4000"],
     },

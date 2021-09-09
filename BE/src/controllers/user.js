@@ -1,25 +1,36 @@
 const UserModel = require("../models/UserModel");
 const jwt = require("jsonwebtoken");
 
-exports.login = async (req, res) => {
-    let user = await UserModel.findById(req.body);
-    if (!user) return res.sendStatus(401);
-    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-    res.json({ accessToken });
-}
-exports.logout = async (req, res) => {
-
-}
-exports.getUser = async (req, res) => {
-    let user = await UserModel.findById(req.body);
-    res.send(user);
-}
-exports.createUser = async (req, res) => {
-    let user = await UserModel.findOne({ google_id: req.body.google_id });
-    if (user) {
-        res.send(user);
-    } else {
-        let newUser = await new UserModel(req.body).save();
-        res.send(newUser);
+exports.signIn = async (req, res) => {
+    let user = await UserModel.findOne(req.body);
+    if (!user) return res.status(401).json({ success: false });
+    const payload = {
+        _id: user._id
     }
+    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
+    res.cookie('access_token', accessToken, {
+        maxAge: 365 * 24 * 60 * 60 * 100,
+        httpOnly: true,
+        //secure: true;
+    })
+    res.status(200).json({ success: true })
+}
+exports.signUp = async (req, res) => {
+    let user = await UserModel.findOne(req.body);
+    if (!user) {
+        user = await new UserModel(req.body).save();
+    }
+    const payload = {
+        _id: newUser._id
+    }
+    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
+    res.cookie('access_token', accessToken, {
+        maxAge: 365 * 24 * 60 * 60 * 100,
+        httpOnly: true,
+        //secure: true;
+    })
+    res.status(200).json({ success: true })
+}
+exports.logOut = async (req, res) => {
+
 }

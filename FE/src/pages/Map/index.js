@@ -10,12 +10,9 @@ function Map(props) {
         <div id="Map">
             <div className="left-pane">
                 <p className='title'>Camera xung quanh đây</p>
-                <div className='input-group'>
-                    <div className='input'>
-                        <input placeholder="Nhập tên camera" />
-                        <button className='btn-search'>Search</button>
-                    </div>
-                    <button className='btn-img'>Hình ảnh</button>
+                <div className='input'>
+                    <input placeholder="Nhập tên camera" />
+                    <button className='btn-search'>Search</button>
                 </div>
                 <ListCamera />
             </div>

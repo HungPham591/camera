@@ -1,0 +1,104 @@
+#VideoDetail {
+  margin-top: 8vh;
+  width: 100vw;
+  height: fit-content;
+  .title-1 {
+    margin-left: 1%;
+    font-weight: 500;
+    font-size: 1.6rem;
+    padding-top: 2vh;
+    margin-bottom: 0;
+  }
+  .custom-container {
+    width: 100%;
+    height: 92vh;
+    display: flex;
+    .left-pane {
+      padding: 1% 1%;
+      width: 70%;
+      height: 100%;
+      #video {
+        width: 100%;
+        height: 80%;
+        border-radius: 5px;
+        background-color: black;
+      }
+      .progressbar {
+        margin-top: 2%;
+        padding: 0;
+        width: 100%;
+        position: relative;
+        background-color: #13599f;
+        height: 3px;
+        li {
+          top: -6px;
+          position: absolute;
+          float: left;
+          list-style: none;
+          text-align: center;
+          border-radius: 100%;
+          width: 15px;
+          height: 15px;
+          background-color: #13599f;
+        }
+      }
+      .progressbar-time {
+        margin-top: 2%;
+        padding: 0;
+        width: 100%;
+        position: relative;
+        li {
+          position: absolute;
+          float: left;
+          list-style: none;
+          text-align: center;
+          border-radius: 100%;
+        }
+      }
+    }
+    .right-pane {
+      overflow-y: scroll;
+      padding: 1% 1%;
+      width: 30%;
+      height: 100%;
+      button {
+        padding: 15px;
+        font-weight: 500;
+        background-color: #13599f;
+        color: white;
+        display: block;
+        margin: 2vh auto;
+        border: 0;
+        border-radius: 10px;
+      }
+      .title {
+        width: 100%;
+        font-size: 28px;
+        font-weight: 600;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .dropzone {
+        width: 100%;
+        height: 430px;
+        padding: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        text-align: center;
+        font-family: "Quicksand", sans-serif;
+        font-weight: 500;
+        font-size: 20px;
+        cursor: pointer;
+        color: #cccccc;
+        border: 4px dashed #009578;
+        border-radius: 10px;
+        .thumb {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+}

@@ -25,8 +25,7 @@ module.exports = async (input, callback) => {
     captureFrame();
     setInterval(() => {
         detect();
-    }, 200);
-    saveImage()
+    }, 500);
 }
 const loadEnvironment = async () => {
     faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
@@ -98,34 +97,13 @@ const detect = async () => {
 
     if (bestMatch === 'unknown') {
         listDetect = [...listDetect, ...resultDetect]
-        createReport(base64)
+        createReport()
     } else {
         console.log('co nguoi quen')
     }
 }
 
-const createReport = async (base64) => {
+const createReport = () => {
     console.log('co nguoi la')
-    const time = new Date().getTime();
-    let report = await new ReportModel({ camera: camera._id, report_time: time }).save();
-    let base64Data = base64.replace(/^data:image\/png;base64,/, "");
-    let path = `${process.env.HOME_PATH}\\src\\public\\report\\${report._id}.png`
-    fs.writeFile(
-        path,
-        base64Data,
-        'base64',
-        (err) => { console.log(err) }
-    )
-}
-const saveImage = () => {
-    setInterval(() => {
-        let base64Data = base64.replace(/^data:image\/png;base64,/, "");
-        let path = `${process.env.HOME_PATH}\\src\\public\\current\\${camera._id}.png`
-        fs.writeFile(
-            path,
-            base64Data,
-            'base64',
-            (err) => { console.log(err) }
-        )
-    }, 60000);
+    new ReportModel({ camera: camera._id }).save();
 }

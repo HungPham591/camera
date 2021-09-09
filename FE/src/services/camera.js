@@ -1,11 +1,11 @@
 import apiCaller from "../api/apiCaller";
 
 export const getCamera = async (BODY) => {
-    let rs = await apiCaller("/camera/", "GET", BODY);
+    let rs = await apiCaller("/camera/", "POST", BODY);
     return rs?.data ? rs.data : []
 }
 export const createCamera = async (BODY) => {
-    let rs = await apiCaller("/camera/", "POST", BODY);
+    let rs = await apiCaller("/camera/createCamera", "POST", BODY);
     return rs?.data ? rs.data : null
 }
 export const updateCamera = async (BODY) => {

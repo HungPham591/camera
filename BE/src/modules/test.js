@@ -22,9 +22,6 @@ module.exports = async (input, callback) => {
         faceapi.nets.faceLandmark68Net.loadFromDisk("./src/weights")
     ])
 
-    // while (true) {
-    //     rtsp.getFrame()
-    // }
     testDetect()
 }
 

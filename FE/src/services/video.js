@@ -1,6 +1,6 @@
 import apiCaller from "../api/apiCaller";
 
-exports.getVideo = async (BODY) => {
-    let rs = await apiCaller("/video/", "GET", BODY);
-    rs?.data ? rs.data : []
+export const getVideo = async (BODY) => {
+    let rs = await apiCaller("/video/", "POST", BODY);
+    return rs?.data ? rs.data : []
 }

@@ -17,13 +17,21 @@ export default function Home(props) {
             <div id='panel' className='panel'>
                 <div>
                     <p className='title'>
-                        Nền tảng quản lý camera số 1 Việt Nam
+                        Nền tảng và ứng dụng điện toán đám mây cho camera.
                     </p>
-                    <p className='sub-title'>
-                        Giải pháp về camera
-                    </p>
+                    <div style={{ marginBottom: '40px' }}>
+                        <p className='sub-title'>
+                            Giúp quản lý hệ thống camera tập trung bằng công nghệ điện toán đám mây.
+                        </p>
+                        <p className='sub-title'>
+                            Giải pháp lưu trữ và xử lý thông tin tối ưu cho bạn.
+                        </p>
+                        <p className='sub-title'>
+                            Tương thích với các thiết bị theo chuẩn Onvif.
+                        </p>
+                    </div>
                     <button className='button'>
-                        Đăng ký
+                        DÙNG THỬ NGAY
                     </button>
                 </div>
             </div>

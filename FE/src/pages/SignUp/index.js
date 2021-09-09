@@ -1,17 +1,19 @@
 import React, { useRef } from "react";
-import "./css/Login.scss";
+import "./css/index.scss";
 import { connect } from "react-redux";
 import { actSigninSuccess, actSigninFail } from "../../actions/authAction";
 import { Link, useHistory } from "react-router-dom";
 import { GoogleLogin } from 'react-google-login';
 import { signIn } from '../../services/user'
 
-function LogIn(props) {
+function SignUp(props) {
     const history = useHistory();
     const inputEmail = useRef(null);
     const inputPass = useRef(null)
 
     const onSuccess = async (googleUser) => {
+        let token = await googleUser.getAuthResponse();
+        console.log(token)
         const user = {
             user_gmail: googleUser.getBasicProfile().getEmail(),
             google_id: googleUser.getBasicProfile().getId(),
@@ -40,14 +42,14 @@ function LogIn(props) {
         }
     }
     return (
-        <div id="Login">
+        <div id="SignUp">
             <div className="card">
                 <div className="header">
-                    <p className="title">Log in</p>
+                    <p className="title">Create account</p>
                     <p className="subtitle">
-                        Create an account?{" "}
-                        <Link className="signin" to="/SignUp">
-                            Sign up
+                        Already have an account?{" "}
+                        <Link className="signin" to="/Login">
+                            Sign in
                         </Link>
                     </p>
                 </div>
@@ -83,4 +85,4 @@ const mapStateToProps = (dispatch) => {
     };
 };
 
-export default connect(null, mapStateToProps)(LogIn);
+export default connect(null, mapStateToProps)(SignUp);

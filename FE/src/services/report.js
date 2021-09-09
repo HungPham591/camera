@@ -1,6 +1,6 @@
 import apiCaller from "../api/apiCaller";
 
-exports.getReport = async (BODY) => {
-    let rs = await apiCaller("/report/", "GET", BODY);
-    rs?.data ? rs.data : []
+export const getReport = async (BODY) => {
+    let rs = await apiCaller("/report/", "POST", BODY);
+    return rs?.data ? rs.data : []
 }

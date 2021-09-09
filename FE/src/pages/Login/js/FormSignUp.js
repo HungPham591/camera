@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { connect } from "react-redux";
-import { actLoginRequest } from "../../../actions/loginAction";
 
 function FormSignUp(props) {
     return (
@@ -27,11 +26,5 @@ function FormSignUp(props) {
         </div>
     )
 }
-const mapStateToProps = (dispatch) => {
-    return {
-        setUser: (user_gmail, user_pass) =>
-            dispatch(actLoginRequest(user_gmail, user_pass)),
-    };
-};
 
-export default connect(null, mapStateToProps)(FormSignUp);
+export default connect(null, null)(FormSignUp);

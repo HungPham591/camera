@@ -22,7 +22,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());//xu ly cookie gui tu client
 app.use(express.static(path.join(__dirname, "public")));//
 app.use(fileUpload());
-app.use(cors());// enable cors
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));// enable cors
 
 listCamera.start();
 route(app);

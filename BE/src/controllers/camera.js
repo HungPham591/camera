@@ -1,24 +1,22 @@
 const CameraModel = require("../models/CameraModel");
 const fs = require("fs");
-const drive = require("../modules/googledrive");
-const UserModel = require("../models/UserModel");
 
 exports.getCamera = async (req, res) => {
     let query = req.body;
     let listCamera = await CameraModel.find(query);
     res.send(listCamera);
 }
+exports.getByName = async (req, res) => {
+    let listCamera = await CameraModel.find(req.body);
+    res.send(listCamera)
+}
+exports.getByUser = async (req, res) => {
+    let listCamera = await CameraModel.find(req.body);
+    res.send(listCamera)
+}
 exports.createCamera = async (req, res) => {
     const camera = new CameraModel(req.body);
     let data = await camera.save();
-    let user = await UserModel.findById(data.user);
-    let folder_name;
-
-    folder_name = "camera " + data._id;
-
-    data.camera_drive = await drive.createFolder(folder_name, user);
-    await CameraModel.findByIdAndUpdate(data._id, data)
-
     res.send(data);
 }
 exports.updateCamera = async (req, res) => {
