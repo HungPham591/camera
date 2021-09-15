@@ -4,6 +4,10 @@ export const getCamera = async (BODY) => {
     let rs = await apiCaller("/camera/", "POST", BODY);
     return rs?.data ? rs.data : []
 }
+export const getCameraByUser = async (BODY) => {
+    let rs = await apiCaller("/camera/getByUser", "POST", BODY);
+    return rs?.data ? rs.data : []
+}
 export const createCamera = async (BODY) => {
     let rs = await apiCaller("/camera/createCamera", "POST", BODY);
     return rs?.data ? rs.data : null

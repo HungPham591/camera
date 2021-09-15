@@ -33,7 +33,7 @@ function LogIn(props) {
     const login = async (user) => {
         let response = await signIn(user);
         if (response?.data?.success) {
-            props.signInSuccess(user);
+            props.signInSuccess(response.data.data);
             history.replace('/')
         } else {
             alert('login fail')
@@ -41,36 +41,39 @@ function LogIn(props) {
     }
     return (
         <div id="Login">
-            <div className="card">
-                <div className="header">
-                    <p className="title">Log in</p>
-                    <p className="subtitle">
-                        Create an account?{" "}
-                        <Link className="signin" to="/SignUp">
-                            Sign up
-                        </Link>
-                    </p>
-                </div>
-                <div className="body">
-                    <div className="formGroup">
-                        <input ref={inputEmail} type="text" placeholder="Email" />
+            <img />
+            <div className='right-pane'>
+                <div className="login-form">
+                    <div className="header">
+                        <p className="title">Log in</p>
+                        <p className="subtitle">
+                            Create an account?{" "}
+                            <Link className="signin" to="/Auth/SignUp">
+                                Sign up
+                            </Link>
+                        </p>
                     </div>
-                    <div className="formGroup">
-                        <input ref={inputPass} type="text" placeholder="Password" />
+                    <div className="body">
+                        <div className="formGroup">
+                            <input ref={inputEmail} type="text" placeholder="Email" />
+                        </div>
+                        <div className="formGroup">
+                            <input ref={inputPass} type="text" placeholder="Password" />
+                        </div>
+                        <div className="formGroup">
+                            <button className="btnLogin" onClick={handleLogin}>
+                                Sign Up
+                            </button>
+                        </div>
+                        <GoogleLogin
+                            clientId={process.env.REACT_APP_GG_SIGNIN_CLIENT_ID}
+                            render={renderProps => (
+                                <button id="btnGoogle" onClick={renderProps.onClick} disabled={renderProps.disabled}>Google button</button>
+                            )}
+                            onSuccess={onSuccess}
+                            onFailure={onFailure}
+                        />
                     </div>
-                    <div className="formGroup">
-                        <button className="btnLogin" onClick={handleLogin}>
-                            Sign Up
-                        </button>
-                    </div>
-                    <GoogleLogin
-                        clientId={process.env.REACT_APP_GG_SIGNIN_CLIENT_ID}
-                        render={renderProps => (
-                            <button id="btnGoogle" onClick={renderProps.onClick} disabled={renderProps.disabled}>Google button</button>
-                        )}
-                        onSuccess={onSuccess}
-                        onFailure={onFailure}
-                    />
                 </div>
             </div>
         </div>

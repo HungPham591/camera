@@ -38,9 +38,13 @@ function Footer(props) {
                         </div>
                     </div>
                     <div className="col-lg-3">
-                        <h5 className='title'>MOBILE APP</h5>
+                        <h5 className='title'>CONTACT</h5>
                         <div className='logo'></div>
                     </div>
+                </div>
+                <div>
+                    <hr></hr>
+                    <p className='rights-reserved'>© 2021 PHAM THANH HUNG. All rights reserved.</p>
                 </div>
             </div>
         </div>

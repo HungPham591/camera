@@ -7,7 +7,8 @@ const route = require("./routes");
 const db = require("./config/db");
 const fileUpload = require("express-fileupload");
 const cors = require('cors');
-const listCamera = require("./modules/run");
+const ControlCamera = require("./modules/ControlCamera");
+const ControlNotification = require('./modules/ControlNotification');
 
 require('dotenv').config();
 
@@ -27,7 +28,8 @@ app.use(cors({
     credentials: true
 }));// enable cors
 
-listCamera.start();
+// listCamera.start();
+ControlNotification.start();
 route(app);
 
 

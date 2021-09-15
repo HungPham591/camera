@@ -1,23 +1,28 @@
 #Login {
-  background-image: linear-gradient(to right top, #8a3c52, #6a82fb);
-  background: url(wave_background.svg);
   width: 100vw;
   height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
   font-family: "Poppins";
   a {
     color: #00aefd;
   }
-  .card {
+  img {
     width: 50%;
-    height: fit-content;
-    padding: 2.5rem 1.5rem;
-    margin: auto;
-    border-radius: 20px;
-    background-color: white;
+    height: 100%;
+    background: url(login.svg);
     border: 0;
+    background-color: #eef7fe;
+  }
+  .right-pane {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .login-form {
+    width: 90%;
+    height: 70%;
     .header {
       .title {
         font-size: 3rem;

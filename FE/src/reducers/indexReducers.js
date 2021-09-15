@@ -1,16 +1,12 @@
 import { combineReducers } from "redux";
 
 import userReducers from './userReducers';
-import cameraReducers from './cameraReducers';
-import reportReducers from './reportReducers';
-import videoReducers from './videoReducers';
 import locationReducers from './locationReducers';
+import notificationReducer from "./NotificationReducers";
 
 const indexReducer = combineReducers({
-    user:userReducers,
-    camera:cameraReducers,
-    report:reportReducers,
-    video:videoReducers,
-    location:locationReducers
+    user: userReducers,
+    location: locationReducers,
+    notification: notificationReducer,
 });
 export default indexReducer;

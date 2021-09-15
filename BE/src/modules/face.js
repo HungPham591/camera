@@ -81,6 +81,13 @@ const detect = async () => {
         .withFaceLandmarks()
         .withFaceDescriptors()
 
+    // const resultDetect = await faceapi
+    //     .detectAllFaces(img)
+    //     .withFaceLandmarks()
+    //     .withFaceExpressions()
+    //     .withFaceDescriptors()
+    //     .withAgeAndGender();
+
     if (!resultDetect.length) {
         console.log('khong co nguoi nao')
         return;

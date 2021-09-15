@@ -5,7 +5,7 @@ const appDir = path.dirname(require.main.filename);
 
 exports.getVideo = async (req, res) => {
     let query = req.body;
-    let listVideo = await VideoModel.find(query);
+    let listVideo = await VideoModel.find(query).populate('camera');
     res.send(listVideo);
 }
 exports.playVideo = async (req, res) => {

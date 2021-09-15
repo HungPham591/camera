@@ -1,14 +1,12 @@
 import { Modal, Button } from "react-bootstrap";
 import callApi from "../../../api/apiCaller";
 import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { useState } from "react";
 import { createCamera } from '../../../services/camera'
 
 function ModalCamera(props) {
     const [data, setData] = useState({ camera_public: false })
     // let data = { camera_public: false };
-    let history = useHistory();
     const onChange = (e) => {
         let newData = data;
 
@@ -30,13 +28,8 @@ function ModalCamera(props) {
             camera_location: props.location,
             camera_public: camera_public,
         };
-        if (props.user.isSignIn) {
-            createCamera(BODY)
-            // callApi("/camera/", "POST", BODY);
-            props.handleCloseCamera();
-        } else {
-            history.push('/login')
-        }
+        createCamera(BODY)
+        props.handleCloseCamera();
         setData({ camera_public: false })
     };
     return (

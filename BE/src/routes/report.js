@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { getReport } = require('../controllers/report')
+const auth = require('../middleware/auth')
+const { getReport, getReportByVideo } = require('../controllers/report')
 
-router.post("/", getReport);
+router.post("/", auth, getReport);
+router.post('/getByVideo', auth, getReportByVideo)
 
 module.exports = router;

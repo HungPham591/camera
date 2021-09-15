@@ -43,36 +43,39 @@ function SignUp(props) {
     }
     return (
         <div id="SignUp">
-            <div className="card">
-                <div className="header">
-                    <p className="title">Create account</p>
-                    <p className="subtitle">
-                        Already have an account?{" "}
-                        <Link className="signin" to="/Login">
-                            Sign in
-                        </Link>
-                    </p>
-                </div>
-                <div className="body">
-                    <div className="formGroup">
-                        <input ref={inputEmail} type="text" placeholder="Email" />
+            <img />
+            <div className='right-pane'>
+                <div className="form-signup">
+                    <div className="header">
+                        <p className="title">Create account</p>
+                        <p className="subtitle">
+                            Already have an account?{" "}
+                            <Link className="signin" to="/Login">
+                                Sign in
+                            </Link>
+                        </p>
                     </div>
-                    <div className="formGroup">
-                        <input ref={inputPass} type="text" placeholder="Password" />
+                    <div className="body">
+                        <div className="formGroup">
+                            <input ref={inputEmail} type="text" placeholder="Email" />
+                        </div>
+                        <div className="formGroup">
+                            <input ref={inputPass} type="text" placeholder="Password" />
+                        </div>
+                        <div className="formGroup">
+                            <button className="btnLogin" onClick={handleLogin}>
+                                Sign Up
+                            </button>
+                        </div>
+                        <GoogleLogin
+                            clientId={process.env.REACT_APP_GG_SIGNIN_CLIENT_ID}
+                            render={renderProps => (
+                                <button id="btnGoogle" onClick={renderProps.onClick} disabled={renderProps.disabled}>Google button</button>
+                            )}
+                            onSuccess={onSuccess}
+                            onFailure={onFailure}
+                        />
                     </div>
-                    <div className="formGroup">
-                        <button className="btnLogin" onClick={handleLogin}>
-                            Sign Up
-                        </button>
-                    </div>
-                    <GoogleLogin
-                        clientId={process.env.REACT_APP_GG_SIGNIN_CLIENT_ID}
-                        render={renderProps => (
-                            <button id="btnGoogle" onClick={renderProps.onClick} disabled={renderProps.disabled}>Google button</button>
-                        )}
-                        onSuccess={onSuccess}
-                        onFailure={onFailure}
-                    />
                 </div>
             </div>
         </div>

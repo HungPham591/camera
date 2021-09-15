@@ -30,7 +30,7 @@ export default function ListVideo(props) {
                     let date = new Date(value.video_time);
                     let datetime =
                         date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-                    let fullPath = `${process.env.REACT_APP_DOMAIN}\\data\\${value.camera}\\${value._id}.mp4`;
+                    let fullPath = `${process.env.REACT_APP_DOMAIN}\\data\\${value.camera._id}\\${value._id}.mp4`;
                     return (
                         <div key={index} className='custom-card'>
                             <video src={fullPath} alt='thumb' />

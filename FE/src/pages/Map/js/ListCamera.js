@@ -24,7 +24,7 @@ export default function ListCamera(props) {
             <div key={index} className="custom-card">
                 <img src={imgUri} alt="" />
                 <div className="card-body">
-                    <h5 class="card-title">Camera {value.camera_name}</h5>
+                    <h5 className="card-title">Camera {value.camera_name}</h5>
                     <button
                         className="btn btn-primary"
                         onClick={() => openStream(value._id)}

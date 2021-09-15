@@ -1,73 +1,55 @@
 import cameraLogo from "../css/camera.jpg";
-import { connect } from "react-redux";
-import { useEffect } from "react";
-import callApi from "../../../api/apiCaller";
-import { useState } from "react";
 import { useHistory } from "react-router";
 
-function ListCamera(props) {
+export default function ListCamera(props) {
     let history = useHistory();
-
-    useEffect(() => {
-        fetchCamera();
-    }, []);
-
-    const [dataCamera, setDataCamera] = useState([]);
-
-    const fetchCamera = async () => {
-        let BODY = { user_id: props.user._id };
-        let data = await callApi("/camera/", "GET", BODY);
-        setDataCamera(data?.data);
-    };
 
     const openStream = (id) => {
         history.push("/Camera/" + id);
     };
+    const handleSettingButton = (camera) => {
+        props.setCamera(camera);
+        props.openModal();
+    }
+    if (!props.dataCamera?.length) {
+        return (
+            <div>
+                <p className='title'>Camera của bạn</p>
+                <h4>No camera</h4>
+            </div>
+        )
+    }
+    return (
+        <div>
+            <p className='title'>Camera của bạn</p>
+            <div className='grid'>
+                {
+                    props.dataCamera.map((value, index) => {
+                        return (
+                            <div key={index} className='custom-card'>
+                                <img src={cameraLogo} />
+                                <p className='title'>Camera {value.camera_name}</p>
+                                <div className='group-button'>
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={() => openStream(value._id)}
+                                    >
+                                        Xem
+                                    </button>
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={() => handleSettingButton(value)}
+                                        style={{ marginLeft: "5%" }}
+                                    >
+                                        Cài đặt
+                                    </button>
+                                </div>
 
-    const deleteCamera = async (id) => {
-        let BODY = { _id: id };
-        let camera = callApi("/camera/", "DELETE", BODY);
-        props.handleClose();
-    };
-
-    return dataCamera.map((value, index) => {
-        if (props.dataCamera !== undefined) {
-            return (
-                <div key={index} className="card" style={{ width: "96%" }}>
-                    <img className="card-img-top" src={cameraLogo} alt="" />
-                    <div className="card-body">
-                        <h5 class="card-title">{value.camera_id}</h5>
-                        <button
-                            className="btn btn-primary"
-                            onClick={() => openStream(value.camera_id)}
-                        >
-                            Xem
-                        </button>
-                        <button
-                            className="btn btn-primary"
-                            onClick={() => deleteCamera(value.camera_id)}
-                            style={{ marginLeft: "2%" }}
-                        >
-                            Xoa
-                        </button>
-                        <button
-                            className="btn btn-primary"
-                            onClick={() => props.openModal(value.camera_id)}
-                            style={{ marginLeft: "2%" }}
-                        >
-                            Cài đặt
-                        </button>
-                    </div>
-                </div>
-            );
-        }
-    });
+                            </div>
+                        )
+                    })
+                }
+            </div>
+        </div>
+    )
 }
-
-const mapStateToProps = (state) => {
-    return {
-        user: state.user,
-    };
-};
-
-export default connect(mapStateToProps)(ListCamera);

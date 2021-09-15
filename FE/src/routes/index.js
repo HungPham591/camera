@@ -17,22 +17,19 @@ const VideoDetail = React.lazy(() => import("../pages/VideoDetail"));
 const User = React.lazy(() => import("../pages/User"));
 
 export default function MainNavigation(props) {
-    const LoginContainer = () => (
-        <Route path="/Login" component={Login} />
-    )
-    const SignUpContainer = () => (
-        <Route path="/SignUp" component={SignUp} />
-    )
-    const HomeContainer = () => (
-        <div>
-            <Nav nav={true} />
-            <Route exact path="/" component={Home} />
-            <Footer />
-        </div>
-    )
+    const AuthContainer = () => {
+        return (
+            <div>
+                <Route path="/Auth/Login" component={Login} />
+                <Route path="/Auth/SignUp" component={SignUp} />
+            </div>
+        )
+    }
+
     const DefaultContainer = () => (
         <div>
             <Nav />
+            <Route exact path="/" component={Home} />
             <Route path="/Map" component={Map} />
             <Route path="/Camera/:id" component={Camera} />
             <Route exact path="/Video" component={Video} />
@@ -45,9 +42,7 @@ export default function MainNavigation(props) {
         <Router>
             <Suspense fallback={<Loader />}>
                 <Switch>
-                    <Route exact path="/Login" component={LoginContainer} />
-                    <Route exact path="/SignUp" component={SignUp} />
-                    <Route exact path="/" component={HomeContainer} />
+                    <Route path="/Auth" component={AuthContainer} />
                     <Route component={DefaultContainer} />
                 </Switch>
             </Suspense>
