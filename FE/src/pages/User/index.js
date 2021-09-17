@@ -46,7 +46,7 @@ export default function User(props) {
                     {
                         listMenu.map((value, index) => {
                             return (
-                                <div key={index} className={'list-item ' + (selectedMenu === index ? 'selected' : '')} onClick={() => setSelectedMenu(index)}>
+                                <div key={index} className={'item ' + (selectedMenu === index ? 'selected' : '')} onClick={() => setSelectedMenu(index)}>
                                     <p>
                                         {value}
                                     </p>

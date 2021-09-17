@@ -3,6 +3,10 @@ const fs = require("fs");
 const path = require('path');
 const appDir = path.dirname(require.main.filename);
 
+exports.getAll = async (req, res) => {
+    let videos = await VideoModel.find();
+    res.send(videos);
+}
 exports.getVideo = async (req, res) => {
     let query = req.body;
     let listVideo = await VideoModel.find(query).populate('camera');

@@ -1,6 +1,10 @@
 const ReportModel = require("../models/ReportModel");
 const CameraModel = require('../models/CameraModel');
 
+exports.getAll = async (req, res) => {
+    const users = await ReportModel.find();
+    res.send(users);
+}
 exports.getReport = async (req, res) => {
     let listCamera = await CameraModel.find(req.body, { _id: 1 });
     listCamera = listCamera.map(value => {

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.4.11",
     "@cycjimmy/jsmpeg-player": "^5.0.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -10,6 +11,7 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "face-api.js": "^0.22.2",
+    "graphql": "^15.5.3",
     "leaflet": "^1.7.1",
     "node-sass": "4.14.1",
     "react": "^17.0.1",

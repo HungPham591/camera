@@ -15,6 +15,7 @@ const Map = React.lazy(() => import("../pages/Map"));
 const Video = React.lazy(() => import("../pages/Video"));
 const VideoDetail = React.lazy(() => import("../pages/VideoDetail"));
 const User = React.lazy(() => import("../pages/User"));
+const Admin = React.lazy(() => import('../pages/Admin'));
 
 export default function MainNavigation(props) {
     const AuthContainer = () => {
@@ -25,7 +26,13 @@ export default function MainNavigation(props) {
             </div>
         )
     }
-
+    const AdminContainer = () => {
+        return (
+            <div>
+                <Route exact path='/Admin/' component={Admin} />
+            </div>
+        )
+    }
     const DefaultContainer = () => (
         <div>
             <Nav />
@@ -43,6 +50,7 @@ export default function MainNavigation(props) {
             <Suspense fallback={<Loader />}>
                 <Switch>
                     <Route path="/Auth" component={AuthContainer} />
+                    <Route path="/Admin" component={AdminContainer} />
                     <Route component={DefaultContainer} />
                 </Switch>
             </Suspense>

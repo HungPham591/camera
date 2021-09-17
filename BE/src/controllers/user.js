@@ -1,6 +1,11 @@
 const UserModel = require("../models/UserModel");
 const jwt = require("jsonwebtoken");
 
+
+exports.getAll = async (req, res) => {
+    let users = await UserModel.find();
+    res.send(users);
+}
 exports.getInfo = async (req, res) => {
     let id = req.body.user;
     let user = await UserModel.findById(id);
