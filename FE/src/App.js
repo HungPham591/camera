@@ -2,27 +2,32 @@ import React, { useMemo } from "react";
 import { connect } from "react-redux";
 import { actGetLocationRequest } from "./actions/locationAction";
 import MainNavigation from "./routes";
-import { actSigninSuccess } from "../src/actions/authAction";
-import { getUserInfo } from '../src/services/user';
+import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client'
+
+
+const link = createHttpLink({
+    uri: 'http://localhost:4000/graphql',
+    credentials: 'include'
+});
+const client = new ApolloClient({
+    link,
+    cache: new InMemoryCache()
+})
 
 function App(props) {
-    const getUser = async () => {
-        let user = await getUserInfo(null);
-        props.signInSuccess(user);
-    }
     useMemo(() => {
         props.getLocation();
-        getUser();
     }, []);
 
     return (
-        <MainNavigation />
+        <ApolloProvider client={client}>
+            <MainNavigation />
+        </ApolloProvider >
     );
 }
 const mapDispatchToProps = (dispatch) => {
     return {
         getLocation: () => dispatch(actGetLocationRequest()),
-        signInSuccess: (user) => dispatch(actSigninSuccess(user)),
     };
 };
 export default connect(null, mapDispatchToProps)(App);

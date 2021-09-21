@@ -1,46 +1,64 @@
 import React, { useRef } from "react";
-import { deleteCamera, updateCamera } from "../../../services/camera";
+import { useMutation } from '@apollo/client'
+import { getCameras, updateCamera, deleteCamera } from '../../../graphql/camera';
+import { getUser } from '../../../graphql/user';
+import { useForm } from 'react-hook-form';
 
 export default function SettingModel(props) {
-    const cameraNameRef = useRef(null);
-    const cameraLinkRef = useRef(null);
-    const cameraLocationRef = useRef(null);
-    const cameraPublicRef = useRef(null);
+    const [updateItem, updateMutation] = useMutation(updateCamera)
+    const [deleteItem, deleteMutation] = useMutation(deleteCamera)
 
-    const handleSaveButton = () => {
-
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
+    const onSubmit = (data) => {
+        if (!props.camera?._id) return;
+        data.camera_location = props.camera?.camera_location;
+        data._id = props.camera?._id;
+        updateItem({
+            variables: data,
+            refetchQueries: [{ query: getUser }, { query: getCameras }]
+        })
+        props.handleClose();
     }
+
     const handleDeleteButton = () => {
-        props.deleteCamera(props.camera._id);
+        if (!props?.camera?._id) return
+        deleteItem({
+            variables: { _id: props?.camera?._id },
+            refetchQueries: [{ query: getUser }]
+        })
         props.handleClose();
     }
     return (
-        <div className={'modal ' + (props.show ? '' : 'modal-hide')}>
+        <form className={'modal ' + (props.show ? '' : 'modal-hide')} onSubmit={handleSubmit(onSubmit)}>
             <div className='header'>
                 <h4 className='title'>Setting</h4>
             </div>
             <div className='body'>
-                <p className='label'>Camera name</p>
-                <input type='text' value={props.camera?.camera_name} ref={cameraNameRef} />
-                <p className='label'>Camera link</p>
-                <input type='text' value={props.camera?.camera_link} ref={cameraLinkRef} />
-                <p className='label'>Camera location</p>
-                <input type='text' value={props.camera?.camera_location} ref={cameraLocationRef} />
+                <label className='label'>Camera name</label>
+                <input type='text' {...register('camera_name', { required: true })} defaultValue={props.camera?.camera_name} />
+                <label className='label'>Camera link</label>
+                <input type='text' {...register('camera_link', { required: true })} defaultValue={props.camera?.camera_link} />
+                <label className='label'>Camera location</label>
+                <input type='text' {...register('camera_location', { required: true })} defaultValue={props.camera?.camera_location} />
                 <div style={{ display: 'flex', justifyContent: 'start', width: '100%', alignItems: 'center' }}>
                     <input
                         type="checkbox"
-                        name="camera_public"
-                        checked={props.camera?.camera_public}
-                        ref={cameraPublicRef}
+                        defaultValue={props.camera?.camera_public}
+                        defaultChecked={props.camera?.camera_public}
+                        {...register('camera_public')}
                     />
-                    <p className='label-checkbox'>public</p>
+                    <label className='label-checkbox'>public</label>
                 </div>
             </div>
             <div className='footer'>
-                <button onClick={handleSaveButton}>Save</button>
+                <input type="submit" />
                 <button onClick={handleDeleteButton}>Delete</button>
                 <button onClick={props.handleClose}>Close</button>
             </div>
-        </div>
+        </form>
     )
 }

@@ -1,8 +1,7 @@
-const { data } = require('@tensorflow/tfjs-node');
 const child_process = require('child_process')
 
 
-const Rtsp = class {
+const ExtractFrame = class {
     constructor(rtsp) {
         this.rtsp = rtsp;
         this.frame = '';
@@ -15,10 +14,8 @@ const Rtsp = class {
         const spawnOptions = [
             "-i",
             this.rtsp,
-            '-vf',
-            'hue=s=0',
             '-r',
-            '5',
+            '1',
             '-q:v',
             '31',
             '-c:v',
@@ -36,4 +33,4 @@ const Rtsp = class {
     }
 }
 
-module.exports = Rtsp
+module.exports = ExtractFrame

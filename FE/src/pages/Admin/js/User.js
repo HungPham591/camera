@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { getAllUser } from '../../../services/user';
+// import { getAllUser } from '../../../services/user';
+import { getUsers } from '../../../graphql/user';
+import { useQuery } from '@apollo/client'
 
 export default function User(props) {
-    const [user, setUser] = useState([]);
+    const { loading, error, data } = useQuery(getUsers);
+
     const [modal, setModal] = useState(false);
     const [selected, setSelected] = useState({})
     const listColumn = ['#', 'user_id', 'user_gmail', 'user_pass', 'google_id', 'google_token', 'access_token', 'create_at'];
-    useEffect(() => {
-        fetchUser();
-    }, []);
-    const fetchUser = async () => {
-        const users = await getAllUser();
-        setUser(users);
-    }
+
     const renderModal = () => {
         return (
             <div className={'modal ' + (modal ? '' : 'd-none')}>
@@ -21,7 +18,7 @@ export default function User(props) {
                     listColumn.map((value, index) => {
                         if (index === 0) return;
                         return (
-                            <div>
+                            <div key={index}>
                                 <p className='label'>{value}</p>
                                 <input type='text' value={Object.values(selected)[index - 1]} />
                             </div>
@@ -52,7 +49,7 @@ export default function User(props) {
                     </thead>
                     <tbody>
                         {
-                            user.map((value, index) => {
+                            data?.users?.map((value, index) => {
                                 const minute = new Date(value.createdAt).getMinutes();
                                 const hour = new Date(value.createdAt).getHours();
                                 const date = new Date(value.createdAt).getDate();

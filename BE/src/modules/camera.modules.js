@@ -1,9 +1,9 @@
 const Stream = require("node-rtsp-stream");
 const Recorder = require("node-rtsp-recorder").Recorder;
-const { uploadFile } = require("./googledrive");
-const { uploadVideo } = require("./youtube");
-const VideoModel = require("../models/VideoModel");
-const UserModel = require("../models/UserModel");
+const { uploadFile } = require("./googledrive.modules");
+const { uploadVideo } = require("./youtube.modules");
+const VideoModel = require("../models/video.model");
+const UserModel = require("../models/user.model");
 const fs = require("fs");
 const workerFarm = require('worker-farm')
 
@@ -81,7 +81,7 @@ const Camera = class {
         this.record = null;
     }
     detect() {
-        const service = workerFarm(require.resolve(__dirname + '\\face.js'))
+        const service = workerFarm(require.resolve(__dirname + '\\detect_face.modules.js'))
         service(this.camera, () => { })
     }
     backUp() {

@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { getCamera } from '../../../services/camera';
+import { getCameras } from '../../../graphql/camera';
+import { useQuery } from '@apollo/client'
 
 export default function Camera(props) {
-    const [camera, setCamera] = useState([]);
+    const { loading, error, data } = useQuery(getCameras);
+
     const [modal, setModal] = useState(false);
     const [selected, setSelected] = useState({})
     const listColumn = ['#', 'camera_id', 'camera_name', 'camera_drive', 'camera_link', 'camera_location', 'camera_public'];
-    useEffect(() => {
-        fetchCamera();
-    }, []);
-    const fetchCamera = async () => {
-        let listCamera = await getCamera({});
-        setCamera(listCamera)
-    }
+
     const renderModal = () => {
         return (
             <div className={'modal ' + (modal ? '' : 'd-none')}>
@@ -21,7 +17,7 @@ export default function Camera(props) {
                     listColumn.map((value, index) => {
                         if (index === 0) return;
                         return (
-                            <div>
+                            <div key={index}>
                                 <p className='label'>{value}</p>
                                 <input type='text' value={Object.values(selected)[index - 1]} />
                             </div>
@@ -52,7 +48,7 @@ export default function Camera(props) {
                     </thead>
                     <tbody>
                         {
-                            camera.map((value, index) => {
+                            data?.cameras?.map((value, index) => {
                                 return (
                                     <tr key={index} onClick={() => handleRowClick(value)}>
                                         <th scope="row">{index + 1}</th>

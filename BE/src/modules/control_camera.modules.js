@@ -1,6 +1,6 @@
-const CameraModel = require("../models/CameraModel");
-const Camera = require("./camera");
-const Events = require('../Events/Camera').eventBus;
+const CameraModel = require("../models/camera.model");
+const Camera = require("./camera.modules");
+const Events = require('../events/camera.event').eventBus;
 
 let listCamera = [];
 

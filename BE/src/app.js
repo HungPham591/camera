@@ -7,8 +7,13 @@ const route = require("./routes");
 const db = require("./config/db");
 const fileUpload = require("express-fileupload");
 const cors = require('cors');
-const ControlCamera = require("./modules/ControlCamera");
-const ControlNotification = require('./modules/ControlNotification');
+const { ApolloServer } = require('apollo-server-express')
+const ControlCamera = require("./modules/control_camera.modules");
+const ControlNotification = require('./modules/control_notification.modules');
+const typeDefs = require('./apollo/schema/schema');
+const resolvers = require('./apollo/resolver/resolver');
+const controller = require('./controllers');
+const Authentication = require('./middleware/authentication.middleware');
 
 require('dotenv').config();
 
@@ -25,12 +30,21 @@ app.use(express.static(path.join(__dirname, "public")));//
 app.use(fileUpload());
 app.use(cors({
     origin: 'http://localhost:3000',
-    credentials: true
+    credentials: true,
 }));// enable cors
+app.use('/graphql', Authentication)
 
-// listCamera.start();
-ControlNotification.start();
-route(app);
+
+ControlCamera.start();
+app.use(route);
+
+const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: ({ req, res }) => ({ controller, req, res }),
+})
+server.applyMiddleware({ app, cors: false })
+console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)
 
 
 // const workerFarm = require('worker-farm')

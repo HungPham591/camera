@@ -1,12 +1,14 @@
 import L from "leaflet";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import "leaflet/dist/leaflet.css";
 import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
-import { getCamera } from '../../../services/camera'
+import { useQuery } from '@apollo/client'
+import { getCameras } from '../../../graphql/camera'
 
 function Map(props) {
-    const [dataCamera, setDataCamera] = useState([]);
+    const { loading, error, data } = useQuery(getCameras);
+
     let history = useHistory();
     let mapObject;
     const greenIcon = (name) => {
@@ -19,16 +21,9 @@ function Map(props) {
         });
     };
     useEffect(() => {
-        fetchCamera();
-    }, []);
-    useEffect(() => {
         initMap();
         loadMarker();
-    }, [dataCamera]);
-    const fetchCamera = async () => {
-        let listCamera = await getCamera({});
-        setDataCamera(listCamera);
-    };
+    }, [data]);
 
     const openStream = (e) => {
         history.push("/Camera/" + e.sourceTarget.feature.properties._id);
@@ -55,24 +50,23 @@ function Map(props) {
         }).addTo(mapObject);
     };
     const loadMarker = () => {
-        if (dataCamera !== undefined && mapObject !== undefined) {
-            dataCamera.forEach((value) => {
-                let marker = L.marker(
-                    [value.camera_location[0], value.camera_location[1]],
-                    {
-                        icon: greenIcon(value.camera_name),
-                    }
-                );
-                marker.feature = {
-                    type: "Point",
-                    properties: {
-                        _id: value._id,
-                    },
-                    geometry: undefined,
-                };
-                marker.addTo(mapObject).on("click", openStream);
-            });
-        }
+        if (!mapObject || !data?.cameras) return;
+        data.cameras.forEach((value) => {
+            let marker = L.marker(
+                [value.camera_location[0], value.camera_location[1]],
+                {
+                    icon: greenIcon(value.camera_name),
+                }
+            );
+            marker.feature = {
+                type: "Point",
+                properties: {
+                    _id: value._id,
+                },
+                geometry: undefined,
+            };
+            marker.addTo(mapObject).on("click", openStream);
+        });
     };
 
     return (

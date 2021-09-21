@@ -41,18 +41,9 @@
           height: 15px;
           background-color: #13599f;
         }
-      }
-      .progressbar-time {
-        margin-top: 2%;
-        padding: 0;
-        width: 100%;
-        position: relative;
-        li {
+        p {
           position: absolute;
-          float: left;
-          list-style: none;
-          text-align: center;
-          border-radius: 100%;
+          top: 20px;
         }
       }
     }

@@ -1,14 +1,9 @@
-const userRouter = require("./user");
-const cameraRouter = require("./camera");
-const videoRouter = require("./video");
-const reportRouter = require("./report");
+const express = require("express");
+const router = express.Router();
+const auth = require('../middleware/auth.middleware')
+const { uploadImg, streamVideo } = require('../controllers/file.controller')
 
+router.get("/video/:id", streamVideo);
+router.post('/uploadImg', auth, uploadImg);
 
-const route = (app) => {
-    app.use("/user", userRouter);
-    app.use("/video", videoRouter);
-    app.use("/report", reportRouter);
-    app.use("/camera", cameraRouter);
-};
-
-module.exports = route;
+module.exports = router;

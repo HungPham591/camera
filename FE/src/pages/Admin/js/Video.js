@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { getAllVideo } from '../../../services/video';
+import { getVideos } from '../../../graphql/video';
+import { useQuery } from '@apollo/client'
 
 export default function Video(props) {
-    const [video, setVideo] = useState([]);
+    const { loading, error, data } = useQuery(getVideos);
     const [modal, setModal] = useState(false);
     const [selected, setSelected] = useState({})
     const listColumn = ['#', 'video_id', 'camera_id', 'createdAt'];
-    useEffect(() => {
-        fetchVideo();
-    }, []);
-    const fetchVideo = async () => {
-        const videos = await getAllVideo();
-        setVideo(videos);
-    }
+
     const renderModal = () => {
         return (
             <div className={'modal ' + (modal ? '' : 'd-none')}>
@@ -21,7 +16,7 @@ export default function Video(props) {
                     listColumn.map((value, index) => {
                         if (index === 0) return;
                         return (
-                            <div>
+                            <div key={index}>
                                 <p className='label'>{value}</p>
                                 <input type='text' value={Object.values(selected)[index - 1]} />
                             </div>
@@ -52,7 +47,7 @@ export default function Video(props) {
                     </thead>
                     <tbody>
                         {
-                            video.map((value, index) => {
+                            data?.videos?.map((value, index) => {
                                 const minute = new Date(value.createdAt).getMinutes();
                                 const hour = new Date(value.createdAt).getHours();
                                 const date = new Date(value.createdAt).getDate();

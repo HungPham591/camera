@@ -4,27 +4,23 @@ import { useHistory } from "react-router";
 export default function ListCamera(props) {
     let history = useHistory();
 
-    const openStream = (id) => {
-        history.push("/Camera/" + id);
+    const handleWatchButton = (id) => {
+        history.push("/Video/" + id);
     };
-    const handleSettingButton = (camera) => {
-        props.setCamera(camera);
-        props.openModal();
-    }
-    if (!props.dataCamera?.length) {
+    if (!props.data?.length) {
         return (
             <div>
-                <p className='title'>Camera của bạn</p>
-                <h4>No camera</h4>
+                <p className='title'>Video của bạn</p>
+                <h4>No videos</h4>
             </div>
         )
     }
     return (
         <div>
-            <p className='title'>Camera của bạn</p>
+            <p className='title'>Video của bạn</p>
             <div className='grid'>
                 {
-                    props.dataCamera.map((value, index) => {
+                    props.data.map((value, index) => {
                         return (
                             <div key={index} className='custom-card'>
                                 <img src={cameraLogo} />
@@ -32,16 +28,9 @@ export default function ListCamera(props) {
                                 <div className='group-button'>
                                     <button
                                         className="btn btn-primary"
-                                        onClick={() => openStream(value._id)}
+                                        onClick={() => handleWatchButton(value._id)}
                                     >
                                         Xem
-                                    </button>
-                                    <button
-                                        className="btn btn-primary"
-                                        onClick={() => handleSettingButton(value)}
-                                        style={{ marginLeft: "5%" }}
-                                    >
-                                        Cài đặt
                                     </button>
                                 </div>
 

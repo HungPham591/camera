@@ -6,6 +6,9 @@ import ListVideo from "./js/ListVideo";
 import { AiOutlineArrowDown, AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineArrowUp } from 'react-icons/ai';
 import { BsArrowDownLeft, BsArrowDownRight, BsArrowUpLeft, BsArrowUpRight, BsArrowCounterclockwise } from 'react-icons/bs'
 
+import { getCamera } from '../../graphql/camera';
+import { useQuery } from '@apollo/client'
+
 export default function CameraStream(props) {
     let { id } = useParams();
     let video;
@@ -15,9 +18,15 @@ export default function CameraStream(props) {
     }
     let canvas;
 
+    const { loading, error, data } = useQuery(getCamera, {
+        variables: {
+            _id: id
+        },
+        skip: id === null
+    })
+
     useEffect(() => {
         canvas = document.getElementById("videoWrapper");
-        const poster = ''
         video = new JSMpeg.VideoElement(
             "#videoWrapper",
             "ws://localhost:" + (9999 + port),
@@ -43,7 +52,7 @@ export default function CameraStream(props) {
                     />
                 </div>
                 <div className="right-pane">
-                    <p className='title'>Camera</p>
+                    <p className='title'>Camera {data?.camera?.camera_name}</p>
                     <a
                         href="/#"
                         id="download"
@@ -70,7 +79,7 @@ export default function CameraStream(props) {
                 </div>
             </div>
             <p style={{ marginLeft: '1%', fontWeight: 500, fontSize: '1.5rem', marginBottom: '10px' }}>List video</p>
-            <ListVideo />
+            <ListVideo videos={data?.camera?.videos} />
         </div>
     );
 }

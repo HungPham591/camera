@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { getAllReport } from '../../../services/report';
+import { getReports } from '../../../graphql/report';
+import { useQuery } from '@apollo/client'
 
 export default function Report(props) {
-    const [report, setReport] = useState([]);
+    const { loading, error, data } = useQuery(getReports);
+
     const [modal, setModal] = useState(false);
     const [selected, setSelected] = useState({})
     const listColumn = ['#', 'camera_id', 'createdAt'];
-    useEffect(() => {
-        fetchReport();
-    }, []);
-    const fetchReport = async () => {
-        let reports = await getAllReport();
-        setReport(reports);
-    }
+
     const renderModal = () => {
         return (
             <div className={'modal ' + (modal ? '' : 'd-none')}>
@@ -21,7 +17,7 @@ export default function Report(props) {
                     listColumn.map((value, index) => {
                         if (index === 0) return;
                         return (
-                            <div>
+                            <div key={index}>
                                 <p className='label'>{value}</p>
                                 <input type='text' value={Object.values(selected)[index - 1]} />
                             </div>
@@ -52,7 +48,7 @@ export default function Report(props) {
                     </thead>
                     <tbody>
                         {
-                            report.map((value, index) => {
+                            data?.reports?.map((value, index) => {
                                 const minute = new Date(value.createdAt).getMinutes();
                                 const hour = new Date(value.createdAt).getHours();
                                 const date = new Date(value.createdAt).getDate();

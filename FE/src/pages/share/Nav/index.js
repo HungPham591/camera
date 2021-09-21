@@ -6,10 +6,15 @@ import { RiNotificationFill } from 'react-icons/ri'
 import "./index.scss";
 import ModalCamera from "./ModalCamera";
 import Notification from "./Notification";
-import Toast from "./Toast";
+// import Toast from "./Toast";
 import { useHistory, useLocation } from "react-router-dom";
+import { useQuery } from '@apollo/client'
+import { getUser } from '../../../graphql/user';
 
 function NavBar(props) {
+    const { loading, error, data } = useQuery(getUser);
+    console.log(error)
+
     const location = useLocation();
     const history = useHistory();
 
@@ -42,7 +47,7 @@ function NavBar(props) {
         showNotification(!notification);
     }
     const handleAddCamera = () => {
-        if (!props.user?._id) {
+        if (!data?.user?._id) {
             return history.push('/Auth/Login')
         }
         handleShowCamera()
@@ -64,8 +69,8 @@ function NavBar(props) {
                 </div>
 
                 <div className="right-nav">
-                    <Link to="/User" id='email' className={props.user?.user_gmail ? '' : 'd-none'}>
-                        {props.user?.user_gmail}
+                    <Link to="/User" id='email' className={data?.user?.user_gmail ? '' : 'd-none'}>
+                        {data?.user?.user_gmail}
                     </Link>
                     <Link to="Auth/Login">
                         <BsFillPersonFill />
@@ -79,7 +84,7 @@ function NavBar(props) {
                 handleCloseCamera={handleCloseCamera}
             />
             <Notification show={notification} />
-            <Toast toast={toast} showToast={showToast} />
+            {/* <Toast toast={toast} showToast={showToast} /> */}
         </>
     );
 }

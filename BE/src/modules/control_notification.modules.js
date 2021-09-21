@@ -1,14 +1,14 @@
-const UserModel = require('../models/UserModel');
-const CameraModel = require('../models/CameraModel');
+const UserModel = require('../models/user.model');
+const CameraModel = require('../models/camera.model');
 const WebSocketServer = require('ws').Server;
-const Events = require('../Events/Notification').eventBus;
+const Events = require('../events/notification.event').eventBus;
 const jwt = require('jsonwebtoken');
 
 let listClient = [];
 const port = 15000;
 let ws = null;
 
-const start = async () => {
+const start = () => {
     createWSServer()
     onClientConnect();
 }

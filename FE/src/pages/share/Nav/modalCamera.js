@@ -1,85 +1,72 @@
 import { Modal, Button } from "react-bootstrap";
-import callApi from "../../../api/apiCaller";
 import { connect } from "react-redux";
 import { useState } from "react";
-import { createCamera } from '../../../services/camera'
+// import { createCamera } from '../../../services/camera'
+import { useMutation } from '@apollo/client'
+import { createCamera, getCameras } from '../../../graphql/camera';
+import { getUser } from '../../../graphql/user';
+import { useForm } from 'react-hook-form';
 
 function ModalCamera(props) {
-    const [data, setData] = useState({ camera_public: false })
-    // let data = { camera_public: false };
-    const onChange = (e) => {
-        let newData = data;
-
-        let target = e.target;
-        let name = target.name;
-        let value = target.value;
-        if (target.type === "checkbox") value = target.checked;
-
-        newData[name] = value
-
-        setData(newData)
-    };
-
-    const submitCamera = () => {
-        let { camera_link, camera_public, camera_name } = data;
-        let BODY = {
-            camera_name: camera_name,
-            camera_link: camera_link,
-            camera_location: props.location,
-            camera_public: camera_public,
-        };
-        createCamera(BODY)
+    const [createItem, createMutation] = useMutation(createCamera)
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
+    const onSubmit = (data) => {
+        if (!props?.location) return;
+        data.camera_location = props.location
+        createItem({
+            variables: data,
+            refetchQueries: [{ query: getUser }]
+        })
         props.handleCloseCamera();
-        setData({ camera_public: false })
-    };
+    }
+
+    const title = [{ title: 'camera uri', value: 'camera_link' }, { title: 'camera name', value: 'camera_name' }]
     return (
         <Modal
             show={props.showCamera}
             onHide={props.handleCloseCamera}
             style={{ zIndex: 9999 }}
         >
-            <div>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Thêm Camera</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <div className="mb-3">
-                        <label className="form-label">Link</label>
-                        <input
-                            className="form-control"
-                            name="camera_link"
-                            onChange={onChange}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label className="form-label">Camera name</label>
-                        <input
-                            className="form-control"
-                            name="camera_name"
-                            onChange={onChange}
-                        />
-                    </div>
+                    {
+                        title.map((value, index) =>
+                        (
+                            <div key={index} className="mb-3">
+                                <label className="form-label">{value.title}</label>
+                                <input
+                                    className="form-control"
+                                    {...register(value.value, { required: true })}
+                                />
+                            </div>
+                        )
+                        )
+                    }
                     <div className="form-group form-check">
                         <input
                             type="checkbox"
                             className="form-check-input"
-                            name="camera_public"
-                            onChange={onChange}
+                            {...register('camera_public')}
                         />
                         <label className="form-check-label" htmlFor="exampleCheck1">
                             Public
                         </label>
                     </div>
                 </Modal.Body>
-            </div>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={props.handleCloseCamera}>
-                    Close
-                </Button>
-                <Button variant="primary" onClick={submitCamera}>
-                    Save Changes
-                </Button>
-            </Modal.Footer>
+                <div style={{ padding: '15px' }}>
+                    <Button variant="secondary" onClick={props.handleCloseCamera}>
+                        Close
+                    </Button>
+                    <input className='btn btn-primary' style={{ marginLeft: '10px' }} type='submit' />
+                </div>
+            </form>
         </Modal>
     );
 }

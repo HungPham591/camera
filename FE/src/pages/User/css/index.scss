@@ -135,4 +135,43 @@
   .modal-hide {
     display: none;
   }
+  .form-info {
+    height: fit-content;
+    width: 100%;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px 0 rgba(172, 172, 172, 0.2);
+    .label {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    input[type="text"] {
+      width: 100%;
+      margin-bottom: 0.5rem;
+      border-radius: 5px;
+      padding: 0.5rem;
+      outline: none;
+      border: 1.8px solid #eee;
+      background-color: #eee;
+      &::placeholder {
+        font-weight: 400;
+      }
+      &:focus {
+        background-color: white;
+      }
+    }
+  }
+  input[type="submit"] {
+    border: 0;
+    border-radius: 10px;
+    width: 25%;
+    height: 50px;
+    background-color: #00aefd;
+    color: white;
+    font-weight: 500;
+    &:focus {
+      outline: none;
+    }
+  }
 }

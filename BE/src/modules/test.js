@@ -1,10 +1,11 @@
 const canvas = require('canvas')
 const faceapi = require("face-api.js");
 const fs = require('fs');
-const Rtsp = require('./rtsp')
+const Rtsp = require('./ExtractFrame')
+const path = require('path');
 require('@tensorflow/tfjs-node')
 
-const url1 = 'rtsp://admin:ASIXNW@192.168.1.6:554/H.264';
+const url1 = 'rtsp://admin:ASIXNW@192.168.1.5:554/H.264';
 const url2 = 'https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/1080/Big_Buck_Bunny_1080_10s_1MB.mp4'
 const { Canvas, Image, ImageData } = canvas;
 
@@ -13,13 +14,16 @@ let loop = 0;
 const rtsp = new Rtsp(url1);
 
 module.exports = async (input, callback) => {
-
     faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
+    const MODELS_URL = path.join(__dirname, '/../weights');
+
+    console.log(MODELS_URL)
 
     await Promise.all([
-        faceapi.nets.ssdMobilenetv1.loadFromDisk("./src/weights"),
-        faceapi.nets.faceRecognitionNet.loadFromDisk("./src/weights"),
-        faceapi.nets.faceLandmark68Net.loadFromDisk("./src/weights")
+        faceapi.nets.ssdMobilenetv1.loadFromDisk(MODELS_URL),
+        faceapi.nets.faceRecognitionNet.loadFromDisk(MODELS_URL),
+        faceapi.nets.faceLandmark68Net.loadFromDisk(MODELS_URL),
+        faceapi.nets.ageGenderNet.loadFromDisk(MODELS_URL)
     ])
 
     testDetect()
@@ -134,7 +138,7 @@ const testDetect = async () => {
             let base64 = 'data:image/png;base64,' + rtsp.getFrame().toString('base64');
             detect(base64);
         }
-    }, 100);
+    }, 1000);
 }
 const detect = async (base64) => {
     try {
@@ -145,6 +149,7 @@ const detect = async (base64) => {
             .detectAllFaces(img)
             .withFaceLandmarks()
             .withFaceDescriptors()
+            .withAgeAndGender();
 
         if (!resultDetect.length) {
             console.log('khong co nguoi nao')
@@ -160,12 +165,19 @@ const detect = async (base64) => {
                 bestMatch = '';
         })
 
+        let descripttion = resultDetect.map(value => {
+            return { gender: value.gender, age: value.age };
+        })
+        console.log(descripttion);
         if (bestMatch === 'unknown') {
             //nguoi la
             listDetect = [...listDetect, ...resultDetect]
             console.log('co nguoi la')
+        } else {
+            console.log('co nguoi quen')
         }
     } catch (err) {
+        console.log('co loi ' + err)
     }
 }
 //  neu co GPU

@@ -1,20 +1,13 @@
-const VideoModel = require("../models/VideoModel");
-const fs = require("fs");
-const path = require('path');
-const appDir = path.dirname(require.main.filename);
+const VideoModel = require("../models/video.model");
 
-exports.getAll = async (req, res) => {
-    let videos = await VideoModel.find();
-    res.send(videos);
+exports.getVideo = async (args, req, res) => {
+    return await VideoModel.findOne(args);
 }
-exports.getVideo = async (req, res) => {
-    let query = req.body;
-    let listVideo = await VideoModel.find(query).populate('camera');
-    res.send(listVideo);
+exports.getVideos = async (args) => {
+    return await VideoModel.find(args)
 }
-exports.playVideo = async (req, res) => {
-    let video_id = req.params.id;
-    let video = await VideoModel.findOne({ _id: video_id });
+exports.streamVideo = async (args, req, res) => {
+    let video = await VideoModel.findById(args._id);
     const range = req.headers.range;
     if (!range) {
         res.status(400).send("Requires Range header");
