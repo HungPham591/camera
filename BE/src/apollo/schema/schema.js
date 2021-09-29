@@ -43,14 +43,13 @@ const typeDefs = gql`
     }
     type Query{
         camera(_id:ID):Camera
-        cameras(_id:ID,user:String,camera_name:String,createdAt:Float):[Camera]
-        camerasByName(camera_name:String):[Camera]
+        cameras(camera_name:String,createdAt:Float):[Camera]
         user(_id:ID):User
         users:[User]
         video(_id:ID):Video
-        videos(_id:ID,camera:String,createdAt:Float):[Video]
+        videos(createdAt:Float):[Video]
         report(_id:ID):Report
-        reports(_id:ID,camera:String,createdAt:Float):[Report]
+        reports(createdAt:Float):[Report]
     }
     type Mutation{
         createCamera(camera_name:String,camera_link:String,camera_location:[Float],camera_public:Boolean):Camera

@@ -1,0 +1,67 @@
+#Blog {
+  margin-top: 8vh;
+  width: 100vw;
+  height: 92vh;
+  display: flex;
+  padding: 5vh 2vw;
+  .left-pane {
+    width: 30%;
+    .menu {
+      width: 100%;
+      box-shadow: 0 0 1.25rem rgba(31, 45, 61, 0.12);
+      border-radius: 10px;
+      padding: 30px;
+      margin-bottom: 5vh;
+      .title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #009cde;
+      }
+      input {
+        justify-content: space-between;
+        color: black;
+        padding: 1rem;
+        border-radius: 5px;
+        outline: none;
+        font-size: 1rem;
+        font-weight: 500;
+        border: 1px solid #eee;
+        background-color: #eee;
+        width: 100%;
+      }
+      ul {
+        padding: 0;
+        margin: 0;
+        li {
+          padding: 2vh 0;
+          border-top: 1px solid #eaedff;
+          list-style-type: none;
+        }
+      }
+    }
+  }
+  .right-pane {
+    overflow-y: scroll;
+    width: 70%;
+    height: 100%;
+    padding: 0 5vw;
+    .custom-card {
+      margin-bottom: 5vh;
+      .title {
+        color: #009cde;
+        font-size: 1.75rem;
+        font-weight: bold;
+        margin-bottom: 5vh;
+      }
+      button {
+        border: 0;
+        padding: 15px 45px;
+        border-radius: 5px;
+        background-color: #009cde;
+        color: white;
+        font-size: 1rem;
+        font-weight: 700;
+      }
+    }
+  }
+}

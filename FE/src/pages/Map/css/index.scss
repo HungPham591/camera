@@ -63,35 +63,28 @@
     font-weight: 600;
     padding: 3vh 0 1vh 0;
   }
-  .input {
-    width: 100%;
+  .search {
     display: flex;
-    margin-bottom: 3vh;
+    justify-content: space-between;
     input {
       width: 80%;
       height: 50px;
-      border: 1px solid rgb(139, 139, 139);
-
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
-      border-right: 0;
+      border: 0;
+      border: 1px solid rgba(31, 45, 61, 0.12);
+      border-radius: 10px;
       padding-left: 2%;
+      margin-bottom: 5vh;
       &:focus {
         outline: none;
+        box-shadow: 0 0 0.5rem rgba(31, 45, 61, 0.12);
       }
     }
-    .btn-search {
-      border: 0;
-      border-top-right-radius: 10px;
-      border-bottom-right-radius: 10px;
-      color: white;
-      width: 20%;
+    button {
       height: 50px;
-      background-color: #0d6efd;
+      padding: 0 30px;
+      border-radius: 10px;
       font-weight: 500;
-      &:focus {
-        outline: none;
-      }
+      border: 0;
     }
   }
 }

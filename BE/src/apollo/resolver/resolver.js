@@ -2,7 +2,6 @@ const resolvers = {
     Query: {
         camera: async (parent, args, { controller, req, res }) => await controller.CameraController.getCamera(args, req, res),
         cameras: async (parent, args, { controller, req, res }) => await controller.CameraController.getCameras(args, req, res),
-        camerasByName: async (parent, args, { controller, req, res }) => await controller.CameraController.getCamerasByName(args, req, res),
         user: async (parent, args, { controller, req, res }) => await controller.UserController.getUser(args, req, res),
         users: async (parent, args, { controller, req, res }) => await controller.UserController.getUsers(args, req, res),
         video: async (parent, args, { controller, req, res }) => await controller.VideoController.getVideo(args, req, res),

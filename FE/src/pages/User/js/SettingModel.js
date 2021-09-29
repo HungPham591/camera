@@ -19,7 +19,7 @@ export default function SettingModel(props) {
         data._id = props.camera?._id;
         updateItem({
             variables: data,
-            refetchQueries: [{ query: getUser }, { query: getCameras }]
+            refetchQueries: [{ query: getUser }]
         })
         props.handleClose();
     }

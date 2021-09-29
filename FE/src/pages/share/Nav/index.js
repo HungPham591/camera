@@ -13,7 +13,6 @@ import { getUser } from '../../../graphql/user';
 
 function NavBar(props) {
     const { loading, error, data } = useQuery(getUser);
-    console.log(error)
 
     const location = useLocation();
     const history = useHistory();
@@ -48,11 +47,12 @@ function NavBar(props) {
     }
     const handleAddCamera = () => {
         if (!data?.user?._id) {
-            return history.push('/Auth/Login')
+            history.push('/Auth/Login')
+            return;
         }
         handleShowCamera()
     }
-    const listNav = [{ name: 'Home', path: '' }, { name: 'Map', path: 'Map' }, { name: 'Video', path: 'Video' }]
+    const listNav = [{ name: 'Home', path: '' }, { name: 'Map', path: 'Map' }, { name: 'Blog', path: 'Blog' }]
     return (
         <>
             <div className={'Nav ' + (nav && checkAtHome() ? '' : 'Nav-Active')}>
@@ -72,7 +72,7 @@ function NavBar(props) {
                     <Link to="/User" id='email' className={data?.user?.user_gmail ? '' : 'd-none'}>
                         {data?.user?.user_gmail}
                     </Link>
-                    <Link to="Auth/Login">
+                    <Link to="/Auth/Login">
                         <BsFillPersonFill />
                     </Link>
                     <RiNotificationFill onClick={handleShowNoti} />

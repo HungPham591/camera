@@ -47,16 +47,21 @@
     padding: 2vh 2vw 2vh 2vw;
     .grid {
       display: grid;
+      grid-auto-rows: 1fr;
       grid-template-columns: 1fr 1fr 1fr;
       grid-gap: 20px;
       .custom-card {
-        width: fit-content;
-        height: fit-content;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         background-color: white;
         border-radius: 10px;
         border: 0;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
         padding: 10px 10px;
+        video {
+          width: 100%;
+        }
         img {
           width: 100%;
         }

@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const getCameras = gql`
-    query{
-        cameras{
+    query($camera_name:String){
+        cameras(camera_name:$camera_name){
             _id
             camera_name
             camera_drive
@@ -41,41 +41,6 @@ export const getCamera = gql`
                 report_time
                 createdAt
             }
-        }
-    }
-`
-export const getCamerasByName = gql`
-    query($camera_name:String){
-        camerasByName(camera_name:$camera_name){
-            _id
-            camera_name
-            camera_drive
-            camera_link
-            camera_location
-            createdAt
-            videos{
-                _id
-                video_time
-                createdAt
-            }
-            reports{
-                _id
-                report_time
-                createdAt
-            }
-        }
-    }
-`
-export const getCamerasByUser = gql`
-    query{
-        cameras{
-            _id
-            user
-            camera_name
-            camera_drive
-            camera_link
-            camera_location
-            createdAt
         }
     }
 `

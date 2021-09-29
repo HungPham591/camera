@@ -4,11 +4,11 @@ exports.getCamera = async (args, req, res) => {
     return await CameraModel.findOne(args);
 }
 exports.getCameras = async (args, req, res) => {
-    return await CameraModel.find(args);
+    if (args.camera_name === undefined) return await CameraModel.find(args);
+    if (args.camera_name.trim() === "") return await CameraModel.find()
+    if (args.camera_name) return await CameraModel.find({ camera_name: { $regex: args.camera_name } });
 }
-exports.getCamerasByName = async (args, req, res) => {
-    return await CameraModel.find({ camera_name: new RegExp(args.camera_name) });
-}
+
 exports.createCamera = async (args, req, res) => {
     if (!req.user) return null;
     const data = { user: req.user, ...args }

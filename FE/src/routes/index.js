@@ -12,7 +12,7 @@ import Loader from "../pages/share/Loader";
 const Camera = React.lazy(() => import("../pages/Camera"));
 const Home = React.lazy(() => import("../pages/Home"));
 const Map = React.lazy(() => import("../pages/Map"));
-const Video = React.lazy(() => import("../pages/Video"));
+const Blog = React.lazy(() => import("../pages/Blog"));
 const VideoDetail = React.lazy(() => import("../pages/VideoDetail"));
 const User = React.lazy(() => import("../pages/User"));
 const Admin = React.lazy(() => import('../pages/Admin'));
@@ -39,7 +39,7 @@ export default function MainNavigation(props) {
             <Route exact path="/" component={Home} />
             <Route path="/Map" component={Map} />
             <Route path="/Camera/:id" component={Camera} />
-            <Route exact path="/Video" component={Video} />
+            <Route path="/Blog" component={Blog} />
             <Route path="/Video/:id" component={VideoDetail} />
             <Route path="/User" component={User} />
             <Footer />

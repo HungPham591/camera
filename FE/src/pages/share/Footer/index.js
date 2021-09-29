@@ -10,31 +10,31 @@ function Footer(props) {
                         <h5 className='title'>RESOURCES</h5>
                         <div className="row">
                             <div className='col-lg-6' style={{ display: 'flex', flexDirection: 'column' }}>
-                                <a>Posts</a>
-                                <a>Questions</a>
-                                <a>Videos</a>
-                                <a>Discussions</a>
-                                <a>Tools</a>
-                                <a>System Status</a>
+                                <p>Posts</p>
+                                <p>Questions</p>
+                                <p>Videos</p>
+                                <p>Discussions</p>
+                                <p>Tools</p>
+                                <p>System Status</p>
                             </div>
                             <div className='col-lg-6' style={{ display: 'flex', flexDirection: 'column' }}>
-                                <a>Organizations</a>
-                                <a>Tags</a>
-                                <a>Authors</a>
-                                <a>Recommend System</a>
-                                <a>Machine Learning</a>
+                                <p>Organizations</p>
+                                <p>Tags</p>
+                                <p>Authors</p>
+                                <p>Recommend System</p>
+                                <p>Machine Learning</p>
                             </div>
                         </div>
                     </div>
                     <div className="col-lg-3">
                         <h5 className='title'>SERVICES</h5>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <a>Posts</a>
-                            <a>Questions</a>
-                            <a>Videos</a>
-                            <a>Discussions</a>
-                            <a>Tools</a>
-                            <a>System Status</a>
+                            <p>Posts</p>
+                            <p>Questions</p>
+                            <p>Videos</p>
+                            <p>Discussions</p>
+                            <p>Tools</p>
+                            <p>System Status</p>
                         </div>
                     </div>
                     <div className="col-lg-3">

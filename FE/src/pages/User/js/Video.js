@@ -21,17 +21,20 @@ export default function ListCamera(props) {
             <div className='grid'>
                 {
                     props.data.map((value, index) => {
+                        const video_path = `${process.env.REACT_APP_DOMAIN}\\video\\${value._id}`;
                         return (
                             <div key={index} className='custom-card'>
-                                <img src={cameraLogo} />
-                                <p className='title'>Camera {value.camera_name}</p>
-                                <div className='group-button'>
-                                    <button
-                                        className="btn btn-primary"
-                                        onClick={() => handleWatchButton(value._id)}
-                                    >
-                                        Xem
-                                    </button>
+                                <video src={video_path} />
+                                <div>
+                                    <p className='title'>Camera {value.camera_name}</p>
+                                    <div className='group-button'>
+                                        <button
+                                            className="btn btn-primary"
+                                            onClick={() => handleWatchButton(value._id)}
+                                        >
+                                            Xem
+                                        </button>
+                                    </div>
                                 </div>
 
                             </div>
