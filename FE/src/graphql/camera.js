@@ -9,16 +9,6 @@ export const getCameras = gql`
             camera_link
             camera_location
             createdAt
-            videos{
-                _id
-                video_time
-                createdAt
-            }
-            reports{
-                _id
-                report_time
-                createdAt
-            }
         }
     }
 `

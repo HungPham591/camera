@@ -1,3 +1,8 @@
 /BE/node_modules
 /FE/node_modules
 /BE/src/public
+SERVER/api-gateway/node_modules
+SERVER/auth-service/node_modules
+SERVER/camera-service/node_modules
+SERVER/report-service/node_modules
+SERVER/video-service/node_modules
