@@ -1,5 +1,4 @@
 const fs = require("fs");
-const VideoModel = require("../models/video.model");
 
 exports.uploadImg = async (req, res) => {
     let id = req.body._id;
@@ -11,13 +10,12 @@ exports.uploadImg = async (req, res) => {
 }
 exports.streamVideo = async (req, res) => {
     let video_id = req.params.id;
-    let video = await VideoModel.findOne({ _id: video_id });
     const range = req.headers.range;
     if (!range) {
         res.status(400).send("Requires Range header");
     }
 
-    const videoPath = `D:/js_project/QL_CAMERA/BE/src/public/data/${video.camera}/${video._id}.mp4`;
+    const videoPath = `${__dirname}/../public/data/${video_id}.mp4`;
     const videoSize = fs.statSync(videoPath).size;
 
     const CHUNK_SIZE = 10 ** 6; // 1MB

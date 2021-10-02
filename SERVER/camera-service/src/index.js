@@ -2,6 +2,9 @@ const app = require('./app');
 const { createClient, responseMessage } = require('./modules/rabbitmq.modules')
 const controller = require('./controllers/camera.controller');
 
+const CameraModel = require("./models/camera.model");
+const Camera = require("./modules/camera.modules");
+
 require('dotenv').config();
 
 const port = process.env.PORT || 4000;
@@ -42,38 +45,41 @@ const response = async (channel, msg, controller) => {
     responseMessage(channel, msg, response);
 }
 
+//controll camera
+
+let listCamera = [];
+let timeBackup = 60 * 1000;
+
+const initListCamera = async () => {
+    let cameras = await CameraModel.find();
+    let users = [];
+    cameras.forEach((camera) => {
+        camera.user = users.find(user => user._id === camera.user);
+        let camera = new Camera(camera);
+        listCamera.push(camera);
+    });
+};
+const startStreamingAllCamera = async () => {
+    console.log('start all camera')
+    await initListCamera();
+    listCamera.forEach((camera) => {
+        camera.startStream();
+        // camera.detect();
+    });
+};
+const uploadVideoToCloud = () => {
+    setInterval(() => {
+        listCamera.forEach(camera => {
+            camera.stopRecord();
+            camera.uploadDrive();
+            camera.uploadYoutube();
+            camera.startRecord();
+        });
+    }, timeBackup);
+}
+// startStreamingAllCamera();
+// uploadVideoToCloud();
 
 app.listen(port, () => {
     console.log('camera service listen at port ' + port)
 })
-
-
-// const CameraModel = require("../models/camera.model");
-// const Camera = require("./camera.modules");
-// const Events = require('../events/camera.event').eventBus;
-
-// let listCamera = [];
-
-// const initListCamera = async () => {
-//     let list = await CameraModel.find();
-//     list.forEach((data) => {
-//         let camera = new Camera(data);
-//         listCamera.push(camera);
-//     });
-// };
-// const start = async () => {
-//     console.log('start all camera')
-//     await initListCamera();
-//     listCamera.forEach((camera) => {
-//         camera.startStream();
-//         // camera.detect();
-//         // camera.backUp();
-//     });
-// };
-
-// Events.on("INSERT_CAMERA", function (doc) {
-// });
-// Events.on("DELETE_CAMERA", function (doc) {
-// });
-
-// module.exports = { start };

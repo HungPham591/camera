@@ -2,21 +2,17 @@ const Stream = require("node-rtsp-stream");
 const Recorder = require("node-rtsp-recorder").Recorder;
 const { uploadFile } = require("./googledrive.modules");
 const { uploadVideo } = require("./youtube.modules");
-const VideoModel = require("../models/video.model");
-const UserModel = require("../models/user.model");
 const fs = require("fs");
 const workerFarm = require('worker-farm')
 
-let timeBackUp = 60 * 1000;
-
-const initStream = (link, id) => {
+const streaming = (url, id) => {
     let port = 0;
     for (let i = 0; i < id.length; i++) {
         port += id.charCodeAt(i)
     }
     return new Stream({
         name: "name",
-        streamUrl: link,
+        streamUrl: url,
         wsPort: 9999 + port,
         ffmpegOptions: {
             "-nostats": "",
@@ -25,28 +21,14 @@ const initStream = (link, id) => {
     });
 };
 
-const initRecord = (camera, video) => {
+const captureVideo = (camera, video) => {
     let rec = new Recorder({
         url: camera.camera_link,
-        folder: "D:/js_project/QL_CAMERA/BE/src/public/data",
-        name: camera._id + "",
+        folder: `${__dirname}/../public/data`,
         fileName: video._id,
     });
     rec.startRecording();
     return rec;
-};
-
-const saveYoutube = async (filePath, fileName, user_id) => {
-    let user = await UserModel.findById(user_id)
-    if (fs.existsSync(filePath)) {
-        uploadVideo(filePath, fileName, user);
-    }
-};
-const saveDrive = async (filePath, fileName, folderId, user_id) => {
-    let user = await UserModel.findById(user_id)
-    if (fs.existsSync(filePath)) {
-        uploadFile(folderId, filePath, fileName, user);
-    }
 };
 
 const Camera = class {
@@ -54,48 +36,43 @@ const Camera = class {
         this.camera = camera;
         this.record = null;
         this.stream = null;
-        this.filePath = "src/public/data/" + camera._id + "/";
+        this.filePath = "src/public/data/";
         this.video = null;
-    }
-    get _id() {
-        return this.camera._id;
+        this.user = camera.user;
     }
     startStream() {
-        this.stream = initStream(this.camera.camera_link, this.camera._id.toString());
+        this.stream = streaming(this.camera.camera_link, this.camera._id.toString());
     }
     stopStream() {
         this.stream.stopStream();
     }
     startRecord() {
         let time = new Date().getTime();
-        new VideoModel({
-            camera: this.camera._id,
-            video_time: time,
-        }).save((err, data) => {
-            this.video = data;
-            this.record = initRecord(this.camera, data);
-        });
+        this.video = time;
+        this.record = captureVideo(this.camera, time);
     }
     stopRecord() {
         this.record.stopRecording();
         this.record = null;
     }
+    uploadDrive() {
+        let filePath = this.filePath + this.video + ".mp4";
+        let fileName = this.video;
+        let folderId = this.camera.camera_drive;
+        if (fs.existsSync(filePath)) {
+            uploadFile(folderId, filePath, fileName, this.user);
+        }
+    }
+    uploadYoutube() {
+        let filePath = this.filePath + this.video + ".mp4";
+        let fileName = this.video;
+        if (fs.existsSync(filePath)) {
+            uploadVideo(filePath, fileName, this.user);
+        }
+    }
     detect() {
         const service = workerFarm(require.resolve(__dirname + '\\detect_face.modules.js'))
         service(this.camera, () => { })
-    }
-    backUp() {
-        this.startRecord();
-        setInterval(() => {
-            let filePath = this.filePath + this.video._id + ".mp4";
-            let fileName = new Date(this.video.video_time).toString();
-            let folderId = this.camera.camera_drive;
-
-            this.stopRecord();
-            saveDrive(filePath, fileName, folderId, this.camera.user);
-            saveYoutube(filePath, fileName, this.camera.user);
-            this.startRecord();
-        }, timeBackUp);
     }
 };
 
