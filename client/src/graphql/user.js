@@ -1,0 +1,82 @@
+import { gql } from '@apollo/client';
+
+export const getUsers = gql`
+    query{
+        users{
+            _id
+            user_name
+            user_pass
+            google_token
+            createdAt
+        }
+    }
+`
+export const getUser = gql`
+    query{
+        user{
+            _id
+            user_name
+            user_pass
+            user_role
+            google_token
+            createdAt
+            cameras{
+                _id
+                camera_name
+                camera_drive
+                camera_link
+                camera_location
+                camera_public
+                createdAt
+                reports{
+                    _id
+                    report_time
+                    report_description{
+                        age
+                        gender
+                    }
+                    createdAt
+                }
+                videos{
+                    _id
+                    video_time
+                    createdAt
+                    camera{
+                        _id
+                    }
+                }
+            }
+        }
+    }
+`
+export const signin = gql`
+    mutation($user_name:String!,$user_pass:String!){
+        signin(user_name:$user_name,user_pass:$user_pass){
+            _id
+            user_name
+            user_pass
+            user_role
+            google_token
+            createdAt
+        }
+    }
+`
+export const signup = gql`
+    mutation($user_name:String,$user_pass:String,$google_token:String){
+        signup(user_name:$user_name,user_pass:$user_pass,google_token:$google_token){
+            _id
+            user_name
+            user_pass
+            user_role
+            google_token
+            createdAt
+        }
+    }
+`
+export const logout = gql`
+    mutation($_id:ID){
+        logout(_id:$_id){
+            _id
+        }
+    }
+`

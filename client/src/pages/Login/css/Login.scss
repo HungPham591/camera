@@ -1,0 +1,92 @@
+#Login {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  font-family: "Poppins";
+  a {
+    color: #00aefd;
+  }
+  img {
+    width: 50%;
+    height: 100%;
+    background: url(login.svg);
+    border: 0;
+    background-color: #eef7fe;
+  }
+  .right-pane {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .login-form {
+    width: 90%;
+    height: 70%;
+    .header {
+      .title {
+        font-size: 3rem;
+        text-align: center;
+        font-weight: bold;
+      }
+      .subtitle {
+        text-align: center;
+        font-size: 1.3rem;
+        margin-bottom: 2.5rem;
+      }
+    }
+    .body {
+      .formGroup {
+        margin-bottom: 1rem;
+        input {
+          font-family: "Poppins", sans-serif;
+          justify-content: space-between;
+          color: black;
+          padding: 1rem;
+          border-radius: 10px;
+          outline: none;
+          font-size: 1.2rem;
+          font-weight: 500;
+          border: 1px solid #eee;
+          background-color: #eee;
+          transition: 0.25s linear;
+          width: 100%;
+        }
+      }
+      .btnLogin {
+        border-radius: 10px;
+        color: white;
+        padding: 1rem;
+        outline: none;
+        font-family: "Poppins", sans-serif;
+        font-size: 1.2rem;
+        text-align: center;
+        width: 100%;
+        background-color: #00aefd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        outline: none;
+        border: 0;
+      }
+    }
+  }
+  #btnGoogle {
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px;
+    color: white;
+    padding: 1rem;
+    outline: none;
+    font-family: "Poppins", sans-serif;
+    font-size: 1.2rem;
+    text-align: center;
+    width: 100%;
+    background-color: #00aefd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    border: 0;
+  }
+}

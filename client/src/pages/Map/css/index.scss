@@ -1,0 +1,90 @@
+#Map {
+  margin-top: 8vh;
+  width: 100vw;
+  height: 92vh;
+  display: flex;
+  .left-pane {
+    overflow-y: scroll;
+    width: 50%;
+    height: 100%;
+    padding: 3vh 2% 1vh 2%;
+  }
+  .right-pane {
+    width: 50%;
+  }
+  .custom-card {
+    padding: 1vh 0 1vh 0;
+    border-top: 1px solid rgb(235, 235, 235);
+    border-bottom: 1px solid rgb(235, 235, 235);
+    display: flex;
+    img {
+      border-radius: 10px;
+      width: 40%;
+      height: 30vh;
+      object-fit: contain;
+    }
+    button {
+      font-weight: 500;
+    }
+  }
+  .greenMarker {
+    background-color: #46e166;
+    width: 2rem;
+    height: 2rem;
+    display: block;
+    left: -1.5rem;
+    top: -1.5rem;
+    position: relative;
+    border-radius: 3rem 3rem 0;
+    transform: rotate(45deg);
+    border: 1px solid #ffffff;
+  }
+
+  .textMarker {
+    width: 2rem;
+    height: 2rem;
+    display: block;
+    left: -1rem;
+    top: -1rem;
+    position: relative;
+    font-weight: bold;
+  }
+  #mapContainer {
+    height: 100%;
+    width: 100%;
+  }
+  #map {
+    z-index: 0;
+  }
+  .title {
+    font-size: 32px;
+    line-height: 36px;
+    color: rgb(34, 34, 34);
+    font-weight: 600;
+    padding: 3vh 0 1vh 0;
+  }
+  .search {
+    display: flex;
+    justify-content: space-between;
+    input {
+      width: 80%;
+      height: 50px;
+      border: 0;
+      border: 1px solid rgba(31, 45, 61, 0.12);
+      border-radius: 10px;
+      padding-left: 2%;
+      margin-bottom: 5vh;
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0.5rem rgba(31, 45, 61, 0.12);
+      }
+    }
+    button {
+      height: 50px;
+      padding: 0 30px;
+      border-radius: 10px;
+      font-weight: 500;
+      border: 0;
+    }
+  }
+}

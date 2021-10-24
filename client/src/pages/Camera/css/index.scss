@@ -1,0 +1,108 @@
+#Camera {
+  margin-top: 8vh;
+  width: 100vw;
+  height: fit-content;
+  .title-1 {
+    margin-left: 1%;
+    font-weight: 500;
+    font-size: 1.6rem;
+    padding-top: 2vh;
+    margin-bottom: 0;
+  }
+  .custom-container {
+    width: 100%;
+    height: 80vh;
+    display: flex;
+    .left-pane {
+      padding: 1% 1%;
+      width: 70%;
+      height: 100%;
+      #videoWrapper {
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+      }
+    }
+    .right-pane {
+      overflow-y: scroll;
+      padding: 1% 1%;
+      width: 30%;
+      height: 100%;
+      .title {
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+      #download {
+        margin: 0 0 2vh 0;
+      }
+      .control-pane {
+        width: 100%;
+        height: 420px;
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #009578;
+        border-radius: 5px;
+        .title {
+          font-size: 22px;
+          font-weight: 500;
+        }
+        .button-group {
+          width: 100%;
+          height: 80%;
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          * {
+            display: block;
+            margin: auto;
+            cursor: pointer;
+            color: white;
+            border-radius: 50%;
+            background-color: #009578;
+            width: 50px;
+            height: 50px;
+            padding: 10px;
+          }
+        }
+      }
+    }
+  }
+  #list-video {
+    width: 100vw;
+    height: 30vh;
+    padding: 1% 1%;
+    display: flex;
+    overflow-x: scroll;
+    .custom-card {
+      border-radius: 10px;
+      display: flex;
+      height: 100%;
+      width: fit-content;
+      margin: 0 1vw 0 0;
+      border: 0;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      padding: 5px 10px;
+      video {
+        border-radius: 10px;
+      }
+      .body {
+        margin-left: 10px;
+        .title {
+          font-size: 1.5rem;
+          font-weight: 600;
+          white-space: nowrap;
+        }
+        button {
+          padding: 10px 15px;
+          font-weight: 500;
+          background-color: #13599f;
+          color: white;
+          border: 0;
+          border-radius: 10px;
+        }
+      }
+    }
+  }
+}
