@@ -9,11 +9,6 @@ export const getVideo = gql`
             camera{
                 _id
                 camera_name
-                reports{
-                    _id
-                    report_time
-                    createdAt
-                }
             }
         }
     }

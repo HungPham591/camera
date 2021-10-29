@@ -1,6 +1,6 @@
 import cameraLogo from "../css/camera.jpg";
 import { useHistory } from "react-router";
-import SettingModal from "./SettingModel";
+import SettingModal from "./CameraModal";
 import { useState } from "react";
 
 export default function ListCamera(props) {

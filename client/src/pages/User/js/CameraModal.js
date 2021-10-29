@@ -4,7 +4,7 @@ import { updateCamera, deleteCamera } from '../../../graphql/camera';
 import { getUser } from '../../../graphql/user';
 import { useForm } from 'react-hook-form';
 
-export default function SettingModel(props) {
+export default function CameraModal(props) {
     const [updateItem, updateMutation] = useMutation(updateCamera)
     const [deleteItem, deleteMutation] = useMutation(deleteCamera)
     const {

@@ -20,6 +20,10 @@ export const getUser = gql`
             user_role
             google_token
             createdAt
+            faces{
+                _id
+                face_name
+            }
             cameras{
                 _id
                 camera_name

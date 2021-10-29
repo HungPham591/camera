@@ -1,8 +1,5 @@
 const FaceModel = require("../models/face.model");
 
-exports.getFace = async (args) => {
-    return await FaceModel.findOne(args);
-}
 exports.getFaces = async (args) => {
     return await FaceModel.find(args);
 }

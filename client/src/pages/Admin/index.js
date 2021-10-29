@@ -6,6 +6,7 @@ import Report from './js/Report';
 import User from './js/User';
 import Video from './js/Video';
 import Dashboard from './js/Dashboard';
+import Blog from './js/Blog';
 import { useHistory } from "react-router-dom";
 
 export default function Admin() {
@@ -22,7 +23,8 @@ export default function Admin() {
             1: <Camera />,
             2: <User />,
             3: <Report />,
-            4: <Video />
+            4: <Video />,
+            5: <Blog />
         }
         return listDashboard[selected];
     }

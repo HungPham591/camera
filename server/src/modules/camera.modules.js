@@ -26,7 +26,7 @@ const streaming = (url, id) => {
 const captureVideo = (url, fileName) => {
     let rec = new Recorder({
         url: url,
-        folder: resolve('../camera-service/src/public/data/'),
+        folder: resolve('../server/src/public/data/'),
         fileName: fileName,
     });
     rec.startRecording();
@@ -83,7 +83,7 @@ const Camera = class {
             this.uploadDrive();
             this.uploadYoutube();
             this.startRecord();
-        }, 30 * 1000);
+        }, 60 * 1000);
     }
 };
 

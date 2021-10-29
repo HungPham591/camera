@@ -11,13 +11,17 @@ const resolvers = {
         videos: async (parent, args, { channel }) => JSON.parse(await sendRPCMessage(channel, args, 'GET_VIDEOS')),
         report: async (parent, args, { channel }) => JSON.parse(await sendRPCMessage(channel, args, 'GET_REPORT')),
         reports: async (parent, args, { channel }) => JSON.parse(await sendRPCMessage(channel, args, 'GET_REPORTS')),
+        faces: async (parent, args, { channel }) => JSON.parse(await sendRPCMessage(channel, args, 'GET_FACES')),
+        blog: async (parent, args, { channel }) => JSON.parse(await sendRPCMessage(channel, args, 'GET_BLOG')),
+        blogs: async (parent, args, { channel }) => JSON.parse(await sendRPCMessage(channel, args, 'GET_BLOGS')),
     },
     Camera: {
         videos: async (parent, args, { channel }) => JSON.parse(await sendRPCMessage(channel, { camera: parent._id }, 'GET_VIDEOS')),
         reports: async (parent, args, { channel }) => JSON.parse(await sendRPCMessage(channel, { camera: parent._id }, 'GET_REPORTS')),
     },
     User: {
-        cameras: async (parent, args, { channel }) => JSON.parse(await sendRPCMessage(channel, { user: parent._id }, 'GET_CAMERAS'))
+        cameras: async (parent, args, { channel }) => JSON.parse(await sendRPCMessage(channel, { user: parent._id }, 'GET_CAMERAS')),
+        faces: async (parent, args, { channel }) => JSON.parse(await sendRPCMessage(channel, { user: parent._id }, 'GET_FACES'))
     },
     Video: {
         camera: async (parent, args, { channel }) => JSON.parse(await sendRPCMessage(channel, { _id: parent.camera }, 'GET_CAMERA'))
@@ -29,6 +33,11 @@ const resolvers = {
         createCamera: async (parent, args, { channel, req }) => JSON.parse(await sendRPCMessage(channel, { ...args, user: req?.user }, 'CREATE_CAMERA')),
         updateCamera: async (parent, args, { channel, req }) => JSON.parse(await sendRPCMessage(channel, { ...args, user: req?.user }, 'UPDATE_CAMERA')),
         deleteCamera: async (parent, args, { channel, req }) => JSON.parse(await sendRPCMessage(channel, { ...args, user: req?.user }, 'DELETE_CAMERA')),
+        createFace: async (parent, args, { channel, req }) => JSON.parse(await sendRPCMessage(channel, { ...args, user: req?.user }, 'CREATE_FACE')),
+        deleteFace: async (parent, args, { channel, req }) => JSON.parse(await sendRPCMessage(channel, { ...args, user: req?.user }, 'DELETE_FACE')),
+        createBlog: async (parent, args, { channel, req }) => JSON.parse(await sendRPCMessage(channel, args, 'CREATE_BLOG')),
+        updateBlog: async (parent, args, { channel, req }) => JSON.parse(await sendRPCMessage(channel, args, 'UPDATE_BLOG')),
+        deleteBlog: async (parent, args, { channel, req }) => JSON.parse(await sendRPCMessage(channel, args, 'DELETE_BLOG')),
         signin: async (parent, args, { channel, res }) => {
             const user = JSON.parse(await sendRPCMessage(channel, args, 'SIGNIN'))
             if (!user) return user;

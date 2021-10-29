@@ -11,8 +11,8 @@ export const getReport = gql`
     }
 `
 export const getReports = gql`
-    query{
-        reports{
+    query($start:Float,$end:Float,$camera:String){
+        reports(start:$start,end:$end,camera:$camera){
             _id
             report_time
             report_description{

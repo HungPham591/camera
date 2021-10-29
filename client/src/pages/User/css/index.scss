@@ -118,6 +118,10 @@
         background-color: white;
       }
     }
+    input[type="file"] {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
     input[type="checkbox"] {
       padding: 0%;
       width: fit-content;
@@ -125,7 +129,6 @@
     .footer {
       padding: 5% 0 0 0;
       display: flex;
-      justify-content: space-around;
     }
     button {
       border: 0;
@@ -135,6 +138,7 @@
       background-color: #00aefd;
       color: white;
       font-weight: 500;
+      margin-left: 20px;
     }
   }
   .modal-hide {

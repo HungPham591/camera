@@ -11,7 +11,6 @@ exports.createBlog = async (args) => {
     return await face.save();
 }
 exports.updateBlog = async (args) => {
-
 }
 exports.deleteBlog = async (args) => {
     return await BlogModel.findByIdAndDelete(args);

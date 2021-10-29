@@ -1,12 +1,18 @@
 const fs = require("fs");
+const path = require('path');
 
 exports.uploadImg = async (req, res) => {
-    let id = req.body._id;
-    let fileImage = req.files.img;
-    let dir = "../BE/src/public/detect/" + id + "/";
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+    try {
+        let fileImage = req.files.img;
+        let fileName = `${req.body.file_name}.jpg`;
+        let dir = path.join(__dirname, '..', `public/face/${req.user}/`);
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 
-    fileImage.mv(dir + fileImage.name, (err) => console.log(err));
+        fileImage.mv(path.join(dir, fileName), (err) => console.log(err));
+    } catch (err) {
+        console.log(err);
+        res.status(400).send(err);
+    }
 }
 exports.streamVideo = async (req, res) => {
     let param = req.params.id;
@@ -15,7 +21,7 @@ exports.streamVideo = async (req, res) => {
         res.status(400).send("Requires Range header");
     }
 
-    const videoPath = `${__dirname}/../public/data/${param}.mp4`;
+    const videoPath = path.join(__dirname, '..', `public/data/${param}.mp4`);
     const videoSize = fs.statSync(videoPath).size;
 
     const CHUNK_SIZE = 10 ** 6; // 1MB

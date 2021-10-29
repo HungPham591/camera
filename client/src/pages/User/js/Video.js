@@ -22,7 +22,6 @@ export default function ListCamera(props) {
                 {
                     props.data.map((value, index) => {
                         const video_path = `${process.env.REACT_APP_DOMAIN}\\video\\${value?.camera?._id}_${value?.video_time}`;
-                        console.log(video_path)
                         return (
                             <div key={index} className='custom-card'>
                                 <video src={video_path} />

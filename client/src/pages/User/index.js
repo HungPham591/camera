@@ -3,6 +3,7 @@ import Camera from "./js/Camera";
 import Analytics from './js/Analytics';
 import Video from './js/Video';
 import UserInfo from './js/User';
+import ListFace from "./js/Face";
 import "./css/index.scss";
 import { IoIosArrowForward } from 'react-icons/io';
 import { useQuery, useMutation } from '@apollo/client'
@@ -37,10 +38,11 @@ export default function User(props) {
             1: <Video data={videos} />,
             2: <Analytics />,
             3: <UserInfo data={data?.user} />,
+            4: <ListFace data={data?.user?.faces} />
         }
         return listDashboard[selectedMenu];
     }
-    const listMenu = ['Danh sách camera', 'Danh sách video', 'Thống kê', 'Thông tin tài khoản', 'Camera được chia sẻ', 'Cài đặt', 'Trợ giúp', 'Đăng xuất']
+    const listMenu = ['Danh sách camera', 'Danh sách video', 'Thống kê', 'Thông tin tài khoản', 'Chia sẻ', 'Cài đặt', 'Trợ giúp', 'Đăng xuất']
     return (
         <div id="User">
             <div className='left-pane'>

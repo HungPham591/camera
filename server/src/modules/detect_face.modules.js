@@ -40,7 +40,7 @@ const loadEnvironment = async () => {
 const loadImage = async () => {
     //khoi tao danh sach nguoi quen
 
-    const dirPath = resolve(`../camera-service/src/public/face/${camera._id}`);
+    const dirPath = resolve(`../server/src/public/face/${camera.user}`);
     let listFile = fs.readdirSync(dirPath)
 
     listFile = listFile.map((value, index) => {

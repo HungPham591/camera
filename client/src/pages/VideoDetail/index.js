@@ -3,8 +3,9 @@ import Dropzone from 'react-dropzone'
 import { useParams } from "react-router-dom";
 import "./css/index.scss";
 import * as faceapi from "face-api.js";
-import { useQuery } from '@apollo/client'
-import { getVideo } from '../../graphql/video'
+import { useQuery, useLazyQuery } from '@apollo/client';
+import { getVideo } from '../../graphql/video';
+import { getReports } from '../../graphql/report'
 
 export default function Video(props) {
     const { id } = useParams();
@@ -13,28 +14,40 @@ export default function Video(props) {
     const [environment, setEnvironment] = useState(false);
     const [file, setFile] = useState(null);
 
-    const { loading, error, data } = useQuery(getVideo, {
+    const [start, setStart] = useState(null)
+    const [end, setEnd] = useState(null);
+
+    const onCompleted = ({ video }) => {
+        setStart(new Date(video?.createdAt).getTime());
+    }
+    const { data: videos } = useQuery(getVideo, {
         variables: {
             _id: id,
         },
-        skip: id === null
+        skip: id === null,
+        onCompleted
     });
+    const [fetchReports, { data: reports }] = useLazyQuery(getReports);
 
-    const video_path = `${process.env.REACT_APP_DOMAIN}\\video\\${data?.video?.camera?._id}_${data?.video?.video_time}`;
-    console.log(video_path)
+    const video_path = `${process.env.REACT_APP_DOMAIN}\\video\\${videos?.video?.camera?._id}_${videos?.video?.video_time}`;
 
-    const start = data?.video?.createdAt;
-    let end = start + 60 * 1000;
     Date.prototype.formatMMDDYYYY = function () {
         return this.getDate() +
             "/" + (this.getMonth() + 1) +
             "/" + this.getFullYear();
     }
-
+    Date.prototype.formatmmhh = function () {
+        return `${this.getHours()}:${this.getMinutes()}`
+    }
     useEffect(() => {
         loadModels();
-        checkLoadComplete();
-    })
+    }, [])
+    useEffect(() => {
+        if (end) fetchReports({ variables: { start, end } });
+    }, [end])
+    useEffect(() => {
+        if (start) checkLoadComplete();
+    }, [start])
 
     const handleOnDrop = (file) => {
         const reader = new FileReader();
@@ -49,6 +62,7 @@ export default function Video(props) {
         video.addEventListener('loadeddata', async () => {
             const videoTime = Math.round(video.duration);
             setTimeVideo(videoTime);
+            setEnd(new Date(start).getTime() + videoTime * 1000);
         })
     }
 
@@ -80,24 +94,28 @@ export default function Video(props) {
         let video = videoRef.current;
         const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions).withFaceLandmarks().withFaceExpressions();
     }
+    const handleButtonSeek = (time) => {
+        const video = videoRef.current;
+        video.currentTime = time;
+    }
     const progressbar = () => {
-        if (!data?.video?.createdAt) return;
+        if (!videos?.video?.createdAt || !reports) return;
         return (
             <ul className="progressbar">
                 <li style={{ left: 0 }}></li>
                 <p style={{ left: 0 }}>{new Date(start).formatMMDDYYYY()}</p>
                 {
-                    data?.video?.camera?.reports?.map((value, index) => {
-                        if (value.createdAt < start || value.createdAt > end) return;
-                        let time = value.createdAt;
-                        const point = (time - start) / (end - start);
-                        const day = new Date(time).formatMMDDYYYY();
+                    reports?.reports?.map((value, index) => {
+                        if (new Date(value.createdAt).getTime() < start || new Date(value.createdAt).getTime() > end) return;
+                        let time = new Date(value.createdAt).getTime();
+                        const point = (time - start) * 100 / (end - start);
+                        const day = new Date(time).formatmmhh();
                         time = new Date(time);
                         return (
-                            <>
-                                <li key={index} style={{ left: `${point}%` }}></li>
-                                <p>{day}</p>
-                            </>
+                            <div key={index}>
+                                <li style={{ left: `${point}%` }} onClick={() => handleButtonSeek(point / 100)}></li>
+                                <p style={{ left: `${point}%` }}>{day}</p>
+                            </div>
                         )
                     })
                 }
@@ -113,11 +131,11 @@ export default function Video(props) {
             <p className='title-1'>Xem lại</p>
             <div className='custom-container'>
                 <div className="left-pane">
-                    <video ref={videoRef} src={video_path} crossOrigin="anonymous" id='video' controls />
+                    {videos ? <video ref={videoRef} src={video_path} crossOrigin="anonymous" id='video' controls /> : ''}
                     {progressbar()}
                 </div>
                 <div className="right-pane">
-                    <p className='title'>Video camera {data?.video?.camera?.camera_name}</p>
+                    <p className='title'>Video camera {videos?.video?.camera?.camera_name}</p>
                     <p>Tạo vào ngày {new Date(start).formatMMDDYYYY()}</p>
                     <Dropzone multiple={true} onDrop={handleOnDrop}>
                         {({ getRootProps, getInputProps }) => (
