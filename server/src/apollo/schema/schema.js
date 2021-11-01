@@ -51,6 +51,7 @@ const typeDefs = gql`
         _id:ID
         blog_title:String
         blog_content:String
+        updatedAt:String
     }
     type Query{
         camera(_id:ID):Camera

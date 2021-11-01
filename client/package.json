@@ -4,17 +4,18 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.4.12",
+    "@ckeditor/ckeditor5-build-classic": "^31.0.0",
+    "@ckeditor/ckeditor5-react": "^3.0.3",
     "@cycjimmy/jsmpeg-player": "^5.0.1",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "chart.js": "^3.5.1",
-    "draft-js": "^0.11.7",
     "face-api.js": "^0.22.2",
     "graphql": "^15.5.3",
+    "html-react-parser": "^1.4.0",
     "leaflet": "^1.7.1",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
     "node-sass": "4.14.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.5.2",
@@ -31,7 +32,8 @@
     "react-top-loading-bar": "^2.0.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "web-vitals": "^1.0.1"
+    "socket.io-client": "^4.3.2",
+    "vietnamese-slug": "^1.1.4"
   },
   "scripts": {
     "start": "react-scripts start",

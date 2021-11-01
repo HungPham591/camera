@@ -1,8 +1,32 @@
 import React from 'react';
 import "./css/index.scss";
+import { getBlogs } from '../../graphql/blog';
+import { useQuery } from '@apollo/client';
+import { useHistory } from "react-router-dom";
+import HtmlParser, { attributesToProps } from 'html-react-parser';
+import slug from 'vietnamese-slug';
 
 export default function Blog(props) {
-    const tags = ['CAMERA', 'RECORDING', 'ENVIRONMENT', 'API', 'MOBILE']
+    const history = useHistory();
+
+    const { loading, error, data } = useQuery(getBlogs);
+    const tags = ['CAMERA', 'RECORDING', 'ENVIRONMENT', 'API', 'MOBILE'];
+    const HtmlParserOptions = {
+        replace: domNode => {
+            if (domNode.attribs && domNode.name !== 'p') {
+                const props = attributesToProps(domNode.attribs);
+                return <span>{domNode.children[0].data}</span>;
+            }
+        }
+    };
+
+    const handleWatchMoreButton = (item) => {
+        history.push({
+            pathname: '/BlogDetail',
+            search: slug(item.blog_title),
+            state: item
+        })
+    }
     return (
         <div id='Blog'>
             <div className='left-pane'>
@@ -25,26 +49,17 @@ export default function Blog(props) {
             </div>
             <div className='right-pane'>
                 <p className='title'>Hướng dẫn</p>
-                <div className='custom-card'>
-                    <p className='title'>Hướng dẫn chuyển đổi chế độ xem liveview sang WebRTC khi Flash Player ngừng hỗ trợ trên trình duyệt web</p>
-                    <p className='content'>Sau ngày 31/12/2020, Adobe Flash Player sẽ ngừng hỗ trợ trên tất cả các trình duyệt. Để đảm bảo việc xem trực tiếp camera trên trình duyệt web vẫn diễn ra bình thường, vCloudcam khuyến khích người dùng thực hiện các thiết lập sau:</p>
-                    <button>Xem thêm</button>
-                </div>
-                <div className='custom-card'>
-                    <p className='title'>Hướng dẫn chuyển đổi chế độ xem liveview sang WebRTC khi Flash Player ngừng hỗ trợ trên trình duyệt web</p>
-                    <p className='content'>Sau ngày 31/12/2020, Adobe Flash Player sẽ ngừng hỗ trợ trên tất cả các trình duyệt. Để đảm bảo việc xem trực tiếp camera trên trình duyệt web vẫn diễn ra bình thường, vCloudcam khuyến khích người dùng thực hiện các thiết lập sau:</p>
-                    <button>Xem thêm</button>
-                </div>
-                <div className='custom-card'>
-                    <p className='title'>Hướng dẫn chuyển đổi chế độ xem liveview sang WebRTC khi Flash Player ngừng hỗ trợ trên trình duyệt web</p>
-                    <p className='content'>Sau ngày 31/12/2020, Adobe Flash Player sẽ ngừng hỗ trợ trên tất cả các trình duyệt. Để đảm bảo việc xem trực tiếp camera trên trình duyệt web vẫn diễn ra bình thường, vCloudcam khuyến khích người dùng thực hiện các thiết lập sau:</p>
-                    <button>Xem thêm</button>
-                </div>
-                <div className='custom-card'>
-                    <p className='title'>Hướng dẫn chuyển đổi chế độ xem liveview sang WebRTC khi Flash Player ngừng hỗ trợ trên trình duyệt web</p>
-                    <p className='content'>Sau ngày 31/12/2020, Adobe Flash Player sẽ ngừng hỗ trợ trên tất cả các trình duyệt. Để đảm bảo việc xem trực tiếp camera trên trình duyệt web vẫn diễn ra bình thường, vCloudcam khuyến khích người dùng thực hiện các thiết lập sau:</p>
-                    <button>Xem thêm</button>
-                </div>
+                {
+                    data?.blogs?.map((value, index) => {
+                        return (
+                            <div key={index} className='custom-card'>
+                                <p className='title'>{value.blog_title}</p>
+                                <p className='content'>{HtmlParser(value.blog_content, HtmlParserOptions)}<div className='gradient'></div></p>
+                                <button onClick={() => handleWatchMoreButton(value)}>Xem thêm</button>
+                            </div>
+                        )
+                    })
+                }
             </div>
         </div>
     );

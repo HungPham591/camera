@@ -2,12 +2,14 @@ import cameraLogo from "../css/camera.jpg";
 import { useHistory } from "react-router";
 import ShareModal from './ShareModal';
 import { useState } from "react";
-import { useMutation } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { deleteFace } from '../../../graphql/face';
 import { getUser } from '../../../graphql/user';
 
 export default function ListFace(props) {
     let history = useHistory();
+
+    const { loading, error, data } = useQuery(getUser);
 
     const [deleteItem, updateMutation] = useMutation(deleteFace)
 
@@ -42,9 +44,10 @@ export default function ListFace(props) {
             <div className='grid'>
                 {
                     props.data.map((value, index) => {
+                        const imgPath = `${process.env.REACT_APP_DOMAIN}\\face\\${data?.user?._id}\\${value?._id}.jpg`
                         return (
                             <div key={index} className='custom-card'>
-                                <img src={cameraLogo} />
+                                <img src={imgPath} />
                                 <p className='title'>{value.face_name}</p>
                                 <div className='group-button'>
                                     <button

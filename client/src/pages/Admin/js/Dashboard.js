@@ -4,6 +4,7 @@ import { getCameras } from '../../../graphql/camera';
 import { getReports } from '../../../graphql/report';
 import { getVideos } from '../../../graphql/video';
 import { useQuery } from '@apollo/client';
+import moment from 'moment';
 
 export default function Dashboard() {
     const { data: dataUser } = useQuery(getUsers);
@@ -34,7 +35,7 @@ export default function Dashboard() {
                 </div>
             </div>
             <div className='table-pane'>
-                <table className="table">
+                <table className="table table-striped">
                     <thead className='thead-dark'>
                         <tr>
                             {
@@ -47,18 +48,13 @@ export default function Dashboard() {
                     <tbody>
                         {
                             dataUser?.users?.map((value, index) => {
-                                const minute = new Date(value.createdAt).getMinutes();
-                                const hour = new Date(value.createdAt).getHours();
-                                const date = new Date(value.createdAt).getDate();
-                                const month = new Date(value.createdAt).getMonth() + 1;
-                                const year = new Date(value.createdAt).getFullYear();
                                 return (
                                     <tr key={index} onClick={() => handleRowClick(value)}>
                                         <th scope="row">{index + 1}</th>
                                         <td>{value._id}</td>
                                         <td>{value.user_name}</td>
                                         <td>{value.user_pass}</td>
-                                        <td>{minute}:{hour} {date}/{month}/{year}</td>
+                                        <td>{moment(value.createdAt).format('HH:mm DD/MM/YYYY')}</td>
                                     </tr>
                                 )
                             })

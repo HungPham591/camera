@@ -1,13 +1,18 @@
 import L from "leaflet";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
-import { useQuery } from '@apollo/client'
-import { getCameras } from '../../../graphql/camera'
+import { useQuery } from '@apollo/client';
+import { getCameras } from '../../../graphql/camera';
+import JSMpeg from "@cycjimmy/jsmpeg-player";
 
 function Map(props) {
     const { loading, error, data } = useQuery(getCameras);
+
+    let video;
+
+    const canvasRef = useRef(null);
 
     let history = useHistory();
     let mapObject;
@@ -21,13 +26,12 @@ function Map(props) {
         });
     };
     useEffect(() => {
+        return () => video?.destroy();
+    })
+    useEffect(() => {
         initMap();
         loadMarker();
     }, [data]);
-
-    const openStream = (e) => {
-        history.push("/Camera/" + e.sourceTarget.feature.properties._id);
-    };
 
     const initMap = () => {
         document.getElementById("mapContainer").innerHTML =
@@ -49,6 +53,22 @@ function Map(props) {
                 'www.openstreetmap.org/copyright">OpenStreetMap</a>',
         }).addTo(mapObject);
     };
+    const showPopup = (e) => {
+        const id = e.sourceTarget.feature.properties._id;
+        const canvas = document.getElementById("videoPopup");
+        let port = 0;
+        for (let i = 0; i < id.length; i++) {
+            port += id.charCodeAt(i)
+        }
+        console.log(canvas)
+        video = new JSMpeg.VideoElement(
+            "#videoPopup",
+            "ws://localhost:" + (9999 + port),
+            { canvas: canvas },
+            { preserveDrawingBuffer: true }
+        );
+    };
+    const popup = () => `<canvas id='videoPopup' />`
     const loadMarker = () => {
         if (!mapObject || !data?.cameras) return;
         data.cameras.forEach((value) => {
@@ -65,7 +85,8 @@ function Map(props) {
                 },
                 geometry: undefined,
             };
-            marker.addTo(mapObject).on("click", openStream);
+            marker.addTo(mapObject).bindPopup(popup).on("click", showPopup);
+            // marker.addTo(mapObject).on("click", openStream);
         });
     };
 

@@ -41,7 +41,7 @@ const resolvers = {
         signin: async (parent, args, { channel, res }) => {
             const user = JSON.parse(await sendRPCMessage(channel, args, 'SIGNIN'))
             if (!user) return user;
-            const payload = { _id: user._id }
+            const payload = { _id: user._id, user_role: false }
             const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
             //httpOnly la khong cho js lay cookie
             res.cookie('access_token', accessToken, {

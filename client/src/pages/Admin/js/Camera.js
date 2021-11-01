@@ -19,7 +19,7 @@ export default function Camera(props) {
                         return (
                             <div key={index}>
                                 <p className='label'>{value}</p>
-                                <input type='text' value={Object.values(selected)[index - 1]} />
+                                <input type='text' value={Object.values(selected)[index - 1] || ''} readOnly />
                             </div>
                         )
                     })
@@ -43,7 +43,7 @@ export default function Camera(props) {
             <input className='search-input' placeholder='Type in to Search...' />
             <p className='title'>CAMERA</p>
             <div className='table-pane'>
-                <table className="table">
+                <table className="table table-striped">
                     <thead className='thead-dark'>
                         <tr>
                             {

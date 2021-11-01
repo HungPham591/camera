@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { signup } from '../../graphql/user';
 import { useMutation } from '@apollo/client';
 import LoadingBar from 'react-top-loading-bar';
+import axios from 'axios';
 
 
 export default function SignUp(props) {
@@ -19,6 +20,21 @@ export default function SignUp(props) {
     const onError = () => {
         alert('Signup fail!!!');
         setProgress(100);
+    }
+    const generateRefreshToken = async (CODE) => {
+        let CLIENT_ID;
+        let CLIENT_SECRET;
+        let TOKEN_URL;
+        const payload = {
+            code: CODE,
+            client_id: CLIENT_ID,
+            client_secret: CLIENT_SECRET,
+            redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+            grant_type: 'authorization_code'
+        };
+        const response = await axios.post(TOKEN_URL, { data: payload });
+        const data = JSON.parse(response.getContentText());
+        return data.refresh_token;
     }
 
     const [signupAction] = useMutation(signup, { onCompleted, onError });

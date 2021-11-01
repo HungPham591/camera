@@ -6,6 +6,7 @@ export const getBlog = gql`
             _id
             blog_title
             blog_content
+            updatedAt
         }
     }
 `
@@ -15,6 +16,7 @@ export const getBlogs = gql`
             _id
             blog_title
             blog_content
+            updatedAt
         }
     }
 `

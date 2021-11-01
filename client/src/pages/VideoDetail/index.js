@@ -6,10 +6,14 @@ import * as faceapi from "face-api.js";
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { getVideo } from '../../graphql/video';
 import { getReports } from '../../graphql/report'
+import moment from 'moment';
 
 export default function Video(props) {
+    const isMounted = useRef(true);
+
     const { id } = useParams();
     const videoRef = useRef(null);
+    const canvasRef = useRef(null);
     const [timeVideo, setTimeVideo] = useState(false);
     const [environment, setEnvironment] = useState(false);
     const [file, setFile] = useState(null);
@@ -31,16 +35,9 @@ export default function Video(props) {
 
     const video_path = `${process.env.REACT_APP_DOMAIN}\\video\\${videos?.video?.camera?._id}_${videos?.video?.video_time}`;
 
-    Date.prototype.formatMMDDYYYY = function () {
-        return this.getDate() +
-            "/" + (this.getMonth() + 1) +
-            "/" + this.getFullYear();
-    }
-    Date.prototype.formatmmhh = function () {
-        return `${this.getHours()}:${this.getMinutes()}`
-    }
     useEffect(() => {
-        loadModels();
+        loadModels()
+        return () => { isMounted.current = false; };
     }, [])
     useEffect(() => {
         if (end) fetchReports({ variables: { start, end } });
@@ -68,13 +65,35 @@ export default function Video(props) {
 
     const loadModels = async () => {
         const path = '/models';
-        await Promise.all([
-            faceapi.nets.tinyFaceDetector.loadFromUri(path),
-            faceapi.nets.faceLandmark68Net.loadFromUri(path),
-            faceapi.nets.faceRecognitionNet.loadFromUri(path),
-            faceapi.nets.faceExpressionNet.loadFromUri(path)
-        ])
+        if (!faceapi.nets.tinyFaceDetector.isLoaded || !faceapi.nets.faceLandmark68Net.isLoaded || !faceapi.nets.faceRecognitionNet.isLoaded || !faceapi.nets.faceExpressionNet.isLoaded)
+            await Promise.all([
+                faceapi.nets.tinyFaceDetector.loadFromUri(path),
+                faceapi.nets.faceLandmark68Net.loadFromUri(path),
+                faceapi.nets.faceRecognitionNet.loadFromUri(path),
+                faceapi.nets.faceExpressionNet.loadFromUri(path)
+            ])
         setEnvironment(true);
+    }
+    const handleVideoOnPlay = () => {
+        // let interval = setInterval(() => {
+        //     if (videoRef.current?.paused || !isMounted.current) return clearInterval(interval);
+        //     faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions)
+        //         .withFaceLandmarks()
+        //         .then(data => {
+        //             if (!data) return;
+        //             drawDetections(data);
+        //         });
+        // }, 500);
+    }
+    const drawDetections = (data) => {
+        if (!isMounted.current || !data || !canvasRef.current?.getContext('2d')) return;
+        const displaySize = {
+            width: videoRef.current.videoWidth,
+            height: videoRef.current.videoHeight,
+        }
+        faceapi.matchDimensions(canvasRef.current, displaySize)
+        const resizedDetections = faceapi.resizeResults(data, displaySize);
+        canvasRef.current.getContext('2d').clearRect(0, 0, displaySize.width, displaySize.height);
     }
     const detectFaceFromVideo = async () => {
         const video = videoRef.current;
@@ -93,6 +112,7 @@ export default function Video(props) {
     const detectFace = async () => {
         let video = videoRef.current;
         const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions).withFaceLandmarks().withFaceExpressions();
+        drawDetections(detections);
     }
     const handleButtonSeek = (time) => {
         const video = videoRef.current;
@@ -103,24 +123,22 @@ export default function Video(props) {
         return (
             <ul className="progressbar">
                 <li style={{ left: 0 }}></li>
-                <p style={{ left: 0 }}>{new Date(start).formatMMDDYYYY()}</p>
+                <p style={{ left: 0 }}>{moment(start).format('DD/MM/YYYY')}</p>
                 {
                     reports?.reports?.map((value, index) => {
                         if (new Date(value.createdAt).getTime() < start || new Date(value.createdAt).getTime() > end) return;
                         let time = new Date(value.createdAt).getTime();
                         const point = (time - start) * 100 / (end - start);
-                        const day = new Date(time).formatmmhh();
-                        time = new Date(time);
                         return (
                             <div key={index}>
                                 <li style={{ left: `${point}%` }} onClick={() => handleButtonSeek(point / 100)}></li>
-                                <p style={{ left: `${point}%` }}>{day}</p>
+                                <p style={{ left: `${point}%` }}>{moment(value.createdAt).format('HH:mm')}</p>
                             </div>
                         )
                     })
                 }
                 <li style={{ right: 0 }}></li>
-                <p style={{ right: 0 }}>{new Date(end).formatMMDDYYYY()}</p>
+                <p style={{ right: 0 }}>{moment(end).format('DD/MM/YYYY')}</p>
             </ul >
         )
     }
@@ -131,12 +149,15 @@ export default function Video(props) {
             <p className='title-1'>Xem lại</p>
             <div className='custom-container'>
                 <div className="left-pane">
-                    {videos ? <video ref={videoRef} src={video_path} crossOrigin="anonymous" id='video' controls /> : ''}
+                    <div>
+                        {videos ? <video ref={videoRef} src={video_path} crossOrigin="anonymous" id='video' controls onPlay={handleVideoOnPlay} /> : ''}
+                        <canvas ref={canvasRef} className='position-absolute' />
+                    </div>
                     {progressbar()}
                 </div>
                 <div className="right-pane">
                     <p className='title'>Video camera {videos?.video?.camera?.camera_name}</p>
-                    <p>Tạo vào ngày {new Date(start).formatMMDDYYYY()}</p>
+                    <p>{moment(start).format('DD/MM/YYYY HH:mm')}</p>
                     <Dropzone multiple={true} onDrop={handleOnDrop}>
                         {({ getRootProps, getInputProps }) => (
                             <section className='dropzone'>

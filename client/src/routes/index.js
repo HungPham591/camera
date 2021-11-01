@@ -1,6 +1,6 @@
 import React from "react";
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 
 import { Suspense } from "react";
 
@@ -16,8 +16,10 @@ const Camera = React.lazy(() => import("../pages/Camera"));
 const Home = React.lazy(() => import("../pages/Home"));
 const Map = React.lazy(() => import("../pages/Map"));
 const Blog = React.lazy(() => import("../pages/Blog"));
+const BlogDetail = React.lazy(() => import("../pages/BlogDetail"));
 const VideoDetail = React.lazy(() => import("../pages/VideoDetail"));
 const User = React.lazy(() => import("../pages/User"));
+const PageNotFound = React.lazy(() => import("../pages/NotFound"));
 const Admin = React.lazy(() => import('../pages/Admin'));
 
 export default function MainNavigation(props) {
@@ -43,6 +45,7 @@ export default function MainNavigation(props) {
             <Route path="/Map" component={Map} />
             <Route path="/Camera/:id" component={Camera} />
             <Route path="/Blog" component={Blog} />
+            <Route path='/BlogDetail' component={BlogDetail} />
             <Route path="/Video/:id" component={VideoDetail} />
             <PrivateRoute path="/User">
                 <User />
@@ -58,7 +61,8 @@ export default function MainNavigation(props) {
                     <AdminRoute path="/Admin">
                         <AdminContainer />
                     </AdminRoute>
-                    <Route component={DefaultContainer} />
+                    <Route path='/' component={DefaultContainer} />
+                    <Route path='*' component={PageNotFound} />
                 </Switch>
             </Suspense>
         </Router>

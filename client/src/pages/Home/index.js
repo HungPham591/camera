@@ -15,6 +15,7 @@ import digitalocean from './css/digital-ocean.png';
 import googlecloud from './css/google-cloud.png'
 
 export default function Home(props) {
+
     return (
         <div id="Home">
             <div id='panel' className='panel'>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import JSMpeg from "@cycjimmy/jsmpeg-player";
 import { useParams } from "react-router-dom";
 import "./css/index.scss";
@@ -7,9 +7,16 @@ import { AiOutlineArrowDown, AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineA
 import { BsArrowDownLeft, BsArrowDownRight, BsArrowUpLeft, BsArrowUpRight, BsArrowCounterclockwise } from 'react-icons/bs'
 
 import { getCamera } from '../../graphql/camera';
-import { useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client';
+
+import * as faceapi from "face-api.js";
 
 export default function CameraStream(props) {
+    const videoRef = useRef(null);
+    const canvasRef = useRef(null);
+
+    const isMounted = useRef(true);
+
     let { id } = useParams();
     let video;
     let port = 0;
@@ -25,16 +32,50 @@ export default function CameraStream(props) {
         skip: id === null
     })
 
+    const loadModels = async () => {
+        const path = '/models';
+        if (!faceapi.nets.tinyFaceDetector.isLoaded || !faceapi.nets.faceLandmark68Net.isLoaded)
+            await Promise.all([
+                faceapi.nets.tinyFaceDetector.loadFromUri(path),
+                faceapi.nets.faceLandmark68Net.loadFromUri(path),
+            ])
+        detectAllFaces();
+    }
+
+    const detectAllFaces = () => {
+        const displaySize = {
+            width: videoRef.current.width,
+            height: videoRef.current.height,
+        }
+        faceapi.matchDimensions(canvasRef.current, displaySize);
+        let interval = setInterval(() => {
+            if (!isMounted.current) return clearInterval(interval);
+            const data = videoRef.current?.toDataURL('image/jpeg', 1.0);
+            const img = new Image();
+            img.src = data;
+            faceapi.detectAllFaces(img, new faceapi.TinyFaceDetectorOptions)
+                .withFaceLandmarks()
+                .then(data => {
+                    if (!data || !isMounted.current) return;
+                    const resizedDetections = faceapi.resizeResults(data, displaySize);
+                    canvasRef.current?.getContext('2d')?.clearRect(0, 0, displaySize.width, displaySize.height);
+                    faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
+                });
+        }, 500);
+    }
+
     useEffect(() => {
+        loadModels();
         canvas = document.getElementById("videoWrapper");
         video = new JSMpeg.VideoElement(
             "#videoWrapper",
             "ws://localhost:" + (9999 + port),
-            { canvas: canvas },
+            { canvas: videoRef.current },
             { preserveDrawingBuffer: true }
         );
         return () => {
             video.destroy();
+            isMounted.current = false;
         }
     }, []);
 
@@ -47,9 +88,8 @@ export default function CameraStream(props) {
             <p className='title-1'>Xem trực tiếp</p>
             <div className='custom-container'>
                 <div className="left-pane">
-                    <canvas
-                        id="videoWrapper"
-                    />
+                    <canvas id="videoWrapper" ref={videoRef} />
+                    <canvas ref={canvasRef} className='result-canvas' />
                 </div>
                 <div className="right-pane">
                     <p className='title'>Camera {data?.camera?.camera_name}</p>

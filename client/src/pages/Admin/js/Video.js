@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getVideos } from '../../../graphql/video';
 import { useQuery } from '@apollo/client'
+import moment from 'moment';
 
 export default function Video(props) {
     const { loading, error, data } = useQuery(getVideos);
@@ -19,7 +20,7 @@ export default function Video(props) {
                         return (
                             <div key={index}>
                                 <p className='label'>{value}</p>
-                                <input type='text' value={Object.values(selected)[index - 1]} />
+                                <input type='text' value={Object.values(selected)[index - 1] || ''} readOnly />
                             </div>
                         )
                     })
@@ -43,7 +44,7 @@ export default function Video(props) {
             <input className='search-input' placeholder='Type in to Search...' />
             <p className='title'>VIDEO</p>
             <div className='table-pane'>
-                <table className="table">
+                <table className="table table-striped">
                     <thead className='thead-dark'>
                         <tr>
                             {
@@ -56,17 +57,12 @@ export default function Video(props) {
                     <tbody>
                         {
                             data?.videos?.map((value, index) => {
-                                const minute = new Date(value.createdAt).getMinutes();
-                                const hour = new Date(value.createdAt).getHours();
-                                const date = new Date(value.createdAt).getDate();
-                                const month = new Date(value.createdAt).getMonth() + 1;
-                                const year = new Date(value.createdAt).getFullYear();
                                 return (
                                     <tr key={index} onClick={() => handleRowClick(value)}>
                                         <th scope="row">{index + 1}</th>
                                         <td>{value._id}</td>
-                                        <td>{value.camera}</td>
-                                        <td>{minute}:{hour} {date}/{month}/{year}</td>
+                                        <td>{value.camera._id}</td>
+                                        <td>{moment(value.createdAt).format('HH:mm DD/MM/YYYY')}</td>
                                     </tr>
                                 )
                             })

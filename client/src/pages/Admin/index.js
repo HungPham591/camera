@@ -12,9 +12,9 @@ import { useHistory } from "react-router-dom";
 export default function Admin() {
     const history = useHistory();
     const [selected, setSelected] = useState(0);
-    const listMenu = ['Home', 'Camera', 'User', 'Report', 'Video', 'Logout'];
+    const listMenu = ['Home', 'Camera', 'User', 'Report', 'Video', 'Blog', 'Logout'];
     const handleSelectMenu = (id) => {
-        if (id === 5) history.replace('/');
+        if (id === 6) history.replace('/');
         else setSelected(id);
     }
     const showDashboard = () => {

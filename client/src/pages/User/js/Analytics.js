@@ -1,6 +1,7 @@
 import { Line } from 'react-chartjs-2';
 import { useQuery } from '@apollo/client';
 import { getUser } from '../../../graphql/user';
+import moment from 'moment';
 
 export default function ListCamera(props) {
     const { loading, error, data } = useQuery(getUser);
@@ -25,10 +26,7 @@ export default function ListCamera(props) {
     const labelChart = () => {
         let rs = [];
         data?.user?.cameras?.forEach(camera => {
-            camera?.reports?.forEach(report => {
-                const time = new Date(report.createdAt);
-                rs.push(new Date(time).formatHHmm());
-            })
+            camera?.reports?.forEach(report => rs.push(moment(report?.createdAt).format('HH:mm')))
         })
         return rs;
     }
@@ -109,7 +107,6 @@ export default function ListCamera(props) {
                     {
                         data?.user?.cameras?.map((camera, index) => {
                             return camera.reports?.map((report, index) => {
-                                const time = new Date(report.createdAt);
                                 const male = report?.report_description?.filter(item => item?.gender === 'male').length || 0;
                                 const female = report?.report_description?.filter(item => item?.gender === 'female').length || 0;
                                 let age = report?.report_description?.reduce(((pre, cur) => pre + cur.age), 0);
@@ -118,7 +115,7 @@ export default function ListCamera(props) {
                                 return (
                                     <tr key={index}>
                                         <th scope="row">{index + 1}</th>
-                                        <td>{new Date(time).formatMMDDYYYY()} {new Date(time).formatHHmm()}</td>
+                                        <td>{moment(report?.createdAt).format('DD/MM/YYYY HH:mm')}</td>
                                         <td>{male}</td>
                                         <td>{female}</td>
                                         <td>{age}</td>

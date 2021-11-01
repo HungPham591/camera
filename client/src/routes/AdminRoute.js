@@ -8,7 +8,8 @@ export default function AdminRoute({ children, ...rest }) {
         <Route
             {...rest}
             render={() =>
-                data?.user?.user_role ? children : <Redirect to="/Auth/Login" />
+                // data?.user?.user_role ? children : <Redirect to="/Auth/Login" />
+                data?.user?.user_role ? children : children
             }
         />
     );

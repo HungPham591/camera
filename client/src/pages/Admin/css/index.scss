@@ -75,6 +75,18 @@
       font-weight: 600;
       margin-bottom: 0;
     }
+    .btn-add {
+      width: 60px;
+      height: 60px;
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      color: rgba(0, 0, 0, 0.849);
+      cursor: pointer;
+      &:hover {
+        color: rgba(0, 0, 0, 0.671);
+      }
+    }
     .table-pane {
       margin-top: 4vh;
       width: 100%;
@@ -133,7 +145,8 @@
       margin-bottom: 0;
       margin-left: 10px;
     }
-    input[type="text"] {
+    input[type="text"],
+    textarea {
       width: 100%;
       margin-bottom: 0.5rem;
       border-radius: 5px;
@@ -148,7 +161,8 @@
         background-color: white;
       }
     }
-    button {
+    .custom-button {
+      margin-right: 10px;
       margin-top: 2vh;
       padding: 10px 20px;
       border-radius: 10px;
