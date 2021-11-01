@@ -68,38 +68,35 @@ const captureFrame = () => {
     }, 1000);
 }
 const detect = async (base64) => {
-    try {
-        const img = new Image()
-        img.src = base64;
+    const img = new Image()
+    img.src = base64;
 
-        const resultDetect = await faceapi
-            .detectAllFaces(img)
-            .withFaceLandmarks()
-            .withFaceDescriptors()
-            .withAgeAndGender();
+    const resultDetect = await faceapi
+        .detectAllFaces(img)
+        .withFaceLandmarks()
+        .withFaceDescriptors()
+        .withAgeAndGender();
 
-        if (!resultDetect.length) return;
+    if (!resultDetect.length) return;
 
-        const faceMatcher = new faceapi.FaceMatcher(resultDetect);
+    const faceMatcher = new faceapi.FaceMatcher(resultDetect);
 
-        let bestMatch = 'unknown';
+    let bestMatch = 'unknown';
 
-        listDetect.forEach(face => {
-            if (faceMatcher.findBestMatch(face.descriptor).label !== "unknown")
-                bestMatch = '';
-        })
+    listDetect.forEach(face => {
+        if (faceMatcher.findBestMatch(face.descriptor).label !== "unknown")
+            bestMatch = '';
+    })
 
-        if (bestMatch === 'unknown') {
-            listDetect = [...listDetect, ...resultDetect]
-            createReport(resultDetect)
-        }
-    } catch (err) {
+    if (bestMatch === 'unknown') {
+        listDetect = [...listDetect, ...resultDetect]
+        createReport(resultDetect, base64);
     }
 }
 
-const createReport = (resultDetect) => {
+const createReport = (resultDetect, base64) => {
     const report_description = resultDetect.map(value => {
         return { gender: value.gender, age: value.age };
     })
-    sendMessage(channel, { camera: camera._id, report_description }, 'CREATE_REPORT')
+    sendMessage(channel, { camera: camera._id, report_description, img: base64, user: camera.user }, 'CREATE_REPORT')
 }

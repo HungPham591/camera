@@ -14,6 +14,7 @@ import * as faceapi from "face-api.js";
 export default function CameraStream(props) {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
+    const downloadRef = useRef(null);
 
     const isMounted = useRef(true);
 
@@ -23,8 +24,6 @@ export default function CameraStream(props) {
     for (let i = 0; i < id.length; i++) {
         port += id.charCodeAt(i)
     }
-    let canvas;
-
     const { loading, error, data } = useQuery(getCamera, {
         variables: {
             _id: id
@@ -59,6 +58,7 @@ export default function CameraStream(props) {
                     if (!data || !isMounted.current) return;
                     const resizedDetections = faceapi.resizeResults(data, displaySize);
                     canvasRef.current?.getContext('2d')?.clearRect(0, 0, displaySize.width, displaySize.height);
+                    if (!canvasRef.current?.getContext('2d')) return;
                     faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
                 });
         }, 500);
@@ -66,7 +66,6 @@ export default function CameraStream(props) {
 
     useEffect(() => {
         loadModels();
-        canvas = document.getElementById("videoWrapper");
         video = new JSMpeg.VideoElement(
             "#videoWrapper",
             "ws://localhost:" + (9999 + port),
@@ -80,7 +79,7 @@ export default function CameraStream(props) {
     }, []);
 
     const setHref = () => {
-        if (canvas) document.getElementById("download").href = canvas.toDataURL();
+        downloadRef.current.href = canvasRef.current.toDataURL();
     };
 
     return (
@@ -94,6 +93,7 @@ export default function CameraStream(props) {
                 <div className="right-pane">
                     <p className='title'>Camera {data?.camera?.camera_name}</p>
                     <a
+                        ref={downloadRef}
                         href="/#"
                         id="download"
                         className="btn btn-primary"

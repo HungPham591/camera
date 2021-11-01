@@ -6,20 +6,31 @@ import { RiNotificationFill } from 'react-icons/ri'
 import "./index.scss";
 import ModalCamera from "./ModalCamera";
 import Notification from "./Notification";
-// import Toast from "./Toast";
+import Toast from "./Toast";
 import { useHistory, useLocation } from "react-router-dom";
 import { useQuery } from '@apollo/client'
 import { getUser } from '../../../graphql/user';
+const { io } = require("socket.io-client");
 
 function NavBar(props) {
-    const { loading, error, data } = useQuery(getUser);
+    const [toast, setToast] = useState(null);
+
+    const onCompleted = ({ user }) => {
+        const socket = io("http://localhost:4007/");
+        socket.emit('join', user._id);
+        socket.on('notification', function (data) {
+            console.log(data)
+            setToast(data);
+        })
+    }
+
+    const { loading, error, data } = useQuery(getUser, { onCompleted });
 
     const location = useLocation();
     const history = useHistory();
 
     const [nav, showNav] = useState(true);
     const [notification, showNotification] = useState(false);
-    const [toast, showToast] = useState(false);
 
     //camera
     const [showCamera, setShowCamera] = useState(false);
@@ -85,7 +96,7 @@ function NavBar(props) {
                 google_token={data?.user?.google_token}
             />
             <Notification show={notification} />
-            {/* <Toast toast={toast} showToast={showToast} /> */}
+            <Toast data={toast} />
         </>
     );
 }

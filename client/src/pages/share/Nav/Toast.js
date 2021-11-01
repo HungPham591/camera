@@ -1,42 +1,23 @@
-import React, { useEffect, useState, memo } from 'react';
-import { connect } from "react-redux";
+import React, { useEffect, useState } from 'react';
+const { io } = require("socket.io-client");
 
-function Toast(props) {
-    const [notification, setNotification] = useState(null);
+export default function Toast(props) {
     const [toast, showToast] = useState(false);
 
     useEffect(() => {
-        if (notification?._id) {
-            showToast(true)
-            setTimeout(() => {
-                showToast(false)
-            }, 3000);
-        }
-    }, [notification])
+        if (!props?.data?.camera) return;
+        showToast(true)
+        setTimeout(() => {
+            showToast(false)
+        }, 5000);
+    }, [props?.data])
 
 
-    useEffect(() => {
-        getNotification()
-    }, [props.user])
-    const getNotification = () => {
-        if (!props.user?._id) return;
-        const ws = new WebSocket(`ws://localhost:15000`)
-        ws.onmessage = (e) => {
-            let { data } = e;
-            data = JSON.parse(data);
-            setNotification(data);
-        }
-    }
     return (
         <div id='Toast' className={toast ? '' : 'd-none'}>
-            <p className='title'>{notification?._id}</p>
-            <p className='content'>{notification?.description}</p>
+            <img src={props?.data?.img} />
+            <p className='title'>new port</p>
+            <p className='content'>{props?.data?.description}</p>
         </div>
     )
 }
-const mapStateToProps = (state) => {
-    return {
-        user: state.user,
-    };
-};
-export default memo(connect(mapStateToProps)(Toast));

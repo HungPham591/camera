@@ -153,6 +153,12 @@
   background-color: white;
   box-shadow: 0 0 1.25rem rgba(31, 45, 61, 0.12);
   z-index: 1;
+  img {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    object-position: top;
+  }
   .title {
     margin-bottom: 0;
     font-weight: 500;

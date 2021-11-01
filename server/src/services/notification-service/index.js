@@ -7,8 +7,8 @@ const amqserver = 'amqp://localhost:5672/';
 
 const { createServer } = require("http");
 const { Server } = require("socket.io");
-const httpServer = createServer(app);
-const io = new Server(httpServer, { cors: 'http://localhost:3000' });
+const server = createServer(app);
+const io = new Server(server, { cors: 'http://localhost:3000' });
 
 const db = require("../../db");
 
@@ -24,8 +24,9 @@ createClient(amqserver).then(async channel => {
 
 io.on('connection', function (socket) {
     //cho client ket noi vao room (dang nhap nhieu thiet bi)
-    socket.on('join_room', function (msg) {
-        //cho user join room
+    socket.on('join', function (msg) {
+        console.log('new user join room ' + JSON.stringify(msg))
+        socket.join(msg);
     })
 })
 

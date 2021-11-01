@@ -1,7 +1,6 @@
 import L from "leaflet";
 import React, { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
-import { useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { useQuery } from '@apollo/client';
 import { getCameras } from '../../../graphql/camera';
@@ -11,10 +10,6 @@ function Map(props) {
     const { loading, error, data } = useQuery(getCameras);
 
     let video;
-
-    const canvasRef = useRef(null);
-
-    let history = useHistory();
     let mapObject;
     const greenIcon = (name) => {
         return L.divIcon({
@@ -60,7 +55,6 @@ function Map(props) {
         for (let i = 0; i < id.length; i++) {
             port += id.charCodeAt(i)
         }
-        console.log(canvas)
         video = new JSMpeg.VideoElement(
             "#videoPopup",
             "ws://localhost:" + (9999 + port),

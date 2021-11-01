@@ -65,7 +65,7 @@ const startAllCamera = async () => {
         camera.startStream();
         // camera.startRecord()
         // camera.backup();
-        // camera.detect();
+        camera.detect();
     });
 };
 

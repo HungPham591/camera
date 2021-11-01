@@ -11,7 +11,7 @@
     "start:video-service": "nodemon ./src/services/video-service/index.js",
     "start:blog-service": "nodemon ./src/services/blog-service/index.js",
     "start:face-service": "nodemon ./src/services/face-service/index.js",
-    "start:notification-service": "nodemon ./src/services/notification-service/index.js"
+    "start:noti-service": "nodemon ./src/services/notification-service/index.js"
   },
   "devDependencies": {
     "nodemon": "^2.0.14"

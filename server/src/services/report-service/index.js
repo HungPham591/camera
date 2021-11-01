@@ -24,6 +24,7 @@ createClient(amqserver).then(async channel => {
         response(channel, msg, controller.getReports);
     })
     channel.consume('CREATE_REPORT', msg => {
+        console.log('new report');
         response(channel, msg, controller.createReport);
     })
     channel.consume('DELETE_REPORT', msg => {
