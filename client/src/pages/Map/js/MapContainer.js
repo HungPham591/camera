@@ -4,7 +4,8 @@ import "leaflet/dist/leaflet.css";
 import { connect } from "react-redux";
 import { useQuery } from '@apollo/client';
 import { getCameras } from '../../../graphql/camera';
-import JSMpeg from "@cycjimmy/jsmpeg-player";
+
+import Hls from 'hls.js';
 
 function Map(props) {
     const { loading, error, data } = useQuery(getCameras);
@@ -50,19 +51,15 @@ function Map(props) {
     };
     const showPopup = (e) => {
         const id = e.sourceTarget.feature.properties._id;
-        const canvas = document.getElementById("videoPopup");
-        let port = 0;
-        for (let i = 0; i < id.length; i++) {
-            port += id.charCodeAt(i)
+        let videoSrc = `${process.env.REACT_APP_DOMAIN}\\stream\\${id}\\index.m3u8`;
+        const video = document.getElementById("videoPopup");
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
         }
-        video = new JSMpeg.VideoElement(
-            "#videoPopup",
-            "ws://localhost:" + (9999 + port),
-            { canvas: canvas },
-            { preserveDrawingBuffer: true }
-        );
     };
-    const popup = () => `<canvas id='videoPopup' />`
+    const popup = () => `<video id='videoPopup' crossOrigin="anonymous" controls autoPlay/>`
     const loadMarker = () => {
         if (!mapObject || !data?.cameras) return;
         data.cameras.forEach((value) => {

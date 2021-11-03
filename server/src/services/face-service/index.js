@@ -16,15 +16,9 @@ createClient(amqserver).then(async channel => {
         channel.assertQueue('CREATE_FACE'),
         channel.assertQueue('DELETE_FACE')
     ])
-    channel.consume('GET_FACES', msg => {
-        response(channel, msg, controller.getFaces);
-    })
-    channel.consume('CREATE_FACE', msg => {
-        response(channel, msg, controller.createFace);
-    })
-    channel.consume('DELETE_FACE', msg => {
-        response(channel, msg, controller.deleteFace);
-    })
+    channel.consume('GET_FACES', msg => response(channel, msg, controller.getFaces))
+    channel.consume('CREATE_FACE', msg => response(channel, msg, controller.createFace))
+    channel.consume('DELETE_FACE', msg => response(channel, msg, controller.deleteFace))
 });
 
 const response = async (channel, msg, controller) => {

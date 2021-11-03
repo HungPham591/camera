@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from "react";
-import JSMpeg from "@cycjimmy/jsmpeg-player";
 import { useParams } from "react-router-dom";
 import "./css/index.scss";
 import ListVideo from "./js/ListVideo";
@@ -9,6 +8,8 @@ import { BsArrowDownLeft, BsArrowDownRight, BsArrowUpLeft, BsArrowUpRight, BsArr
 import { getCamera } from '../../graphql/camera';
 import { useQuery } from '@apollo/client';
 
+import Hls from 'hls.js';
+
 import * as faceapi from "face-api.js";
 
 export default function CameraStream(props) {
@@ -17,18 +18,30 @@ export default function CameraStream(props) {
     const downloadRef = useRef(null);
 
     const isMounted = useRef(true);
+    isMounted.current = true;
 
     let { id } = useParams();
-    let video;
-    let port = 0;
-    for (let i = 0; i < id.length; i++) {
-        port += id.charCodeAt(i)
+
+    useEffect(() => {
+        loadModels();
+        return () => { isMounted.current = false; }
+    }, [])
+
+    const onCompleted = ({ camera }) => {
+        let videoSrc = `${process.env.REACT_APP_DOMAIN}\\stream\\${camera._id}\\index.m3u8`;
+        const video = videoRef.current;
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+        }
     }
-    const { loading, error, data } = useQuery(getCamera, {
+    const { data } = useQuery(getCamera, {
         variables: {
             _id: id
         },
-        skip: id === null
+        skip: id === null,
+        onCompleted
     })
 
     const loadModels = async () => {
@@ -38,21 +51,17 @@ export default function CameraStream(props) {
                 faceapi.nets.tinyFaceDetector.loadFromUri(path),
                 faceapi.nets.faceLandmark68Net.loadFromUri(path),
             ])
-        detectAllFaces();
     }
 
     const detectAllFaces = () => {
         const displaySize = {
-            width: videoRef.current.width,
-            height: videoRef.current.height,
+            width: videoRef.current.videoWidth,
+            height: videoRef.current.videoHeight,
         }
         faceapi.matchDimensions(canvasRef.current, displaySize);
         let interval = setInterval(() => {
-            if (!isMounted.current) return clearInterval(interval);
-            const data = videoRef.current?.toDataURL('image/jpeg', 1.0);
-            const img = new Image();
-            img.src = data;
-            faceapi.detectAllFaces(img, new faceapi.TinyFaceDetectorOptions)
+            if (!isMounted.current || videoRef.current?.paused) return clearInterval(interval);
+            faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions)
                 .withFaceLandmarks()
                 .then(data => {
                     if (!data || !isMounted.current) return;
@@ -63,23 +72,19 @@ export default function CameraStream(props) {
                 });
         }, 500);
     }
+    const handleVideoOnPlay = () => {
+        detectAllFaces();
+    }
 
-    useEffect(() => {
-        loadModels();
-        video = new JSMpeg.VideoElement(
-            "#videoWrapper",
-            "ws://localhost:" + (9999 + port),
-            { canvas: videoRef.current },
-            { preserveDrawingBuffer: true }
-        );
-        return () => {
-            video.destroy();
-            isMounted.current = false;
-        }
-    }, []);
 
     const setHref = () => {
-        downloadRef.current.href = canvasRef.current.toDataURL();
+        const video = videoRef.current
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const canvasContext = canvas.getContext("2d");
+        canvasContext.drawImage(video, 0, 0);
+        downloadRef.current.href = canvas.toDataURL('image/png');
     };
 
     return (
@@ -87,7 +92,7 @@ export default function CameraStream(props) {
             <p className='title-1'>Xem trực tiếp</p>
             <div className='custom-container'>
                 <div className="left-pane">
-                    <canvas id="videoWrapper" ref={videoRef} />
+                    <video id="videoWrapper" ref={videoRef} onPlay={handleVideoOnPlay} crossOrigin="anonymous" controls autoPlay />
                     <canvas ref={canvasRef} className='result-canvas' />
                 </div>
                 <div className="right-pane">

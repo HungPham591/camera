@@ -27,21 +27,11 @@ const connectAmqserver = async () => {
         channelAmq.assertQueue('UPDATE_CAMERA'),
         channelAmq.assertQueue('DELETE_CAMERA')
     ])
-    channelAmq.consume('GET_CAMERA', msg => {
-        response(channelAmq, msg, controller.getCamera);
-    })
-    channelAmq.consume('GET_CAMERAS', msg => {
-        response(channelAmq, msg, controller.getCameras);
-    })
-    channelAmq.consume('CREATE_CAMERA', msg => {
-        response(channelAmq, msg, controller.createCamera);
-    })
-    channelAmq.consume('UPDATE_CAMERA', msg => {
-        response(channelAmq, msg, controller.updateCamera);
-    })
-    channelAmq.consume('DELETE_CAMERA', msg => {
-        response(channelAmq, msg, controller.deleteCamera);
-    })
+    channelAmq.consume('GET_CAMERA', msg => response(channelAmq, msg, controller.getCamera))
+    channelAmq.consume('GET_CAMERAS', msg => response(channelAmq, msg, controller.getCameras))
+    channelAmq.consume('CREATE_CAMERA', msg => response(channelAmq, msg, controller.createCamera))
+    channelAmq.consume('UPDATE_CAMERA', msg => response(channelAmq, msg, controller.updateCamera))
+    channelAmq.consume('DELETE_CAMERA', msg => response(channelAmq, msg, controller.deleteCamera))
 }
 const response = async (channel, msg, controller) => {
     const data = JSON.parse(msg.content);
@@ -65,7 +55,7 @@ const startAllCamera = async () => {
         camera.startStream();
         // camera.startRecord()
         // camera.backup();
-        camera.detect();
+        // camera.detect();
     });
 };
 

@@ -12,7 +12,7 @@ import triggerAccessSvg from './css/trigger-notification.svg';
 import ideaSvg from './css/we-have-an-idea.svg';
 import aws from './css/aws.png';
 import digitalocean from './css/digital-ocean.png';
-import googlecloud from './css/google-cloud.png'
+import googlecloud from './css/google-cloud.png';
 
 export default function Home(props) {
 

@@ -17,7 +17,7 @@ export default function ListVideo(props) {
                     let fullPath = `${process.env.REACT_APP_DOMAIN}\\data\\${props.camera}_${value.video_time}.mp4`;
                     return (
                         <div key={index} className='custom-card'>
-                            <video src={fullPath} alt='thumb' />
+                            <video className='video' src={fullPath} alt='thumb' />
                             <div className='body'>
                                 <p className='title'>{moment(value.video_time).format('YYYY-MM-DD')}</p>
                                 <button onClick={() => openVideo(value._id)}>Xem</button>

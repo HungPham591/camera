@@ -19,18 +19,10 @@ createClient(amqserver).then(async channel => {
         channel.assertQueue('GET_USER'),
         channel.assertQueue('GET_USERS')
     ])
-    channel.consume('SIGNIN', msg => {
-        response(channel, msg, controller.signIn);
-    })
-    channel.consume('SIGNUP', msg => {
-        response(channel, msg, controller.signUp);
-    })
-    channel.consume('GET_USER', msg => {
-        response(channel, msg, controller.getUser);
-    })
-    channel.consume('GET_USERS', msg => {
-        response(channel, msg, controller.getUsers);
-    })
+    channel.consume('SIGNIN', msg => response(channel, msg, controller.signIn))
+    channel.consume('SIGNUP', msg => response(channel, msg, controller.signUp))
+    channel.consume('GET_USER', msg => response(channel, msg, controller.getUser))
+    channel.consume('GET_USERS', msg => response(channel, msg, controller.getUsers))
 });
 
 const response = async (channel, msg, controller) => {

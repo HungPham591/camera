@@ -18,21 +18,11 @@ createClient(amqserver).then(async channel => {
         channel.assertQueue('UPDATE_BLOG'),
         channel.assertQueue('DELETE_BLOG')
     ])
-    channel.consume('GET_BLOG', msg => {
-        response(channel, msg, controller.getBlog);
-    })
-    channel.consume('GET_BLOGS', msg => {
-        response(channel, msg, controller.getBlogs);
-    })
-    channel.consume('CREATE_BLOG', msg => {
-        response(channel, msg, controller.createBlog);
-    })
-    channel.consume('UPDATE_BLOG', msg => {
-        response(channel, msg, controller.updateBlog);
-    })
-    channel.consume('DELETE_BLOG', msg => {
-        response(channel, msg, controller.deleteBlog);
-    })
+    channel.consume('GET_BLOG', msg => response(channel, msg, controller.getBlog))
+    channel.consume('GET_BLOGS', msg => response(channel, msg, controller.getBlogs))
+    channel.consume('CREATE_BLOG', msg => response(channel, msg, controller.createBlog))
+    channel.consume('UPDATE_BLOG', msg => response(channel, msg, controller.updateBlog))
+    channel.consume('DELETE_BLOG', msg => response(channel, msg, controller.deleteBlog))
 });
 
 const response = async (channel, msg, controller) => {

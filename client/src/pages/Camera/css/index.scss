@@ -26,7 +26,7 @@
       }
       .result-canvas {
         width: 97%;
-        height: 95%;
+        height: 85%;
         position: absolute;
       }
     }
@@ -90,7 +90,7 @@
       margin: 0 1vw 0 0;
       border: 0;
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-      video {
+      .video {
         height: 100%;
         border-bottom-left-radius: 5px;
         border-top-left-radius: 5px;

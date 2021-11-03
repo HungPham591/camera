@@ -8,7 +8,7 @@ const fileUpload = require("express-fileupload");
 app.use(express.static(path.join(__dirname, '..', '..', "public")));
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: '*',
     credentials: true,
 }));// enable cors
 app.use(fileUpload());

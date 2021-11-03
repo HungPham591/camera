@@ -1457,24 +1457,6 @@
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-10.1.0.tgz#f0950bba18819512d42f7197e56c518aa491cf18"
   integrity sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
 
-"@cycjimmy/awesome-js-funcs@^2.3.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@cycjimmy/awesome-js-funcs/-/awesome-js-funcs-2.5.0.tgz#e45c0839f367c0035375a9c0273e303247790af6"
-  integrity sha512-xy4MkuL8FcmRfWm0FwdHUCWB+EQ/ljCuTAf6d3SdaXPDgD4celrq0/vJT9ekLF0E6Au4fLbvRh1G8sXnGwDUkg==
-
-"@cycjimmy/jsmpeg-player@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@cycjimmy/jsmpeg-player/-/jsmpeg-player-5.0.1.tgz#f29ca77641af518498df1fca91bfacb1101032d8"
-  integrity sha512-x2kCCEfmXinebXC3d8XBJmOeFP+Jw0f4peT2rAmNvhggP1hYPvACP2ioobxeZvp255rPQTt/RPNi9y2SJ5ATMQ==
-  dependencies:
-    "@cycjimmy/awesome-js-funcs" "^2.3.0"
-    "@cycjimmy/sass-lib" "^1.0.3"
-
-"@cycjimmy/sass-lib@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@cycjimmy/sass-lib/-/sass-lib-1.0.3.tgz#df5fbd7edc3dcbb6531bf186713e2e052391c3dc"
-  integrity sha512-OTr8uMjeRapr0bWTKs782Jj84/xQt1XvVl5ZyYW1yi4sEbqY1FfW1FYLeflBp4gSU99o4c/nPi2Fx5aRxna5dw==
-
 "@emotion/cache@^11.4.0":
   version "11.4.0"
   resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-11.4.0.tgz#293fc9d9a7a38b9aad8e9337e5014366c3b09ac0"
@@ -6191,6 +6173,11 @@ history@^4.9.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
     value-equal "^1.0.1"
+
+hls.js@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/hls.js/-/hls.js-1.0.12.tgz#ad80ee6444217f4f22de7cdf0da0a49ce1dad845"
+  integrity sha512-YnyujGMZAofraBzl5PjPI6kw7HMt/Dhpnr+PrTtmoIApKUPFmeKWqvdIGhdmxQcrSHoCHDEqSX79m+Zpu924Kg==
 
 hmac-drbg@^1.0.1:
   version "1.0.1"

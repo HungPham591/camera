@@ -17,18 +17,10 @@ createClient(amqserver).then(async channel => {
         channel.assertQueue('CREATE_VIDEO'),
         channel.assertQueue('DELETE_VIDEO'),
     ])
-    channel.consume('GET_VIDEO', msg => {
-        response(channel, msg, controller.getVideo);
-    })
-    channel.consume('GET_VIDEOS', msg => {
-        response(channel, msg, controller.getVideos);
-    })
-    channel.consume('CREATE_VIDEO', msg => {
-        response(channel, msg, controller.createVideo);
-    })
-    channel.consume('DELETE_VIDEO', msg => {
-        response(channel, msg, controller.deleteVideo);
-    })
+    channel.consume('GET_VIDEO', msg => response(channel, msg, controller.getVideo))
+    channel.consume('GET_VIDEOS', msg => response(channel, msg, controller.getVideos))
+    channel.consume('CREATE_VIDEO', msg => response(channel, msg, controller.createVideo))
+    channel.consume('DELETE_VIDEO', msg => response(channel, msg, controller.deleteVideo))
 });
 
 const response = async (channel, msg, controller) => {
