@@ -29,7 +29,9 @@ const Stream = class {
             'delete_segments',
             this.filePath
         ]
+        this.removeOldFile();
         this.stream = child_process.spawn('ffmpeg', spawnOptions, { detached: false });
+        this.stream.stderr.on('data', (data) => { });
     }
     stopStream() {
         this.stream.kill('SIGINT');
@@ -37,6 +39,7 @@ const Stream = class {
     }
     removeOldFile() {
         fs.rmdirSync(this.dirPath, { recursive: true, force: true });
+        fs.mkdirSync(this.dirPath);
     }
 }
 

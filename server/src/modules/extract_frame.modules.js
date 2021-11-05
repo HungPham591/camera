@@ -30,6 +30,10 @@ const ExtractFrame = class {
         stream.stdout.on('data', (data) => {
             this.frame = data
         })
+        stream.stderr.on('data', (data) => { });
+    }
+    stop() {
+
     }
 }
 

@@ -59,17 +59,14 @@ export default function CameraStream(props) {
             height: videoRef.current.videoHeight,
         }
         faceapi.matchDimensions(canvasRef.current, displaySize);
-        let interval = setInterval(() => {
+        let interval = setInterval(async () => {
             if (!isMounted.current || videoRef.current?.paused) return clearInterval(interval);
-            faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions)
-                .withFaceLandmarks()
-                .then(data => {
-                    if (!data || !isMounted.current) return;
-                    const resizedDetections = faceapi.resizeResults(data, displaySize);
-                    canvasRef.current?.getContext('2d')?.clearRect(0, 0, displaySize.width, displaySize.height);
-                    if (!canvasRef.current?.getContext('2d')) return;
-                    faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
-                });
+            const data = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions).withFaceLandmarks()
+            if (!data || !isMounted.current) return;
+            const resizedDetections = faceapi.resizeResults(data, displaySize);
+            canvasRef.current?.getContext('2d')?.clearRect(0, 0, displaySize.width, displaySize.height);
+            if (!canvasRef.current?.getContext('2d')) return;
+            faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
         }, 500);
     }
     const handleVideoOnPlay = () => {
