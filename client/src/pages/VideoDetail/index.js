@@ -17,7 +17,7 @@ export default function Video(props) {
     const [timeVideo, setTimeVideo] = useState(false);
     const [environment, setEnvironment] = useState(false);
     const [file, setFile] = useState(null);
-
+    const alert = useRef(null);
     const [start, setStart] = useState(null)
     const [end, setEnd] = useState(null);
 
@@ -47,12 +47,13 @@ export default function Video(props) {
     }, [start])
 
     const handleOnDrop = (file) => {
+        if (!file?.length) return;
+        canvasRef.current?.getContext('2d')?.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
+        alert.current.className = 'alert alert-danger text-center d-none';
         const reader = new FileReader();
 
         reader.readAsDataURL(file[0]);
-        reader.onload = () => {
-            setFile(reader.result)
-        };
+        reader.onload = () => setFile(reader.result);
     }
     const checkLoadComplete = () => {
         const video = videoRef.current;
@@ -65,25 +66,52 @@ export default function Video(props) {
 
     const loadModels = async () => {
         const path = '/models';
-        if (!faceapi.nets.tinyFaceDetector.isLoaded || !faceapi.nets.faceLandmark68Net.isLoaded || !faceapi.nets.faceRecognitionNet.isLoaded || !faceapi.nets.faceExpressionNet.isLoaded)
+        if (!faceapi.nets.ssdMobilenetv1.isLoaded || !faceapi.nets.faceLandmark68Net.isLoaded || !faceapi.nets.faceRecognitionNet.isLoaded)
             await Promise.all([
-                faceapi.nets.tinyFaceDetector.loadFromUri(path),
-                faceapi.nets.faceLandmark68Net.loadFromUri(path),
                 faceapi.nets.faceRecognitionNet.loadFromUri(path),
-                faceapi.nets.faceExpressionNet.loadFromUri(path)
+                faceapi.nets.ssdMobilenetv1.loadFromUri(path),
+                faceapi.nets.faceLandmark68Net.loadFromUri(path),
             ])
         setEnvironment(true);
     }
-    const handleVideoOnPlay = () => {
-        // let interval = setInterval(() => {
-        //     if (videoRef.current?.paused || !isMounted.current) return clearInterval(interval);
-        //     faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions)
-        //         .withFaceLandmarks()
-        //         .then(data => {
-        //             if (!data) return;
-        //             drawDetections(data);
-        //         });
-        // }, 500);
+    const getFaceDescription = async () => {
+        const img = new Image();
+        img.src = file;
+        return await faceapi
+            .detectSingleFace(img)
+            .withFaceLandmarks()
+            .withFaceDescriptor();
+    }
+
+    const seekVideoAndDetectFace = async () => {
+        canvasRef.current?.getContext('2d')?.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
+        if (!file) return;
+        const descriptions = await getFaceDescription();
+        if (!descriptions) return alert.current.className = 'alert alert-danger text-center';
+        alert.current.className = 'alert alert-danger text-center d-none';
+        const video = videoRef.current;
+        let seekResolve;
+        video.addEventListener('seeked', async function () {
+            if (seekResolve) seekResolve();
+        });
+        let currentTime = 0;
+        while (currentTime < timeVideo) {
+            video.currentTime = currentTime;
+            await new Promise(r => seekResolve = r);// doi seek xong
+            const data = await detectFace(descriptions);
+            if (data) return drawDetections(data);
+            currentTime += 1
+        }
+        alert.current.className = 'alert alert-danger text-center';
+    }
+    const detectFace = async (descriptions) => {
+        if (!descriptions?.descriptor) return false;
+        let video = videoRef.current;
+        const resultDetect = await faceapi.detectAllFaces(video, new faceapi.SsdMobilenetv1Options()).withFaceLandmarks().withFaceDescriptors();
+        if (!resultDetect?.length) return false;
+        const faceMatcher = new faceapi.FaceMatcher(resultDetect);
+        if (faceMatcher.findBestMatch(descriptions?.descriptor).label !== 'unknown') return resultDetect;
+        return false;
     }
     const drawDetections = (data) => {
         if (!isMounted.current || !data || !canvasRef.current?.getContext('2d')) return;
@@ -93,26 +121,7 @@ export default function Video(props) {
         }
         faceapi.matchDimensions(canvasRef.current, displaySize)
         const resizedDetections = faceapi.resizeResults(data, displaySize);
-        canvasRef.current.getContext('2d').clearRect(0, 0, displaySize.width, displaySize.height);
-    }
-    const detectFaceFromVideo = async () => {
-        const video = videoRef.current;
-        let seekResolve;
-        video.addEventListener('seeked', async function () {
-            if (seekResolve) seekResolve();
-        });
-        let currentTime = 0;
-        while (currentTime < timeVideo) {
-            video.currentTime = currentTime;
-            await new Promise(r => seekResolve = r)
-            await detectFace()
-            currentTime += 1
-        }
-    }
-    const detectFace = async () => {
-        let video = videoRef.current;
-        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions).withFaceLandmarks().withFaceExpressions();
-        drawDetections(detections);
+        faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
     }
     const handleButtonSeek = (time) => {
         const video = videoRef.current;
@@ -120,24 +129,25 @@ export default function Video(props) {
     }
     const progressbar = () => {
         if (!videos?.video?.createdAt || !reports) return;
+        const listReport = (
+            reports?.reports?.map((value, index) => {
+                if (new Date(value.createdAt).getTime() < start || new Date(value.createdAt).getTime() > end) return;
+                let time = new Date(value.createdAt).getTime();
+                const point = (time - start) * 100 / (end - start);
+                return (
+                    <div key={index}>
+                        <li style={{ left: `${point}%` }} onClick={() => handleButtonSeek(time - start)}></li>
+                        <p style={{ left: `${point}%` }}>{moment(value.createdAt).format('HH:mm')}</p>
+                    </div>
+                )
+            })
+        )
         return (
             <ul className="progressbar">
-                <li style={{ left: 0 }}></li>
+                <li style={{ left: 0 }} onClick={() => handleButtonSeek(0)}></li>
                 <p style={{ left: 0 }}>{moment(start).format('DD/MM/YYYY')}</p>
-                {
-                    reports?.reports?.map((value, index) => {
-                        if (new Date(value.createdAt).getTime() < start || new Date(value.createdAt).getTime() > end) return;
-                        let time = new Date(value.createdAt).getTime();
-                        const point = (time - start) * 100 / (end - start);
-                        return (
-                            <div key={index}>
-                                <li style={{ left: `${point}%` }} onClick={() => handleButtonSeek(point / 100)}></li>
-                                <p style={{ left: `${point}%` }}>{moment(value.createdAt).format('HH:mm')}</p>
-                            </div>
-                        )
-                    })
-                }
-                <li style={{ right: 0 }}></li>
+                {listReport}
+                <li style={{ right: 0 }} onClick={() => handleButtonSeek(end - start)}></li>
                 <p style={{ right: 0 }}>{moment(end).format('DD/MM/YYYY')}</p>
             </ul >
         )
@@ -149,16 +159,16 @@ export default function Video(props) {
             <p className='title-1'>Xem lại</p>
             <div className='custom-container'>
                 <div className="left-pane">
-                    <div>
-                        {videos ? <video ref={videoRef} src={video_path} crossOrigin="anonymous" id='video' controls onPlay={handleVideoOnPlay} /> : ''}
-                        <canvas ref={canvasRef} className='position-absolute' />
+                    <div className='video-pane'>
+                        {videos ? <video ref={videoRef} src={video_path} crossOrigin="anonymous" id='video' controls /> : ''}
+                        <canvas ref={canvasRef} className='result-canvas' />
                     </div>
                     {progressbar()}
                 </div>
                 <div className="right-pane">
                     <p className='title'>Video camera {videos?.video?.camera?.camera_name}</p>
                     <p>{moment(start).format('DD/MM/YYYY HH:mm')}</p>
-                    <Dropzone multiple={true} onDrop={handleOnDrop}>
+                    <Dropzone multiple={false} onDrop={handleOnDrop} accept='image/jpeg, image/png'>
                         {({ getRootProps, getInputProps }) => (
                             <section className='dropzone'>
                                 <div {...getRootProps()}>
@@ -168,7 +178,8 @@ export default function Video(props) {
                             </section>
                         )}
                     </Dropzone>
-                    <button disabled={!environment && !timeVideo} onClick={detectFaceFromVideo}>Xem kết quả</button>
+                    <p ref={alert} className='alert alert-danger text-center d-none'>Không tìm thấy</p>
+                    <button disabled={!environment && !timeVideo} onClick={seekVideoAndDetectFace}>Xem kết quả</button>
                 </div>
             </div>
         </div>

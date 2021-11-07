@@ -16,6 +16,7 @@ export default function CameraStream(props) {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const downloadRef = useRef(null);
+    const hls = useRef(null);
 
     const isMounted = useRef(true);
     isMounted.current = true;
@@ -24,16 +25,16 @@ export default function CameraStream(props) {
 
     useEffect(() => {
         loadModels();
-        return () => { isMounted.current = false; }
+        return () => { isMounted.current = false; hls.current?.destroy() }
     }, [])
 
     const onCompleted = ({ camera }) => {
         let videoSrc = `${process.env.REACT_APP_DOMAIN}\\stream\\${camera._id}\\index.m3u8`;
         const video = videoRef.current;
         if (Hls.isSupported()) {
-            const hls = new Hls();
-            hls.loadSource(videoSrc);
-            hls.attachMedia(video);
+            hls.current = new Hls();
+            hls.current.loadSource(videoSrc);
+            hls.current.attachMedia(video);
         }
     }
     const { data } = useQuery(getCamera, {
@@ -61,11 +62,10 @@ export default function CameraStream(props) {
         faceapi.matchDimensions(canvasRef.current, displaySize);
         let interval = setInterval(async () => {
             if (!isMounted.current || videoRef.current?.paused) return clearInterval(interval);
-            const data = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions).withFaceLandmarks()
+            const data = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks()
             if (!data || !isMounted.current) return;
             const resizedDetections = faceapi.resizeResults(data, displaySize);
             canvasRef.current?.getContext('2d')?.clearRect(0, 0, displaySize.width, displaySize.height);
-            if (!canvasRef.current?.getContext('2d')) return;
             faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
         }, 500);
     }

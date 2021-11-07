@@ -52,6 +52,7 @@
   #mapContainer {
     height: 100%;
     width: 100%;
+    z-index: 0;
   }
   .leaflet-popup {
     transform: translate3d(10px, 181px, 0px);
@@ -80,9 +81,6 @@
   #videoPopup {
     width: 150px;
     height: 100px;
-  }
-  #map {
-    z-index: 0;
   }
   .title {
     font-size: 32px;

@@ -9,9 +9,9 @@ import Hls from 'hls.js';
 
 function Map(props) {
     const { loading, error, data } = useQuery(getCameras);
+    const hls = useRef(null);
+    const mapObject = useRef(null);
 
-    let video;
-    let mapObject;
     const greenIcon = (name) => {
         return L.divIcon({
             className: "my-custom-pin",
@@ -22,23 +22,21 @@ function Map(props) {
         });
     };
     useEffect(() => {
-        return () => video?.destroy();
-    })
+        if (!mapObject?.current) initMap();
+        return () => { hls.current?.destroy() }
+    }, [])
     useEffect(() => {
-        initMap();
         loadMarker();
     }, [data]);
 
     const initMap = () => {
-        document.getElementById("mapContainer").innerHTML =
-            "<div id='map' style='width: 100%; height: 100%;'></div>";
         if (props.location.length === 0) {
-            mapObject = L.map("map", {
+            mapObject.current = L.map("mapContainer", {
                 center: [10.030948595309376, 105.76856626550823],
                 zoom: 18,
             });
         } else {
-            mapObject = L.map("map", {
+            mapObject.current = L.map("mapContainer", {
                 center: props.location,
                 zoom: 18,
             });
@@ -47,21 +45,21 @@ function Map(props) {
             attribution:
                 '&copy; <a href="http://' +
                 'www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        }).addTo(mapObject);
+        }).addTo(mapObject.current);
     };
     const showPopup = (e) => {
         const id = e.sourceTarget.feature.properties._id;
         let videoSrc = `${process.env.REACT_APP_DOMAIN}\\stream\\${id}\\index.m3u8`;
         const video = document.getElementById("videoPopup");
         if (Hls.isSupported()) {
-            const hls = new Hls();
-            hls.loadSource(videoSrc);
-            hls.attachMedia(video);
+            hls.current = new Hls();
+            hls.current.loadSource(videoSrc);
+            hls.current.attachMedia(video);
         }
     };
     const popup = () => `<video id='videoPopup' crossOrigin="anonymous" controls autoPlay/>`
     const loadMarker = () => {
-        if (!mapObject || !data?.cameras) return;
+        if (!mapObject.current || !data?.cameras) return;
         data.cameras.forEach((value) => {
             let marker = L.marker(
                 [value.camera_location[0], value.camera_location[1]],
@@ -76,8 +74,7 @@ function Map(props) {
                 },
                 geometry: undefined,
             };
-            marker.addTo(mapObject).bindPopup(popup).on("click", showPopup);
-            // marker.addTo(mapObject).on("click", openStream);
+            marker.addTo(mapObject.current).bindPopup(popup).on("click", showPopup);
         });
     };
 

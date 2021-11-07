@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { connect } from "react-redux";
+import { Link, NavLink, withRouter } from "react-router-dom";
 import { BsFillPersonFill, BsFillPlusCircleFill } from "react-icons/bs";
 import { RiNotificationFill } from 'react-icons/ri'
 import "./index.scss";
@@ -12,14 +11,13 @@ import { useQuery } from '@apollo/client'
 import { getUser } from '../../../graphql/user';
 const { io } = require("socket.io-client");
 
-function NavBar(props) {
+export default function NavBar(props) {
     const [toast, setToast] = useState(null);
 
     const onCompleted = ({ user }) => {
         const socket = io("http://localhost:4007/");
         socket.emit('join', user._id);
         socket.on('notification', function (data) {
-            console.log(data)
             setToast(data);
         })
     }
@@ -38,10 +36,8 @@ function NavBar(props) {
     const handleShowCamera = () => setShowCamera(true);
 
     const handleScroll = () => {
-        if (window.pageYOffset > 10)
-            showNav(false)
-        else
-            showNav(true)
+        if (window.pageYOffset > 10) showNav(false)
+        else showNav(true)
     };
 
     useState(() => {
@@ -49,18 +45,14 @@ function NavBar(props) {
     }, [])
     const checkAtHome = () => {
         const path = location.pathname;
-        if (path === '/')
-            return true
+        if (path === '/') return true
         return false
     }
     const handleShowNoti = () => {
         showNotification(!notification);
     }
     const handleAddCamera = () => {
-        if (!data?.user?._id) {
-            history.push('/Auth/Login')
-            return;
-        }
+        if (!data?.user?._id) return history.push('/Auth/Login');
         handleShowCamera()
     }
     const listNav = [{ name: 'Home', path: '' }, { name: 'Map', path: 'Map' }, { name: 'Blog', path: 'Blog' }]
@@ -100,12 +92,3 @@ function NavBar(props) {
         </>
     );
 }
-
-const mapStateToProps = (state) => {
-    return {
-        user: state.user,
-        location: state.location,
-    };
-};
-
-export default connect(mapStateToProps)(NavBar);
