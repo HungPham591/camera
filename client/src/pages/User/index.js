@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Camera from "./js/Camera";
-import Analytics from './js/Analytics';
+import Dashboard from './js/Dashboard';
 import Video from './js/Video';
 import UserInfo from './js/User';
 import ListFace from "./js/Face";
@@ -29,16 +29,12 @@ export default function User(props) {
     }
 
     const showDashboard = () => {
-        let videos = [];
-        data?.user?.cameras?.forEach(value => {
-            videos = [...value.videos, ...videos]
-        });
         const listDashboard = {
-            0: <Camera data={data?.user?.cameras} />,
-            1: <Video data={videos} />,
-            2: <Analytics />,
-            3: <UserInfo data={data?.user} />,
-            4: <ListFace data={data?.user?.faces} />
+            0: <Camera />,
+            1: <Video />,
+            2: <Dashboard />,
+            3: <UserInfo />,
+            4: <ListFace />
         }
         return listDashboard[selectedMenu];
     }

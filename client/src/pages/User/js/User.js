@@ -1,4 +1,6 @@
 import { useForm } from 'react-hook-form';
+import { getUser } from '../../../graphql/user';
+import { useQuery } from '@apollo/client';
 
 export default function ListCamera(props) {
     const {
@@ -6,6 +8,7 @@ export default function ListCamera(props) {
         handleSubmit,
         formState: { errors },
     } = useForm();
+    const { loading, error, data } = useQuery(getUser);
     const onSubmit = (data) => console.log(data);
 
     const titles = [{ value: '_id', title: 'id' }, { title: 'name', value: 'user_name' }, { title: 'password', value: 'user_pass' }];
@@ -17,7 +20,7 @@ export default function ListCamera(props) {
                         return (
                             <div key={index}>
                                 <p className='label'>{value.title}</p>
-                                <input type='text' {...register(value.value, { required: true })} defaultValue={props?.data[value.value] || ''} />
+                                <input type='text' {...register(value.value, { required: true })} defaultValue={data?.user[value.value] || ''} />
                                 {errors[value.value] && <p>Last name is required.</p>}
                             </div>
                         )

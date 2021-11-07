@@ -13,13 +13,21 @@
     width: 50%;
   }
   .custom-card {
+    width: 100%;
+    overflow-x: hidden;
     padding: 1vh 0 1vh 0;
     border-top: 1px solid rgb(235, 235, 235);
     border-bottom: 1px solid rgb(235, 235, 235);
     display: flex;
-    img {
+    .card-body {
+      padding: 0vh 1vw;
+    }
+    p {
+      margin-bottom: 0.8rem;
+    }
+    video {
       border-radius: 10px;
-      width: 40%;
+      width: 60%;
       height: 30vh;
       object-fit: contain;
     }

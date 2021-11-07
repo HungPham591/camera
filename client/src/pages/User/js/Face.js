@@ -1,4 +1,3 @@
-import cameraLogo from "../css/camera.jpg";
 import { useHistory } from "react-router";
 import ShareModal from './ShareModal';
 import { useState } from "react";
@@ -26,16 +25,6 @@ export default function ListFace(props) {
     const handleShareButton = () => {
         handleShow();
     }
-    if (!props.data?.length) {
-        return (
-            <div>
-                <ShareModal show={show} handleClose={handleClose} />
-                <p className='title'>Chia sẻ</p>
-                <h4>Chưa có ai được chia sẻ</h4>
-                <button className='btn btn-primary' onClick={handleShareButton} style={{ marginTop: '1vh', marginBottom: '2vh' }}>Chia sẻ</button>
-            </div>
-        )
-    }
     return (
         <div>
             <ShareModal show={show} handleClose={handleClose} />
@@ -43,7 +32,7 @@ export default function ListFace(props) {
             <button className='btn btn-primary' onClick={handleShareButton} style={{ marginTop: '1vh', marginBottom: '2vh' }}>Chia sẻ</button>
             <div className='grid'>
                 {
-                    props.data.map((value, index) => {
+                    data?.user?.faces.map((value, index) => {
                         const imgPath = `${process.env.REACT_APP_DOMAIN}\\face\\${data?.user?._id}\\${value?._id}.jpg`
                         return (
                             <div key={index} className='custom-card'>

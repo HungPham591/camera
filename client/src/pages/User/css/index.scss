@@ -60,6 +60,9 @@
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
         padding: 10px 10px;
         video {
+          max-height: 250px;
+          object-fit: cover;
+          object-position: top;
           width: 100%;
         }
         img {

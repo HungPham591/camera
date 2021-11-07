@@ -37,6 +37,9 @@ exports.sendRPCMessage = (channel, message, rpcQueue) => {
             correlationId,
             replyTo: REPLY_QUEUE,
         });
+        setTimeout(() => {
+            resolve(null)
+        }, 1000);
     });
 }
 exports.responseMessage = (channel, oldMessage, message) => {
