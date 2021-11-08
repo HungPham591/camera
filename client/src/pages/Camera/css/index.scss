@@ -1,7 +1,7 @@
 #Camera {
   margin-top: 8vh;
   width: 100vw;
-  height: fit-content;
+  height: 92vh;
   .title-1 {
     margin-left: 1%;
     font-weight: 500;
@@ -51,8 +51,8 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        border: 1px solid #009578;
         border-radius: 5px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
         .title {
           font-size: 22px;
           font-weight: 500;

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import "./css/index.scss";
-import ListVideo from "./js/ListVideo";
 import { AiOutlineArrowDown, AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineArrowUp } from 'react-icons/ai';
 import { BsArrowDownLeft, BsArrowDownRight, BsArrowUpLeft, BsArrowUpRight, BsArrowCounterclockwise } from 'react-icons/bs'
 
@@ -120,8 +119,6 @@ export default function CameraStream(props) {
                     </div>
                 </div>
             </div>
-            <p style={{ marginLeft: '1%', fontWeight: 500, fontSize: '1.5rem', marginBottom: '10px' }}>List video</p>
-            <ListVideo videos={data?.camera?.videos} camera={data?.camera?._id} />
         </div>
     );
 }

@@ -15,6 +15,7 @@ export default function NavBar(props) {
     const [toast, setToast] = useState(null);
 
     const onCompleted = ({ user }) => {
+        if (!user) return;
         const socket = io("http://localhost:4007/");
         socket.emit('join', user._id);
         socket.on('notification', function (data) {

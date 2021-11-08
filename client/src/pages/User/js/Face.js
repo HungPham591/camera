@@ -32,7 +32,7 @@ export default function ListFace(props) {
             <button className='btn btn-primary' onClick={handleShareButton} style={{ marginTop: '1vh', marginBottom: '2vh' }}>Chia sẻ</button>
             <div className='grid'>
                 {
-                    data?.user?.faces.map((value, index) => {
+                    data?.user?.faces?.map((value, index) => {
                         const imgPath = `${process.env.REACT_APP_DOMAIN}\\face\\${data?.user?._id}\\${value?._id}.jpg`
                         return (
                             <div key={index} className='custom-card'>

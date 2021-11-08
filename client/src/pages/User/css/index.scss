@@ -45,6 +45,18 @@
     width: 70%;
     height: 100%;
     padding: 2vh 2vw 2vh 2vw;
+    select {
+      width: 100%;
+      margin-bottom: 1rem;
+      border-radius: 5px;
+      padding: 0.5rem;
+      outline: none;
+      border: 1.8px solid #eee;
+      background-color: #eee;
+      &:focus {
+        background-color: white;
+      }
+    }
     .grid {
       display: grid;
       grid-auto-rows: 1fr;
