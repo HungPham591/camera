@@ -4,6 +4,10 @@ exports.getUser = async (args) => {
     if (!args.user) return null;
     return await UserModel.findById(args.user);
 }
+exports.updateUser = async (args) => {
+    const query = { user_name: args.user_name }
+    return await UserModel.findOneAndUpdate(query, args);
+}
 exports.getUsers = async (args) => {
     return await UserModel.find(args);
 }

@@ -1,40 +1,24 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "./css/index.scss";
-import { Link, useHistory } from "react-router-dom";
-import { GoogleLogin } from 'react-google-login';
+import { Link } from "react-router-dom";
 import { useForm } from 'react-hook-form';
 import { signup } from '../../graphql/user';
 import { useMutation } from '@apollo/client';
 import LoadingBar from 'react-top-loading-bar';
-import axios from 'axios';
 
 
 export default function SignUp(props) {
-    const history = useHistory();
     const [progress, setProgress] = useState(0);
 
     const onCompleted = ({ signup }) => {
-        if (signup) history.replace('/');
+        if (signup) {
+            window.location.assign('http://localhost:4002/auth/google');
+        }
         else onError();
     }
     const onError = () => {
         alert('Signup fail!!!');
         setProgress(100);
-    }
-    const generateRefreshToken = async (CODE) => {
-        let CLIENT_ID;
-        let CLIENT_SECRET;
-        let TOKEN_URL;
-        const payload = {
-            code: CODE,
-            client_id: CLIENT_ID,
-            client_secret: CLIENT_SECRET,
-            redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-            grant_type: 'authorization_code'
-        };
-        const response = await axios.post(TOKEN_URL, { data: payload });
-        const data = JSON.parse(response.getContentText());
-        return data.refresh_token;
     }
 
     const [signupAction] = useMutation(signup, { onCompleted, onError });
@@ -49,12 +33,6 @@ export default function SignUp(props) {
         setProgress(60);
     }
 
-    const onSuccess = async (res) => {
-        console.log(await res.getAuthResponse())
-    };
-    const onFailure = (error) => {
-        console.log(error);
-    };
 
     return (
         <div id="SignUp">
@@ -87,18 +65,6 @@ export default function SignUp(props) {
                                 Sign Up
                             </button>
                         </div>
-                        <GoogleLogin
-                            clientId={process.env.REACT_APP_GG_SIGNIN_CLIENT_ID}
-                            render={renderProps => (
-                                <button id="btnGoogle" onClick={renderProps.onClick} disabled={renderProps.disabled}>Google button</button>
-                            )}
-                            onSuccess={onSuccess}
-                            onFailure={onFailure}
-                            scope="profile email https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/drive"
-                            accessType="offline"
-                            // responseType="code"
-                            prompt='consent'
-                        />
                     </form>
                 </div>
             </div>

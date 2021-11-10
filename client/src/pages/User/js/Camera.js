@@ -35,7 +35,7 @@ export default function ListCamera(props) {
         handleShow();
     }
     const listCamera = () => {
-        return data?.user?.cameras.map((value, index) => {
+        return data?.user?.cameras?.map((value, index) => {
             return (
                 <div key={index} className='custom-card'>
                     <video ref={el => refVideo.current[index] = el}></video>

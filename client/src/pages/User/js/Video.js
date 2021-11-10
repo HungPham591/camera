@@ -9,12 +9,13 @@ export default function ListVideo(props) {
     const [camera, setCamera] = useState(null);
 
     const onCompleted = ({ user }) => {
+        if (!user?.cameras?.length) return;
         setCamera(user?.cameras[0])
     }
     const { loading, error, data } = useQuery(getUser, { onCompleted });
 
     useEffect(() => {
-        if (!camera && data?.user?.cameras[0]) setCamera(data?.user?.cameras[0]?._id);
+        if (!camera && data?.user?.cameras?.length) setCamera(data?.user?.cameras[0]?._id);
     }, [])
 
     const handleWatchButton = (id) => {

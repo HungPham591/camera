@@ -60,7 +60,7 @@ export default function LogIn(props) {
                         </div>
                         <div className="formGroup">
                             <button type='submit' className="btnLogin">
-                                Sign Up
+                                Log In
                             </button>
                         </div>
                     </form>
