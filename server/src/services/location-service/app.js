@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const path = require("path");
-const route = require("../../routes/camera.routes");
+const route = require("../../routes/location.routes");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 app.use(express.static(path.join(__dirname, '..', '..', "public")));

@@ -1,0 +1,66 @@
+#SettingCamera {
+  margin-top: 8vh;
+  width: 100vw;
+  height: 92vh;
+  display: flex;
+  .left-pane {
+    padding-top: 5vh;
+    display: flex;
+    justify-content: center;
+    width: 60%;
+    height: 100%;
+    position: relative;
+    #videoWrapper {
+      border-radius: 5px;
+      background-color: black;
+      width: 97%;
+      height: 80%;
+      position: absolute;
+    }
+    .result-canvas {
+      background-color: transparent;
+      position: absolute;
+    }
+    button {
+      font-weight: 500;
+      padding: 10px 30px;
+      position: absolute;
+    }
+  }
+  .right-pane {
+    padding-top: 5vh;
+    overflow-y: scroll;
+    width: 40%;
+    height: 100%;
+    .title {
+      font-size: 1.7rem;
+      font-weight: 700;
+    }
+    .form-info {
+      height: fit-content;
+      width: 100%;
+      .label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+      input[type="text"] {
+        width: 100%;
+        margin-bottom: 0.5rem;
+        border-radius: 5px;
+        padding: 0.5rem;
+        outline: none;
+        border: 1.8px solid #eee;
+        background-color: #eee;
+        &::placeholder {
+          font-weight: 400;
+        }
+        &:focus {
+          background-color: white;
+        }
+      }
+      input[type="submit"] {
+        margin-top: 3vh;
+      }
+    }
+  }
+}

@@ -3,12 +3,16 @@ import React, { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import { connect } from "react-redux";
 import { useQuery } from '@apollo/client';
-import { getCameras } from '../../../graphql/camera';
+import { getUser } from '../../../graphql/user';
 
 import Hls from 'hls.js';
 
 function Map(props) {
-    const { loading, error, data } = useQuery(getCameras);
+    const onCompleted = ({ user }) => {
+        loadLocationMarker();
+    }
+
+    const { data } = useQuery(getUser, { onCompleted });
     const hls = useRef(null);
     const mapObject = useRef(null);
 
@@ -22,21 +26,23 @@ function Map(props) {
         });
     };
     useEffect(() => {
-        if (!mapObject?.current) initMap();
+        if (!mapObject?.current) initLocationMap();
         return () => { hls.current?.destroy() }
     }, [])
-    useEffect(() => {
-        loadMarker();
-    }, [data]);
-
-    const initMap = () => {
+    const handleButtonBack = () => {
+        initLocationMap();
+        loadLocationMarker();
+    }
+    const initLocationMap = () => {
+        mapObject.current?.off();
+        mapObject.current?.remove();
         if (props.location.length === 0) {
-            mapObject.current = L.map("mapContainer", {
+            mapObject.current = L.map("map", {
                 center: [10.030948595309376, 105.76856626550823],
                 zoom: 18,
             });
         } else {
-            mapObject.current = L.map("mapContainer", {
+            mapObject.current = L.map("map", {
                 center: props.location,
                 zoom: 18,
             });
@@ -47,7 +53,24 @@ function Map(props) {
                 'www.openstreetmap.org/copyright">OpenStreetMap</a>',
         }).addTo(mapObject.current);
     };
-    const showPopup = (e) => {
+    const initCameraMap = (id) => {
+        const imgPath = ` http://localhost:4007/map/${data?.user?._id}/${id}.jpg`
+
+        mapObject.current?.off();
+        mapObject.current?.remove();
+
+        mapObject.current = L.map("map", { crs: L.CRS.Simple });
+        const bounds = [[0, 0], [1000, 1000]];
+        L.imageOverlay(imgPath, bounds).addTo(mapObject.current);
+        mapObject.current.fitBounds(bounds);
+
+        loadCameraMarker(id);
+    }
+    const handleLocationMarker = (e) => {
+        const id = e.sourceTarget.feature.properties._id;
+        initCameraMap(id);
+    };
+    const handleCameraMarker = (e) => {
         const id = e.sourceTarget.feature.properties._id;
         let videoSrc = `${process.env.REACT_APP_DOMAIN}\\stream\\${id}\\index.m3u8`;
         const video = document.getElementById("videoPopup");
@@ -56,11 +79,32 @@ function Map(props) {
             hls.current.loadSource(videoSrc);
             hls.current.attachMedia(video);
         }
+    }
+    const cameraPopup = () => `<video id='videoPopup' crossOrigin="anonymous" controls autoPlay/>`;
+
+    const loadLocationMarker = () => {
+        if (!mapObject.current || !data?.user.locations) return;
+        data?.user?.locations.forEach((value) => {
+            let marker = L.marker(
+                [value.location_coordinate[0], value.location_coordinate[1]],
+                {
+                    icon: greenIcon(value.location_name),
+                }
+            );
+            marker.feature = {
+                type: "Point",
+                properties: {
+                    _id: value._id,
+                },
+                geometry: undefined,
+            };
+            marker.addTo(mapObject.current).on("click", handleLocationMarker);
+        });
     };
-    const popup = () => `<video id='videoPopup' crossOrigin="anonymous" controls autoPlay/>`
-    const loadMarker = () => {
-        if (!mapObject.current || !data?.cameras) return;
-        data.cameras.forEach((value) => {
+    const loadCameraMarker = (id) => {
+        if (!mapObject.current || !data?.user?.cameras) return;
+        data?.user?.cameras.forEach((value) => {
+            if (value?.location !== id) return;
             let marker = L.marker(
                 [value.camera_location[0], value.camera_location[1]],
                 {
@@ -74,12 +118,15 @@ function Map(props) {
                 },
                 geometry: undefined,
             };
-            marker.addTo(mapObject.current).bindPopup(popup).on("click", showPopup);
+            marker.addTo(mapObject.current).bindPopup(cameraPopup).on("click", handleCameraMarker);
         });
-    };
+    }
 
     return (
-        <div id="mapContainer"></div>
+        <div id='mapContainer'>
+            <div id="map"></div>
+            <button onClick={handleButtonBack} style={{ right: 10, top: 10 }}>Back</button>
+        </div>
     );
 }
 

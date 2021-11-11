@@ -1,7 +1,7 @@
 const UserModel = require("../models/user.model");
 
 exports.getUser = async (args) => {
-    if (!args.user) return null;
+    if (!args?.user) return null;
     return await UserModel.findById(args.user);
 }
 exports.updateUser = async (args) => {

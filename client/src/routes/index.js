@@ -21,6 +21,7 @@ const VideoDetail = React.lazy(() => import("../pages/VideoDetail"));
 const User = React.lazy(() => import("../pages/User"));
 const PageNotFound = React.lazy(() => import("../pages/NotFound"));
 const Admin = React.lazy(() => import('../pages/Admin'));
+const CameraSetting = React.lazy(() => import('../pages/CameraSetting'));
 
 export default function MainNavigation(props) {
     const AuthContainer = () => {
@@ -47,6 +48,7 @@ export default function MainNavigation(props) {
             <Route path="/Blog" component={Blog} />
             <Route path='/BlogDetail' component={BlogDetail} />
             <Route path="/Video/:id" component={VideoDetail} />
+            <Route path="/CameraSetting" component={CameraSetting} />
             <PrivateRoute path="/User">
                 <User />
             </PrivateRoute>

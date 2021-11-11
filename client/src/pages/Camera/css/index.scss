@@ -77,42 +77,4 @@
       }
     }
   }
-  #list-video {
-    width: 100vw;
-    height: 30vh;
-    padding: 1% 1%;
-    display: flex;
-    overflow-x: scroll;
-    .custom-card {
-      border-radius: 5px;
-      display: flex;
-      height: 100%;
-      width: fit-content;
-      margin: 0 1vw 0 0;
-      border: 0;
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-      .video {
-        height: 100%;
-        border-bottom-left-radius: 5px;
-        border-top-left-radius: 5px;
-      }
-      .body {
-        padding: 5px 10px;
-        margin-left: 10px;
-        .title {
-          font-size: 1.5rem;
-          font-weight: 600;
-          white-space: nowrap;
-        }
-        button {
-          padding: 10px 15px;
-          font-weight: 500;
-          background-color: #13599f;
-          color: white;
-          border: 0;
-          border-radius: 10px;
-        }
-      }
-    }
-  }
 }

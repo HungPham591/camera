@@ -12,14 +12,9 @@ const amqserver = 'amqp://localhost:5672/'
 
 const db = require("../../db");
 
-db.connect();
 
-//
-let channelAmq;
-
-//
 const connectAmqserver = async () => {
-    channelAmq = await createClient(amqserver);
+    let channelAmq = await createClient(amqserver);
     await Promise.all([
         channelAmq.assertQueue('GET_CAMERA'),
         channelAmq.assertQueue('GET_CAMERAS'),
@@ -32,6 +27,9 @@ const connectAmqserver = async () => {
     channelAmq.consume('CREATE_CAMERA', msg => response(channelAmq, msg, controller.createCamera))
     channelAmq.consume('UPDATE_CAMERA', msg => response(channelAmq, msg, controller.updateCamera))
     channelAmq.consume('DELETE_CAMERA', msg => response(channelAmq, msg, controller.deleteCamera))
+    Event.on("CREATE_VIDEO", function (doc) {
+        sendMessage(channelAmq, doc, 'CREATE_VIDEO');
+    });
 }
 const response = async (channel, msg, controller) => {
     const data = JSON.parse(msg.content);
@@ -60,14 +58,13 @@ const startAllCamera = async () => {
 };
 
 const startServer = async () => {
-    await connectAmqserver();
-    await startAllCamera();
-    Event.on("CREATE_VIDEO", function (doc) {
-        sendMessage(channelAmq, doc, 'CREATE_VIDEO');
-    });
+    await db.connect();
+    connectAmqserver();
+    startAllCamera();
 }
 
 startServer();
+
 
 app.listen(port, () => {
     console.log('camera service listen at port ' + port)

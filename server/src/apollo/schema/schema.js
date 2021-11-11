@@ -5,6 +5,7 @@ const typeDefs = gql`
     type Camera{
         _id:ID
         user:User
+        location:String
         camera_name:String
         camera_drive:String
         camera_link:String
@@ -24,6 +25,7 @@ const typeDefs = gql`
         createdAt:String
         cameras:[Camera]
         faces:[Face]
+        locations:[Location]
     }
     type Video{
         _id:ID
@@ -47,6 +49,13 @@ const typeDefs = gql`
         user:User
         face_name:String
     }
+    type Location{
+        _id:ID
+        user:User
+        location_name:String
+        location_coordinate:[Float]
+        cameras:[Camera]
+    }
     type Blog{
         _id:ID
         blog_title:String
@@ -65,6 +74,8 @@ const typeDefs = gql`
         blog(_id:ID):Blog
         blogs:[Blog]
         faces:[Face]
+        location(_id:ID,location_name:String):Location
+        locations:[Location]
     }
     type Mutation{
         createCamera(camera_name:String,camera_link:String,camera_location:[Float],camera_public:Boolean,google_token:String):Camera
@@ -75,6 +86,8 @@ const typeDefs = gql`
         deleteBlog(_id:ID):Blog
         createFace(face_name:String):Face
         deleteFace(_id:ID):Face
+        createLocation(location_name:String,location_coordinate:[Float]):Location
+        deleteLocation(_id:ID):Location
         signin(user_name:String!,user_pass:String!):User
         signup(user_name:String,user_pass:String,google_token:String):User
         logout(_id:ID):User

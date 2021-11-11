@@ -14,6 +14,19 @@ exports.uploadImg = async (req, res) => {
         res.status(400).send(err);
     }
 }
+exports.uploadMap = async (req, res) => {
+    try {
+        let fileImage = req.files.img;
+        let fileName = `${req.body.file_name}.jpg`;
+        let dir = path.join(__dirname, '..', `public/map/${req.user}/`);
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+
+        fileImage.mv(path.join(dir, fileName), (err) => console.log(err));
+    } catch (err) {
+        console.log(err);
+        res.status(400).send(err);
+    }
+}
 exports.streamVideo = async (req, res) => {
     let param = req.params.id;
     const range = req.headers.range;

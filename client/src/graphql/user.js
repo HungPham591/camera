@@ -24,8 +24,14 @@ export const getUser = gql`
                 _id
                 face_name
             }
+            locations{
+                _id
+                location_name
+                location_coordinate
+            }
             cameras{
                 _id
+                location
                 camera_name
                 camera_drive
                 camera_link
