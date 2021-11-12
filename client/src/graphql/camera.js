@@ -35,8 +35,8 @@ export const getCamera = gql`
     }
 `
 export const createCamera = gql`
-    mutation($camera_name:String,$camera_location:[Float],$camera_link:String,$camera_public:Boolean,$google_token:String){
-        createCamera(camera_name:$camera_name,camera_location:$camera_location,camera_link:$camera_link,camera_public:$camera_public,google_token:$google_token){
+    mutation($camera_name:String,$camera_location:[Float],$camera_link:String,$camera_public:Boolean,$google_token:String,$location:String){
+        createCamera(camera_name:$camera_name,camera_location:$camera_location,camera_link:$camera_link,camera_public:$camera_public,google_token:$google_token,location:$location){
             _id
             camera_name
             camera_link

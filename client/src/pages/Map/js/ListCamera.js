@@ -56,7 +56,7 @@ export default function ListCamera(props) {
         <div>
             <p className='title'>Địa điểm xung quanh đây</p>
             <div className='search'>
-                <input ref={refInput} onKeyDown={handleKeyDown} placeholder="Nhập tên camera..." />
+                <input ref={refInput} onKeyDown={handleKeyDown} placeholder="Nhập tên địa điểm..." />
                 <button className='btn btn-primary' onClick={handleSearchButton}>Search</button>
             </div>
             {listCamera()}

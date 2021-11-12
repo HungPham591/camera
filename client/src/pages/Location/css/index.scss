@@ -1,0 +1,105 @@
+#Location {
+  margin-top: 8vh;
+  width: 100vw;
+  height: 92vh;
+  display: flex;
+  .left-pane {
+    height: 100%;
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .right-pane {
+    overflow-y: scroll;
+    width: 40%;
+    height: 100%;
+    padding: 3vh 2% 1vh 2%;
+  }
+  .custom-card {
+    width: 100%;
+    overflow-x: hidden;
+    margin-bottom: 2vh;
+    padding: 1vh 0 1vh 0;
+    display: flex;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    .card-body {
+      padding: 0vh 1vw;
+    }
+    p {
+      margin-bottom: 0.8rem;
+    }
+    video {
+      border-radius: 5px;
+      width: 60%;
+      height: 100%;
+      object-fit: cover;
+    }
+    button {
+      font-weight: 500;
+    }
+  }
+  .greenMarker {
+    background-color: #46e166;
+    width: 2rem;
+    height: 2rem;
+    display: block;
+    left: -1.5rem;
+    top: -1.5rem;
+    position: relative;
+    border-radius: 3rem 3rem 0;
+    transform: rotate(45deg);
+    border: 1px solid #ffffff;
+  }
+
+  .textMarker {
+    width: 2rem;
+    height: 2rem;
+    display: block;
+    left: -1rem;
+    top: -1rem;
+    position: relative;
+    font-weight: bold;
+  }
+  #map {
+    z-index: 0;
+    border-radius: 5px;
+    height: 95%;
+    width: 95%;
+  }
+  .leaflet-popup {
+    transform: translate3d(10px, 181px, 0px);
+  }
+  .leaflet-popup-content-wrapper {
+    width: 200px;
+    height: 150px;
+    display: flex;
+    align-item: center;
+    justify-content: center;
+    border-radius: 5px;
+    padding: 0;
+  }
+  .leaflet-popup-content {
+    width: 200px;
+    height: 150px;
+    display: flex;
+    align-item: center;
+    justify-content: center;
+    margin: 0;
+    padding-top: 25px;
+  }
+  .leaflet-popup-tip-container {
+    display: none;
+  }
+  #videoPopup {
+    width: 150px;
+    height: 100px;
+  }
+  .title {
+    font-size: 32px;
+    line-height: 36px;
+    color: rgb(34, 34, 34);
+    font-weight: 600;
+  }
+}

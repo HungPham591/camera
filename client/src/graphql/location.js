@@ -9,6 +9,26 @@ export const getLocations = gql`
         }
     }
 `
+export const getLocation = gql`
+    query($_id:ID){
+        location(_id:$_id){
+            _id
+            user
+            location_name
+            location_coordinate
+            cameras{
+                _id
+                location
+                camera_name
+                camera_drive
+                camera_link
+                camera_location
+                camera_public
+                createdAt
+            }
+        }
+    }
+`
 
 export const createLocation = gql`
     mutation($location_name:String,$location_coordinate:[Float]){

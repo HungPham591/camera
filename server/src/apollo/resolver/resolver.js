@@ -33,7 +33,7 @@ const resolvers = {
         camera: async (parent, args, { channel }) => JSON.parse(await sendRPCMessage(channel, { _id: parent.camera }, 'GET_CAMERA'))
     },
     Location: {
-        cameras: async (parent, args, { channel }) => JSON.parse(await sendRPCMessage(channel, { user: parent._id }, 'GET_CAMERAS')),
+        cameras: async (parent, args, { channel }) => JSON.parse(await sendRPCMessage(channel, { location: parent._id }, 'GET_CAMERAS')),
     },
     Mutation: {
         createCamera: async (parent, args, { channel, req }) => JSON.parse(await sendRPCMessage(channel, { ...args, user: req?.user }, 'CREATE_CAMERA')),

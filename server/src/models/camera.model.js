@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const drive = require("../modules/googledrive.modules");
 const Schema = mongoose.Schema;
 
 const CameraSchema = new Schema(

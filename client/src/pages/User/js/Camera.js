@@ -34,6 +34,9 @@ export default function ListCamera(props) {
         setCamera(camera);
         handleShow();
     }
+    const handleCustomButton = (camera) => {
+        history.push('/CameraSetting/' + camera._id)
+    }
     const listCamera = () => {
         return data?.user?.cameras?.map((value, index) => {
             return (
@@ -53,6 +56,13 @@ export default function ListCamera(props) {
                             style={{ marginLeft: "5%" }}
                         >
                             Cài đặt
+                        </button>
+                        <button
+                            className="btn btn-primary"
+                            onClick={() => handleCustomButton(value)}
+                            style={{ marginLeft: "5%" }}
+                        >
+                            Chi tiet
                         </button>
                     </div>
 

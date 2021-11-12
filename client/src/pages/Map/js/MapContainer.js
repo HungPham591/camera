@@ -8,11 +8,7 @@ import { getUser } from '../../../graphql/user';
 import Hls from 'hls.js';
 
 function Map(props) {
-    const onCompleted = ({ user }) => {
-        loadLocationMarker();
-    }
-
-    const { data } = useQuery(getUser, { onCompleted });
+    const { data } = useQuery(getUser);
     const hls = useRef(null);
     const mapObject = useRef(null);
 
@@ -28,7 +24,10 @@ function Map(props) {
     useEffect(() => {
         if (!mapObject?.current) initLocationMap();
         return () => { hls.current?.destroy() }
-    }, [])
+    }, []);
+    useEffect(() => {
+        loadLocationMarker();
+    }, [data]);
     const handleButtonBack = () => {
         initLocationMap();
         loadLocationMarker();

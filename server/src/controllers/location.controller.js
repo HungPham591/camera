@@ -5,9 +5,7 @@ exports.getLocation = async (args) => {
 }
 exports.getLocations = async (args) => {
     if (!args?.user) return null;
-    if (args.location_name === undefined) return await LocationModel.find(args);
-    if (args.location_name.trim() === "") return await LocationModel.find()
-    if (args.location_name) return await LocationModel.find({ location_name: { $regex: args.location_name } });
+    return await LocationModel.find(args);
 }
 exports.createLocation = async (args) => {
     if (!args?.user) return null;

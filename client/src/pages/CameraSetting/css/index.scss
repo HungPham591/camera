@@ -13,8 +13,8 @@
     #videoWrapper {
       border-radius: 5px;
       background-color: black;
-      width: 97%;
-      height: 80%;
+      width: 95%;
+      height: 90%;
       position: absolute;
     }
     .result-canvas {
@@ -28,6 +28,7 @@
     }
   }
   .right-pane {
+    padding: 5vh 1vw 0 0;
     padding-top: 5vh;
     overflow-y: scroll;
     width: 40%;
@@ -35,6 +36,15 @@
     .title {
       font-size: 1.7rem;
       font-weight: 700;
+    }
+    .react_time_range__time_range_container {
+      padding-left: 0;
+      padding-right: 0;
+      margin-bottom: 0.5rem;
+    }
+    .react_time_range__rail__outer,
+    .react_time_range__rail__inner {
+      width: 100%;
     }
     .form-info {
       height: fit-content;
@@ -58,7 +68,12 @@
           background-color: white;
         }
       }
-      input[type="submit"] {
+      input[type="submit"],
+      button {
+        color: white;
+        font-weight: 500;
+        margin-right: 20px;
+        padding: 10px 20px;
         margin-top: 3vh;
       }
     }

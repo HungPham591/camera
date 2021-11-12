@@ -4,9 +4,7 @@ exports.getCamera = async (args) => {
     return await CameraModel.findOne(args);
 }
 exports.getCameras = async (args) => {
-    if (args.camera_name === undefined) return await CameraModel.find(args);
-    if (args.camera_name.trim() === "") return await CameraModel.find()
-    if (args.camera_name) return await CameraModel.find({ camera_name: { $regex: args.camera_name } });
+    return await CameraModel.find(args);
 }
 
 exports.createCamera = async (args) => {

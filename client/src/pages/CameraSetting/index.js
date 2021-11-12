@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./css/index.scss";
 import CanvasDraw from "react-canvas-draw";
 import { getCamera } from '../../graphql/camera';
 import { useQuery } from '@apollo/client';
+import TimeSlider from "../../components/time-slider";
 
 import Hls from 'hls.js';
 
@@ -37,7 +38,7 @@ export default function CameraStream(props) {
         skip: id === null,
         onCompleted
     })
-    const titles = [{ title: 'name', value: 'camera_name' }, { title: 'uri', value: 'camera_uri' }];
+    const titles = [{ title: 'name', value: 'camera_name' }, { title: 'uri', value: 'camera_link' }];
     const form = () => {
         return (
             <form className='custom-card form-info' >
@@ -46,12 +47,23 @@ export default function CameraStream(props) {
                         return (
                             <div key={index}>
                                 <p className='label'>{value.title}</p>
-                                <input type='text' />
+                                <input type='text' defaultValue={data?.camera[value.value]} />
                             </div>
                         )
                     })
                 }
-                <input type="submit" />
+                <div>
+                    <p className='label'>Thời gian hoạt động</p>
+                    <TimeSlider />
+                </div>
+                <div>
+                    <p className='label'>Thời gian hoạt động</p>
+                    <TimeSlider />
+                </div>
+                <div style={{ display: 'flex' }}>
+                    <input className='btn btn-primary' type="submit" />
+                    <button className='btn btn-warning' onClick={() => canvasRef.current?.clear()}>Clear</button>
+                </div>
             </form>
         )
     }
@@ -60,8 +72,7 @@ export default function CameraStream(props) {
         <div id="SettingCamera">
             <div className="left-pane">
                 <video id="videoWrapper" ref={videoRef} crossOrigin="anonymous" autoPlay />
-                <CanvasDraw style={{ width: '97%', height: '80%', backgroundColor: 'transparent' }} hideGrid={true} ref={canvasRef} className='result-canvas' />
-                <button className="btn btn-primary" style={{ bottom: 30, left: 10 }}>clear</button>
+                <CanvasDraw style={{ width: '95%', height: '90%', backgroundColor: 'transparent' }} brushColor='red' hideGrid={true} ref={canvasRef} className='result-canvas' />
             </div>
             <div className="right-pane">
                 <p className='title'>Camera Setting</p>
