@@ -85,40 +85,39 @@ export default function CameraStream(props) {
 
     return (
         <div id="Camera">
-            <p className='title-1'>Xem trực tiếp</p>
-            <div className='custom-container'>
-                <div className="left-pane">
-                    <video id="videoWrapper" ref={videoRef} onPlay={handleVideoOnPlay} crossOrigin="anonymous" controls autoPlay />
-                    <canvas ref={canvasRef} className='result-canvas' />
-                </div>
-                <div className="right-pane">
-                    <p className='title'>Camera {data?.camera?.camera_name}</p>
-                    <a
-                        ref={downloadRef}
-                        href="/#"
-                        id="download"
-                        className="btn btn-primary"
-                        onClick={setHref}
-                        download="camera"
-                    >
-                        Screenshot
-                    </a>
-                    <div className='control-pane'>
-                        <p className='title'>Bảng điều khiển</p>
-                        <div className='button-group'>
-                            <BsArrowUpLeft />
-                            <AiOutlineArrowUp />
-                            <BsArrowUpRight />
-                            <AiOutlineArrowLeft />
-                            <BsArrowCounterclockwise />
-                            <AiOutlineArrowRight />
-                            <BsArrowDownLeft />
-                            <AiOutlineArrowDown />
-                            <BsArrowDownRight />
-                        </div>
+            <div className="left-pane">
+                <video id="videoWrapper" ref={videoRef} onPlay={handleVideoOnPlay} crossOrigin="anonymous" controls autoPlay />
+                <canvas ref={canvasRef} className='result-canvas' />
+            </div>
+            <div className="right-pane">
+                <p className='title'>Trực tiếp</p>
+                <p className='small-title'>Tên camera</p>
+                <p className='small-text'>{data?.camera?.camera_name}</p>
+                <a
+                    ref={downloadRef}
+                    href="/#"
+                    id="download"
+                    className="btn btn-primary"
+                    onClick={setHref}
+                    download="camera"
+                >
+                    Screenshot
+                </a>
+                <div className='control-pane'>
+                    <p className='title'>Bảng điều khiển</p>
+                    <div className='button-group'>
+                        <BsArrowUpLeft />
+                        <AiOutlineArrowUp />
+                        <BsArrowUpRight />
+                        <AiOutlineArrowLeft />
+                        <BsArrowCounterclockwise />
+                        <AiOutlineArrowRight />
+                        <BsArrowDownLeft />
+                        <AiOutlineArrowDown />
+                        <BsArrowDownRight />
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

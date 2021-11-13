@@ -156,31 +156,31 @@ export default function Video(props) {
 
     return (
         <div id="VideoDetail">
-            <p className='title-1'>Xem lại</p>
-            <div className='custom-container'>
-                <div className="left-pane">
-                    <div className='video-pane'>
-                        {videos ? <video ref={videoRef} src={video_path} crossOrigin="anonymous" id='video' controls /> : ''}
-                        <canvas ref={canvasRef} className='result-canvas' />
-                    </div>
-                    {progressbar()}
+            <div className="left-pane">
+                <div className='video-pane'>
+                    {videos ? <video ref={videoRef} src={video_path} crossOrigin="anonymous" id='video' controls /> : ''}
+                    <canvas ref={canvasRef} className='result-canvas' />
                 </div>
-                <div className="right-pane">
-                    <p className='title'>Video camera {videos?.video?.camera?.camera_name}</p>
-                    <p>{moment(start).format('DD/MM/YYYY HH:mm')}</p>
-                    <Dropzone multiple={false} onDrop={handleOnDrop} accept='image/jpeg, image/png'>
-                        {({ getRootProps, getInputProps }) => (
-                            <section className='dropzone'>
-                                <div {...getRootProps()}>
-                                    <input {...getInputProps()} />
-                                    {file ? <img className='thumb' src={file} /> : <p>Drag 'n' drop some files here, or click to select files</p>}
-                                </div>
-                            </section>
-                        )}
-                    </Dropzone>
-                    <p ref={alert} className='alert alert-danger text-center d-none'>Không tìm thấy</p>
-                    <button disabled={!environment && !timeVideo} onClick={seekVideoAndDetectFace}>Xem kết quả</button>
-                </div>
+                {progressbar()}
+            </div>
+            <div className="right-pane">
+                <p className='title'>Xem lại</p>
+                <p className='small-title'>Tên camera</p>
+                <p className='small-text'>{videos?.video?.camera?.camera_name}</p>
+                <p className='small-title'>Thời gian</p>
+                <p className='small-text'>{moment(start).format('DD/MM/YYYY HH:mm')}</p>
+                <Dropzone multiple={false} onDrop={handleOnDrop} accept='image/jpeg, image/png'>
+                    {({ getRootProps, getInputProps }) => (
+                        <section className='dropzone'>
+                            <div {...getRootProps()}>
+                                <input {...getInputProps()} />
+                                {file ? <img className='thumb' src={file} /> : <p>Drag 'n' drop some files here, or click to select files</p>}
+                            </div>
+                        </section>
+                    )}
+                </Dropzone>
+                <p ref={alert} className='alert alert-danger text-center d-none'>Không tìm thấy</p>
+                <button disabled={!environment && !timeVideo} onClick={seekVideoAndDetectFace}>Xem kết quả</button>
             </div>
         </div>
     );
