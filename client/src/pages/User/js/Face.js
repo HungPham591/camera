@@ -28,8 +28,8 @@ export default function ListFace(props) {
     return (
         <div>
             <ShareModal show={show} handleClose={handleClose} />
-            <p className='title'>Chia sẻ</p>
-            <button className='btn btn-primary' onClick={handleShareButton} style={{ marginTop: '1vh', marginBottom: '2vh' }}>Chia sẻ</button>
+            <p className='title'>Hình ảnh</p>
+            <button className='btn btn-primary' onClick={handleShareButton} style={{ marginTop: '1vh', marginBottom: '2vh' }}>Thêm mới</button>
             <div className='grid'>
                 {
                     data?.user?.faces?.map((value, index) => {

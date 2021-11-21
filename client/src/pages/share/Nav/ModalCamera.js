@@ -1,73 +1,50 @@
 import { Modal, Button } from "react-bootstrap";
 import { connect } from "react-redux";
-import { useState } from "react";
-// import { createCamera } from '../../../services/camera'
-import { useMutation } from '@apollo/client'
-import { createCamera, getCameras } from '../../../graphql/camera';
+import { useRef, useState } from "react";
+import { useQuery } from '@apollo/client'
 import { getUser } from '../../../graphql/user';
-import { useForm } from 'react-hook-form';
+import { useHistory } from "react-router";
+
 
 function ModalCamera(props) {
-    const [createItem, { data, loading, error }] = useMutation(createCamera)
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm();
-    const onSubmit = (data) => {
-        if (!props?.location) return;
-        data.camera_location = props.location;
-        data.google_token = props.google_token;
-        createItem({
-            variables: data,
-            refetchQueries: [{ query: getUser }]
+    const history = useHistory();
+    const dropdownRef = useRef(null)
+    const { data } = useQuery(getUser);
+
+    const dropdown = () => {
+        const listOption = data?.user?.locations?.map((value, index) => {
+            return <option key={index} value={value._id}>{value.location_name}</option>
         })
+        return (
+            <select ref={dropdownRef} style={{ width: '100%', borderRadius: '5px', padding: '0.5rem', outline: 'none', border: '1.8px solid #eee', backgroundColor: '#eee' }} >
+                {listOption}
+            </select>
+        );
+    }
+    const handleButtonClick = () => {
+        if (!dropdownRef.current?.value) return props.handleCloseCamera();
+        history.push('/Location/' + dropdownRef.current?.value);
         props.handleCloseCamera();
     }
 
-    const title = [{ title: 'camera uri', value: 'camera_link' }, { title: 'camera name', value: 'camera_name' }]
     return (
         <Modal
             show={props.showCamera}
             onHide={props.handleCloseCamera}
             style={{ zIndex: 9999 }}
         >
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Thêm Camera</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {
-                        title.map((value, index) =>
-                        (
-                            <div key={index} className="mb-3">
-                                <label className="form-label">{value.title}</label>
-                                <input
-                                    className="form-control"
-                                    {...register(value.value, { required: true })}
-                                />
-                            </div>
-                        )
-                        )
-                    }
-                    <div className="form-group form-check">
-                        <input
-                            type="checkbox"
-                            className="form-check-input"
-                            {...register('camera_public')}
-                        />
-                        <label className="form-check-label" htmlFor="exampleCheck1">
-                            Public
-                        </label>
-                    </div>
-                </Modal.Body>
-                <div style={{ padding: '15px' }}>
-                    <Button variant="secondary" onClick={props.handleCloseCamera}>
-                        Close
-                    </Button>
-                    <input className='btn btn-primary' style={{ marginLeft: '10px' }} type='submit' />
-                </div>
-            </form>
+            <Modal.Header closeButton>
+                <Modal.Title>Thêm Camera vào địa điểm</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {dropdown()}
+            </Modal.Body>
+            <div style={{ padding: '15px' }}>
+                <Button variant="secondary" onClick={props.handleCloseCamera}>
+                    Close
+                </Button>
+                <button className='btn btn-primary' style={{ marginLeft: '10px' }} onClick={handleButtonClick}>Add</button>
+            </div>
         </Modal>
     );
 }

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Event = require('../events/camera.event').eventBus;
 
 const CameraSchema = new Schema(
     {
@@ -13,6 +14,9 @@ const CameraSchema = new Schema(
     },
     { timestamps: true }
 );
+CameraSchema.post('save', function (next) {
+    Event.emit('NEW_CAMERA', this);
+});
 
 const CameraModel = mongoose.model("cameras", CameraSchema);
 

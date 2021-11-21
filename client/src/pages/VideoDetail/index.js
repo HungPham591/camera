@@ -33,7 +33,7 @@ export default function Video(props) {
     });
     const [fetchReports, { data: reports }] = useLazyQuery(getReports);
 
-    const video_path = `${process.env.REACT_APP_DOMAIN}\\video\\${videos?.video?.camera?._id}_${videos?.video?.video_time}`;
+    const video_path = `${process.env.REACT_APP_DOMAIN}\\video\\${videos?.video?.camera?._id}\\${videos?.video?.video_time}`;
 
     useEffect(() => {
         loadModels()
@@ -180,7 +180,7 @@ export default function Video(props) {
                     )}
                 </Dropzone>
                 <p ref={alert} className='alert alert-danger text-center d-none'>Không tìm thấy</p>
-                <button disabled={!environment && !timeVideo} onClick={seekVideoAndDetectFace}>Xem kết quả</button>
+                <button disabled={!environment && !timeVideo} onClick={seekVideoAndDetectFace}>Tìm kiếm</button>
             </div>
         </div>
     );

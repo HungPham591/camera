@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
 
+
 export const getUsers = gql`
     query{
         users{
@@ -12,8 +13,8 @@ export const getUsers = gql`
     }
 `
 export const getUser = gql`
-    query{
-        user{
+    query($_id:ID){
+        user(_id:$_id){
             _id
             user_name
             user_pass
@@ -24,7 +25,7 @@ export const getUser = gql`
                 _id
                 face_name
             }
-            locations{
+            locations {
                 _id
                 location_name
                 location_coordinate

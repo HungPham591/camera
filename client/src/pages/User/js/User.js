@@ -33,7 +33,7 @@ export default function ListCamera(props) {
 
     return (
         <div>
-            <p className='title'>Info của bạn</p>
+            <p className='title'>Thông tin tài khoản</p>
             {form()}
         </div>
     )

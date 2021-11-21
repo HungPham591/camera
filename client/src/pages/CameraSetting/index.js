@@ -18,6 +18,7 @@ export default function CameraStream(props) {
 
     let { id } = useParams();
 
+
     useEffect(() => {
         return () => { isMounted.current = false; hls.current?.destroy() }
     }, [])
@@ -57,7 +58,7 @@ export default function CameraStream(props) {
                     <TimeSlider />
                 </div>
                 <div>
-                    <p className='label'>Thời gian hoạt động</p>
+                    <p className='label'>Thời gian thông báo</p>
                     <TimeSlider />
                 </div>
                 <div style={{ display: 'flex' }}>
@@ -75,7 +76,7 @@ export default function CameraStream(props) {
                 <CanvasDraw style={{ width: '95%', height: '90%', backgroundColor: 'transparent' }} brushColor='red' hideGrid={true} ref={canvasRef} className='result-canvas' />
             </div>
             <div className="right-pane">
-                <p className='title'>Camera Setting</p>
+                <p className='title'>Cài đặt Camera</p>
                 {form()}
             </div>
         </div>

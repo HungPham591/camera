@@ -53,7 +53,7 @@ function Map(props) {
         }).addTo(mapObject.current);
     };
     const initCameraMap = (id) => {
-        const imgPath = ` http://localhost:4007/map/${data?.user?._id}/${id}.jpg`
+        const imgPath = ` http://localhost:4008/map/${data?.user?._id}/${id}.jpg`
 
         mapObject.current?.off();
         mapObject.current?.remove();

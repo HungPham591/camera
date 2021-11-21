@@ -13,3 +13,7 @@ exports.createVideo = async (args) => {
 exports.deleteVideo = async (args) => {
     return await VideoModel.findByIdAndRemove(args._id);
 }
+exports.deleteVideoByCamera = async (args) => {
+    const query = { camera: args._id };
+    return await VideoModel.deleteMany(query);
+}

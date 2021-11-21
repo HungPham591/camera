@@ -20,10 +20,10 @@ export default function User(props) {
 
     const handleSelectMenu = (id) => {
         if (id === 7 && data?.user?._id) {
-            // logoutUser({
-            //     variables: data?.user?._id,
-            //     refetchQueries: [{ query: getUser }]
-            // });
+            logoutUser({
+                variables: data?.user?._id,
+                refetchQueries: [{ query: getUser }]
+            });
             history.replace('/Auth/Login');
         }
         else setSelectedMenu(id);
@@ -40,7 +40,7 @@ export default function User(props) {
         }
         return listDashboard[selectedMenu];
     }
-    const listMenu = ['Danh sách camera', 'Danh sách video', 'Thống kê', 'Thông tin tài khoản', 'Chia sẻ', 'Địa điểm', 'Cài đặt', 'Trợ giúp', 'Đăng xuất']
+    const listMenu = ['Danh sách camera', 'Danh sách video', 'Thống kê', 'Thông tin tài khoản', 'Người quen', 'Địa điểm', 'Cài đặt', 'Trợ giúp', 'Đăng xuất']
     return (
         <div id="User">
             <div className='left-pane'>

@@ -3,9 +3,12 @@ import { getUser } from '../../../graphql/user';
 import { useQuery } from '@apollo/client';
 import moment from 'moment';
 import { useEffect, useState } from "react";
+import { deleteVideo } from '../../../graphql/video';
+import { useMutation } from '@apollo/client';
 
 export default function ListVideo(props) {
     let history = useHistory();
+    const [deleteItem, deleteMutation] = useMutation(deleteVideo)
     const [camera, setCamera] = useState(null);
 
     const onCompleted = ({ user }) => {
@@ -21,12 +24,19 @@ export default function ListVideo(props) {
     const handleWatchButton = (id) => {
         history.push("/Video/" + id);
     };
+    const handleDeleteButton = (id) => {
+        if (!id) return false;
+        deleteItem({
+            variables: { _id: id },
+            refetchQueries: [{ query: getUser }]
+        })
+    }
     const handleDropdown = (e) => {
         setCamera(e.target.value);
     }
     const dropdown = () => {
         const listOption = data?.user?.cameras?.map((value, index) => {
-            return <option key={index} value={value._id}>{value.camera_name}</option>
+            return <option key={index} value={value._id}>Video của camera {value.camera_name}</option>
         })
         return (
             <select onChange={handleDropdown}>
@@ -38,7 +48,7 @@ export default function ListVideo(props) {
         return data?.user?.cameras?.map((value, index) => {
             if (value?._id !== camera) return;
             return value?.videos?.map((value, index) => {
-                const video_path = `${process.env.REACT_APP_DOMAIN}\\video\\${value?.camera?._id}_${value?.video_time}`;
+                const video_path = `${process.env.REACT_APP_DOMAIN}\\video\\${value?.camera?._id}\\${value?.video_time}`;
                 return (
                     <div key={index} className='custom-card'>
                         <video src={video_path} />
@@ -50,6 +60,13 @@ export default function ListVideo(props) {
                                     onClick={() => handleWatchButton(value._id)}
                                 >
                                     Xem
+                                </button>
+                                <button
+                                    className="btn btn-primary"
+                                    style={{ marginLeft: "5%" }}
+                                    onClick={() => handleDeleteButton(value?.camera?._id)}
+                                >
+                                    Xoa
                                 </button>
                             </div>
                         </div>

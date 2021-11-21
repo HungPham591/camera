@@ -22,25 +22,34 @@ export default function ListLocation(props) {
             refetchQueries: [{ query: getUser }]
         })
     };
+    const handleWatchButton = (_id) => {
+        history.push('/Location/' + _id);
+    }
     const handleShareButton = () => {
         handleShow();
     }
-    console.log(data?.user?.locations)
     return (
         <div>
             <LocationModal show={show} handleClose={handleClose} />
             <p className='title'>Địa điểm</p>
-            <button className='btn btn-primary' onClick={handleShareButton} style={{ marginTop: '1vh', marginBottom: '2vh' }}>Địa điểm</button>
+            <button className='btn btn-primary' onClick={handleShareButton} style={{ marginTop: '1vh', marginBottom: '2vh' }}>Thêm mới</button>
             <div className='grid'>
                 {
                     data?.user?.locations?.map((value, index) => {
-                        const imgPath = ` http://localhost:4007/map/${data?.user?._id}/${value?._id}.jpg`
+                        const imgPath = ` http://localhost:4008/map/${data?.user?._id}/${value?._id}.jpg`
                         return (
                             <div key={index} className='custom-card'>
                                 <img src={imgPath} />
                                 <p className='title'>{value.location_name}</p>
                                 <div className='group-button'>
                                     <button
+                                        className="btn btn-primary"
+                                        onClick={() => handleWatchButton(value._id)}
+                                    >
+                                        Xem
+                                    </button>
+                                    <button
+                                        style={{ marginLeft: '6%' }}
                                         className="btn btn-primary"
                                         onClick={() => handleDeleteButton(value._id)}
                                     >

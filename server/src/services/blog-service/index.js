@@ -8,9 +8,9 @@ const amqserver = 'amqp://localhost:5672/'
 
 const db = require("../../db");
 
-db.connect();
 
-createClient(amqserver).then(async channel => {
+const connectAmqserver = async () => {
+    const channel = await createClient(amqserver);
     await Promise.all([
         channel.assertQueue('GET_BLOG'),
         channel.assertQueue('GET_BLOGS'),
@@ -23,13 +23,19 @@ createClient(amqserver).then(async channel => {
     channel.consume('CREATE_BLOG', msg => response(channel, msg, controller.createBlog))
     channel.consume('UPDATE_BLOG', msg => response(channel, msg, controller.updateBlog))
     channel.consume('DELETE_BLOG', msg => response(channel, msg, controller.deleteBlog))
-});
-
+}
 const response = async (channel, msg, controller) => {
     const data = JSON.parse(msg.content);
     const response = await controller(data);
+    if (!response) return;
     responseMessage(channel, msg, response);
 }
+
+const startServer = async () => {
+    await db.connect();
+    connectAmqserver();
+}
+startServer();
 
 
 app.listen(port, () => {

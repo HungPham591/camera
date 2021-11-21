@@ -12,7 +12,7 @@ export default function LogIn(props) {
 
     const onCompleted = ({ signin }) => {
         if (signin?.user_role) history.replace('/Admin');
-        else if (signin) history.replace('/');
+        else if (signin) window.location.assign('http://localhost:3000');
         else onError();
     }
     const onError = () => {
@@ -53,10 +53,12 @@ export default function LogIn(props) {
                     </div>
                     <form className="body" onSubmit={handleSubmit(onSubmit)}>
                         <div className="formGroup">
-                            <input type="text" {...register('user_name', { required: true })} placeholder="Name" />
+                            <input type='email' {...register('user_name', { required: true })} placeholder="Name" />
+                            {errors.user_name && <p className='text-danger'>User name is required.</p>}
                         </div>
                         <div className="formGroup">
-                            <input type="text" {...register('user_pass', { required: true })} placeholder="Password" />
+                            <input type='password' {...register('user_pass', { required: true })} placeholder="Password" />
+                            {errors.user_pass && <p className='text-danger'>Password is required.</p>}
                         </div>
                         <div className="formGroup">
                             <button type='submit' className="btnLogin">

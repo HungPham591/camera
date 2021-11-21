@@ -9,10 +9,8 @@ const amqserver = 'amqp://localhost:5672/'
 
 const db = require("../../db");
 
-
-db.connect();
-
-createClient(amqserver).then(async channel => {
+const connectAmqserver = async () => {
+    const channel = await createClient(amqserver);
     await Promise.all([
         channel.assertQueue('SIGNIN'),
         channel.assertQueue('SIGNUP'),
@@ -25,14 +23,18 @@ createClient(amqserver).then(async channel => {
     channel.consume('GET_USER', msg => response(channel, msg, controller.getUser))
     channel.consume('UPDATE_USER', msg => response(channel, msg, controller.updateUser))
     channel.consume('GET_USERS', msg => response(channel, msg, controller.getUsers))
-});
-
+}
 const response = async (channel, msg, controller) => {
     const data = JSON.parse(msg.content);
     const response = await controller(data);
+    if (!response) return;
     responseMessage(channel, msg, response);
 }
-
+const startServer = async () => {
+    await db.connect();
+    connectAmqserver();
+}
+startServer();
 
 app.listen(port, () => {
     console.log('auth service listen at port ' + port)

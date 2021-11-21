@@ -3,6 +3,8 @@ const app = require('./app');
 const { createClient, responseMessage, sendRPCMessage, sendMessage } = require('../../modules/rabbitmq.modules')
 const controller = require('../../controllers/camera.controller');
 const Event = require('../../events/camera.event').eventBus;
+const fs = require('fs');
+const path = require("path");
 
 const CameraModel = require("../../models/camera.model");
 const Camera = require("../../modules/camera.modules");
@@ -12,9 +14,10 @@ const amqserver = 'amqp://localhost:5672/'
 
 const db = require("../../db");
 
+let channelAmq;
 
 const connectAmqserver = async () => {
-    let channelAmq = await createClient(amqserver);
+    channelAmq = await createClient(amqserver);
     await Promise.all([
         channelAmq.assertQueue('GET_CAMERA'),
         channelAmq.assertQueue('GET_CAMERAS'),
@@ -27,35 +30,29 @@ const connectAmqserver = async () => {
     channelAmq.consume('CREATE_CAMERA', msg => response(channelAmq, msg, controller.createCamera))
     channelAmq.consume('UPDATE_CAMERA', msg => response(channelAmq, msg, controller.updateCamera))
     channelAmq.consume('DELETE_CAMERA', msg => response(channelAmq, msg, controller.deleteCamera))
-    Event.on("CREATE_VIDEO", function (doc) {
-        sendMessage(channelAmq, doc, 'CREATE_VIDEO');
-    });
 }
 const response = async (channel, msg, controller) => {
     const data = JSON.parse(msg.content);
     const response = await controller(data);
+    if (!response) return;
     responseMessage(channel, msg, response);
 }
 //controll camera
 let listCamera = [];
 
-const initListCamera = async () => {
+const startAllCamera = async () => {
     let cameras = await CameraModel.find();
     cameras.forEach((data) => {
         let camera = new Camera(data);
         listCamera.push(camera);
-    });
-};
-const startAllCamera = async () => {
-    console.log('start all camera')
-    await initListCamera();
-    listCamera.forEach((camera) => {
         camera.startStream();
         // camera.startRecord()
         // camera.backup();
         // camera.detect();
     });
+    console.log('start all camera');
 };
+
 
 const startServer = async () => {
     await db.connect();
@@ -65,6 +62,24 @@ const startServer = async () => {
 
 startServer();
 
+Event.on("NEW_CAMERA", function (doc) {
+    let camera = new Camera(doc);
+    camera.startStream();
+    listCamera.push(doc);
+});
+Event.on("DELETE_CAMERA", function (doc) {
+    const dataPath = path.join(__dirname, '..', '..', "public", 'data', doc?._id);
+    const streamPath = path.join(__dirname, '..', '..', "public", 'stream', doc?._id);
+    fs.rmdirSync(dataPath, { recursive: true, force: true });
+    fs.rmdirSync(streamPath, { recursive: true, force: true });
+});
+Event.on("UPDATE_CAMERA", function (doc) {
+    console.log('update camera' + doc);
+});
+Event.on("CREATE_VIDEO", function (doc) {
+    if (!channelAmq && typeof doc !== 'object') return;
+    sendMessage(channelAmq, doc, 'CREATE_VIDEO');
+});
 
 app.listen(port, () => {
     console.log('camera service listen at port ' + port)

@@ -16,14 +16,21 @@ let listDetect = [];
 let camera;
 let url;
 let channel;
+let exit;
 
 module.exports = async (input, callback) => {
     camera = input;
+    exit = callback;
     url = camera.camera_link;
 
     await loadEnvironment();
     await loadImage()
     captureFrame();
+}
+const refreshListDetect = () => {
+    setInterval(() => {
+        listDetect = descriptions;
+    }, 60 * 1000);
 }
 const loadEnvironment = async () => {
     faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
@@ -36,6 +43,19 @@ const loadEnvironment = async () => {
         faceapi.nets.faceLandmark68Net.loadFromDisk("./src/weights"),
         faceapi.nets.ageGenderNet.loadFromDisk('./src/weights')
     ])
+}
+const connectAmqServer = async () => {
+    channel = await createClient(amqserver);
+    await Promise.all([
+        channel.assertQueue('DELETE_CAMERA'),
+        channel.assertQueue('UPDATE_CAMERA'),
+    ])
+    channel.consume('DELETE_CAMERA', msg => onDeleteCamera(msg))
+    channel.consume('UPDATE_CAMERA', msg => { })
+}
+const onDeleteCamera = (msg) => {
+    const data = JSON.parse(msg.content);
+    if (data._id === camera._id) exit();
 }
 const loadImage = async () => {
     //khoi tao danh sach nguoi quen
@@ -67,6 +87,28 @@ const captureFrame = () => {
         }
     }, 1000);
 }
+const checkTimeDetect = () => {
+    const currentTime = new Date().getTime();
+    if (currentTime >= camera.time_detect[0] && currentTime <= camera.time_detect[1]) return true;
+    return false;
+}
+
+const checkFaceInsidePolygon = (point, polygon) => {
+    //[ [ 1, 1 ], [ 1, 2 ], [ 2, 2 ], [ 2, 1 ] ]
+    let x = point[0], y = point[1];
+
+    let inside = false;
+    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+        let xi = polygon[i][0], yi = polygon[i][1];
+        let xj = polygon[j][0], yj = polygon[j][1];
+
+        let intersect = ((yi > y) != (yj > y))
+            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+    }
+
+    return inside;
+};
 const detect = async (base64) => {
     const img = new Image()
     img.src = base64;
@@ -84,7 +126,7 @@ const detect = async (base64) => {
     let bestMatch = 'unknown';
 
     listDetect.forEach(face => {
-        if (faceMatcher.findBestMatch(face.descriptor).label !== "unknown")
+        if (faceMatcher.findBestMatch(face?.descriptor).label !== "unknown")
             bestMatch = '';
     })
 

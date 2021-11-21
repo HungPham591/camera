@@ -81,6 +81,7 @@ const typeDefs = gql`
         createCamera(camera_name:String,camera_link:String,camera_location:[Float],camera_public:Boolean,google_token:String,location:String):Camera
         updateCamera(_id:ID,camera_name:String,camera_link:String,camera_location:[Float],camera_public:Boolean,location:String):Camera
         deleteCamera(_id:ID):Camera
+        deleteVideo(_id:ID):Video
         createBlog(blog_title:String,blog_content:String):Blog
         updateBlog(_id:ID,blog_title:String,blog_content:String):Blog
         deleteBlog(_id:ID):Blog

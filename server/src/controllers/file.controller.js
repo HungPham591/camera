@@ -28,13 +28,14 @@ exports.uploadMap = async (req, res) => {
     }
 }
 exports.streamVideo = async (req, res) => {
-    let param = req.params.id;
+    let camera_id = req.params.camera_id;
+    let video_time = req.params.video_time;
     const range = req.headers.range;
     if (!range) {
         res.status(400).send("Requires Range header");
     }
 
-    const videoPath = path.join(__dirname, '..', `public/data/${param}.mp4`);
+    const videoPath = path.join(__dirname, '..', `public/data/${camera_id}/${video_time}.mp4`);
     const videoSize = fs.statSync(videoPath).size;
 
     const CHUNK_SIZE = 10 ** 6; // 1MB

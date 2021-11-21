@@ -10,9 +10,6 @@ const { Server } = require("socket.io");
 const server = createServer(app);
 const io = new Server(server, { cors: 'http://localhost:3000' });
 
-const db = require("../../db");
-
-db.connect();
 
 createClient(amqserver).then(async channel => {
     await channel.assertQueue('CREATE_REPORT');

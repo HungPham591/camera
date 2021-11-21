@@ -12,15 +12,17 @@
     "start:blog-service": "nodemon ./src/services/blog-service/index.js",
     "start:face-service": "nodemon ./src/services/face-service/index.js",
     "start:noti-service": "nodemon ./src/services/notification-service/index.js",
-    "start:location-service": "nodemon ./src/services/location-service/index.js"
+    "start:location-service": "nodemon ./src/services/location-service/index.js",
+    "dev": "npm-run-all --parallel start:api-gateway start:auth-service start:camera-service start:report-service start:video-service start:blog-service start:face-service start:noti-service start:location-service"
   },
   "devDependencies": {
-    "nodemon": "^2.0.14"
+    "nodemon": "^2.0.14",
+    "npm-run-all": "^4.1.5"
   },
   "dependencies": {
-    "@tensorflow/tfjs-node": "^3.10.0",
+    "@tensorflow/tfjs-node": "^3.11.0",
     "amqplib": "^0.8.0",
-    "apollo-server-express": "2.19.2",
+    "apollo-server-express": "^3.5.0",
     "bcryptjs": "^2.4.3",
     "canvas": "^2.8.0",
     "cookie-parser": "^1.4.5",

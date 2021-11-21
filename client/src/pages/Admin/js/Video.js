@@ -25,7 +25,7 @@ export default function Video(props) {
                         )
                     })
                 }
-                <button onClick={() => setModal(false)}>close</button>
+                <button className='custom-button' onClick={() => setModal(false)}>close</button>
             </div>
         )
     }

@@ -9,16 +9,6 @@ const port = process.env.PORT || 4002;
 const amqserver = 'amqp://localhost:5672/';
 
 
-createClient(amqserver).then((channel) => {
-    const server = new ApolloServer({
-        typeDefs,
-        resolvers,
-        context: ({ req, res }) => ({ req, res, channel }),
-    })
-    server.applyMiddleware({ app, cors: false })
-    console.log(`Server ready at http://localhost:${port}${server.graphqlPath}`);
-    googleRoute(channel)
-});
 
 const googleRoute = (channel) => {
     const { google } = require('googleapis');
@@ -52,7 +42,20 @@ const googleRoute = (channel) => {
 
 }
 
+const startServer = async () => {
+    const channel = await createClient(amqserver);
+    const server = new ApolloServer({
+        typeDefs,
+        resolvers,
+        context: ({ req, res }) => ({ req, res, channel }),
+    })
+    await server.start();
+    server.applyMiddleware({ app, cors: false })
+    console.log(`Server ready at http://localhost:${port}${server.graphqlPath}`);
+    googleRoute(channel)
+}
 
+startServer();
 
 app.listen(port, () => {
     console.log('api gateway listen at port ' + port)

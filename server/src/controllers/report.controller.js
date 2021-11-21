@@ -18,3 +18,7 @@ exports.createReport = async (args) => {
 exports.deleteReport = async (args) => {
     return await ReportModel.findByIdAndDelete(args);
 }
+exports.deleteReportByCamera = async (args) => {
+    const query = { camera: args._id };
+    return await ReportModel.deleteMany(query);
+}

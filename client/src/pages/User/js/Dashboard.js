@@ -6,14 +6,7 @@ import moment from 'moment';
 export default function ListCamera(props) {
     const { loading, error, data } = useQuery(getUser);
 
-    Date.prototype.formatMMDDYYYY = function () {
-        return this.getDate() +
-            "/" + (this.getMonth() + 1) +
-            "/" + this.getFullYear();
-    }
-    Date.prototype.formatHHmm = function () {
-        return this.getHours() + ':' + this.getMinutes();
-    }
+
     const dataChart = () => {
         let rs = [];
         data?.user?.cameras?.forEach(camera => {

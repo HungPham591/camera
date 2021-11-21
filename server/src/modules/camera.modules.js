@@ -8,10 +8,10 @@ const workerFarm = require('worker-farm')
 const Event = require('../events/camera.event').eventBus;
 const resolve = require('path').resolve
 
-const captureVideo = (url, fileName) => {
+const captureVideo = (url, folderPath, fileName) => {
     let rec = new Recorder({
         url: url,
-        folder: resolve('../server/src/public/data/'),
+        folder: folderPath,
         fileName: fileName,
     });
     rec.startRecording();
@@ -23,7 +23,7 @@ const Camera = class {
         this.camera = camera;
         this.record = null;
         this.stream = new Stream(this.camera);
-        this.filePath = resolve('../camera-service/src/public/data/');
+        this.filePath = resolve(`../camera-service/src/public/data/${camera._id}`);
         this.video = null;
     }
     startStream() {
@@ -35,14 +35,14 @@ const Camera = class {
     startRecord() {
         let time = new Date().getTime();
         this.video = time;
-        this.record = captureVideo(this.camera.camera_link, `${this.camera._id}_${time}`);
+        this.record = captureVideo(this.camera.camera_link, resolve(`../server/src/public/data/${this.camera._id}`), `${time}`);
     }
     stopRecord() {
         this.record.stopRecording();
         this.record = null;
     }
     uploadDrive() {
-        const filePath = `${this.filePath}\\${this.camera._id}_${this.video}.mp4`;
+        const filePath = `${this.filePath}\\${this.video}.mp4`;
         const fileName = `${this.camera.camera_name}_${Date(this.video)}`;
         const token = this.camera.google_token;
         if (fs.existsSync(filePath)) {
@@ -50,7 +50,7 @@ const Camera = class {
         }
     }
     uploadYoutube() {
-        const filePath = `${this.filePath}\\${this.camera._id}_${this.video}.mp4`;
+        const filePath = `${this.filePath}\\${this.video}.mp4`;
         const fileName = `${this.camera.camera_name}_${Date(this.video)}`;
         const token = this.camera.google_token;
         if (fs.existsSync(filePath)) {

@@ -25,3 +25,12 @@ export const getVideos = gql`
         }
     }
 `
+export const deleteVideo = gql`
+    mutation($_id:ID){
+        deleteVideo(_id:$_id){
+            _id
+            video_time
+            createdAt
+        }
+    }
+`

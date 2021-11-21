@@ -53,8 +53,8 @@ export default function Blog(props) {
                     data?.blogs?.map((value, index) => {
                         return (
                             <div key={index} className='custom-card'>
-                                <p className='title'>{value.blog_title}</p>
-                                <p className='content'>{HtmlParser(value.blog_content, HtmlParserOptions)}<div className='gradient'></div></p>
+                                <p className='title'>{value?.blog_title}</p>
+                                <p className='content'>{HtmlParser(value?.blog_content, HtmlParserOptions)}<div className='gradient'></div></p>
                                 <button onClick={() => handleWatchMoreButton(value)}>Xem thêm</button>
                             </div>
                         )

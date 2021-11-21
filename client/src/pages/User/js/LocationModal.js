@@ -13,7 +13,7 @@ function LocationModal(props) {
         let formData = new FormData();
         formData.append('img', refImg.current[0]);
         formData.append('file_name', fileName);
-        axios.post(`http://localhost:4007/uploadImg`, formData, { withCredentials: true });
+        axios.post(`http://localhost:4008/uploadImg`, formData, { withCredentials: true });
     }
     const onError = (e) => {
         console.log(e)

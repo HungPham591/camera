@@ -16,7 +16,8 @@ exports.createClient = rabbitmqconn => {
                 msg => {
                     channel.responseEmitter.emit(
                         msg.properties.correlationId,
-                        msg.content.toString('utf8'),
+                        // msg.content.toString('utf8'),
+                        JSON.parse(msg.content)
                     );
                 },
                 { noAck: true },

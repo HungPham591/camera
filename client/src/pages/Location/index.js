@@ -51,7 +51,7 @@ export default function Location(props) {
         handleShowModal();
     }
     const initCameraMap = () => {
-        const imgPath = `http://localhost:4007/map/${data?.location?.user}/${id}.jpg`;
+        const imgPath = `http://localhost:4008/map/${data?.location?.user}/${id}.jpg`;
 
         mapObject.current?.off();
         mapObject.current?.remove();

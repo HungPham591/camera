@@ -2,17 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { getUsers } from '../../../graphql/user';
 import { useQuery } from '@apollo/client';
 import moment from 'moment';
+import UserDetail from './UserDetail';
 
 export default function User(props) {
     const { loading, error, data } = useQuery(getUsers);
     const [page, setPage] = useState(1);
-    const [modal, setModal] = useState(false);
-    const [selected, setSelected] = useState({})
+    const [modalSetting, setModalSetting] = useState(false);
+    const [modalDetail, setModalDetail] = useState(false);
+    const [selectedSetting, setSelectedSetting] = useState({})
+    const [selectedUser, setSelectedUser] = useState({})
     const listColumn = ['#', 'user_id', 'user_name', 'user_pass', 'create_at'];
 
-    const renderModal = () => {
+    const rederModalSetting = () => {
         return (
-            <div className={'modal ' + (modal ? '' : 'd-none')}>
+            <div className={'modal ' + (modalSetting ? '' : 'd-none')}>
                 <p className='title'>VIDEO</p>
                 {
                     listColumn.map((value, index) => {
@@ -20,12 +23,20 @@ export default function User(props) {
                         return (
                             <div key={index}>
                                 <p className='label'>{value}</p>
-                                <input type='text' value={Object.values(selected)[index - 1] || ''} readOnly />
+                                <input type='text' value={Object.values(selectedSetting)[index - 1] || ''} readOnly />
                             </div>
                         )
                     })
                 }
-                <button onClick={() => setModal(false)}>close</button>
+                <button className='custom-button' onClick={() => setModalSetting(false)}>close</button>
+            </div>
+        )
+    }
+    const renderModelDetail = () => {
+        return (
+            <div className={'modal ' + (modalDetail ? '' : 'd-none')}>
+                <UserDetail id={selectedUser?._id} />
+                <button className='custom-button' onClick={() => setModalDetail(false)}>close</button>
             </div>
         )
     }
@@ -35,9 +46,13 @@ export default function User(props) {
     const handleNextPage = () => {
         setPage(page + 1);
     }
+    const handleButtonSetting = (item) => {
+        setSelectedSetting(item);
+        setModalSetting(true);
+    }
     const handleRowClick = (item) => {
-        setSelected(item);
-        setModal(true);
+        setSelectedUser(item);
+        setModalDetail(true);
     }
     return (
         <div>
@@ -64,6 +79,7 @@ export default function User(props) {
                                         <td>{value.user_name}</td>
                                         <td>{value.user_pass}</td>
                                         <td>{moment(value.createdAt).format('HH:mm DD/MM/YYYY')}</td>
+                                        {/* <td><button onClick={() => handleButtonSetting(value)}>setting</button></td> */}
                                     </tr>
                                 )
                             })
@@ -76,7 +92,8 @@ export default function User(props) {
                 <li className="page-item"><p className="page-link">{page}</p></li>
                 <li className="page-item" onClick={handleNextPage}><p className="page-link">Next</p></li>
             </ul>
-            {renderModal()}
+            {rederModalSetting()}
+            {renderModelDetail()}
         </div>
     )
 }

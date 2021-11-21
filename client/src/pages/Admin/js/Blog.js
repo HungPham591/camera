@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { BsFillPlusCircleFill } from "react-icons/bs";
-import { getBlogs, createBlog, deleteBlog } from '../../../graphql/blog';
+import { getBlogs, createBlog, deleteBlog, updateBlog } from '../../../graphql/blog';
 import { useQuery, useMutation } from '@apollo/client';
 import { useForm } from 'react-hook-form';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
@@ -17,6 +17,7 @@ export default function Blog(state) {
     const dataEditor = useRef(null);
 
     const [createItem, createMutation] = useMutation(createBlog);
+    const [updateItem, updateMutation] = useMutation(updateBlog);
     const [deleteItem, deleteMutation] = useMutation(deleteBlog);
 
     const {
@@ -32,10 +33,16 @@ export default function Blog(state) {
 
     const onSubmit = (data) => {
         data = { ...data, blog_content: dataEditor.current };
-        createItem({
-            variables: data,
-            refetchQueries: [{ query: getBlogs }]
-        })
+        if (!selected)
+            createItem({
+                variables: data,
+                refetchQueries: [{ query: getBlogs }]
+            })
+        else
+            updateItem({
+                variables: data,
+                refetchQueries: [{ query: getBlogs }]
+            })
         setModal(false)
     }
     const handleDeleteButton = () => {
@@ -46,17 +53,21 @@ export default function Blog(state) {
         })
         setModal(false)
     }
+    const handleCloseButton = () => {
+        setSelected(null);
+        setModal(false)
+    }
     const renderModal = () => {
         return (
             <form className={'modal ' + (modal ? '' : 'd-none')} onSubmit={handleSubmit(onSubmit)}>
                 <p className='title'>BLOG</p>
                 <p className='label'>Title</p>
-                <input type='text' {...register('blog_title')} defaultValue={selected?.blog_title} required />
+                <input type='text' {...register('blog_title')} defaultValue={selected?.blog_title || ''} required />
                 <p className='label'>Content</p>
                 <CKEditor editor={ClassicEditor} data={selected?.blog_content || ''} onChange={handleOnEditorChange} />
                 <input className='custom-button' type="submit" />
                 <button className='custom-button' type='button' onClick={handleDeleteButton}>Delete</button>
-                <button className='custom-button' type='button' onClick={() => setModal(false)}>close</button>
+                <button className='custom-button' type='button' onClick={handleCloseButton}>close</button>
             </form>
         )
     }

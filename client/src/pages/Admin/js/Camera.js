@@ -24,7 +24,7 @@ export default function Camera(props) {
                         )
                     })
                 }
-                <button onClick={() => setModal(false)}>close</button>
+                <button className='custom-button' onClick={() => setModal(false)}>close</button>
             </div>
         )
     }

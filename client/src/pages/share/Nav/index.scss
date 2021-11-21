@@ -143,10 +143,12 @@
   }
 }
 #Toast {
+  display: flex;
+  justify-content: space-between;
   position: fixed;
   top: 10vh;
   right: 2vw;
-  width: 27vw;
+  width: 22vw;
   height: fit-content;
   padding: 10px 15px;
   border-radius: 10px;
@@ -162,7 +164,7 @@
   .title {
     margin-bottom: 0;
     font-weight: 500;
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
   .content {
     margin-bottom: 0;

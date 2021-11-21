@@ -1,8 +1,9 @@
 const UserModel = require("../models/user.model");
 
 exports.getUser = async (args) => {
-    if (!args?.user) return null;
-    return await UserModel.findById(args.user);
+    if (args?._id) return await UserModel.findById(args._id);
+    else if (args?.user) return await UserModel.findById(args.user);
+    return null;
 }
 exports.updateUser = async (args) => {
     const query = { user_name: args.user_name }

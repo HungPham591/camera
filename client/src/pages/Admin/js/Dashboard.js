@@ -26,11 +26,11 @@ export default function Dashboard() {
                     <p className='text'>{dataCamera?.cameras?.length || 0}</p>
                 </div>
                 <div>
-                    <p className='small-text'>Number of cameras</p>
+                    <p className='small-text'>Number of videos</p>
                     <p className='text'>{dataVideo?.videos?.length || 0}</p>
                 </div>
                 <div>
-                    <p className='small-text'>Number of cameras</p>
+                    <p className='small-text'>Number of reports</p>
                     <p className='text'>{dataReport?.reports?.length || 0}</p>
                 </div>
             </div>

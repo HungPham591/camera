@@ -16,7 +16,7 @@ function Notification(props) {
                     <div key={index} className='item'>
                         <IoIosAlert className='icon' />
                         <div className='body'>
-                            <p className='title'>Notification from camera {camera.camera_name}</p>
+                            <p className='title'>Thông báo đến từ {camera.camera_name}</p>
                             <p className='content'>{moment(report.createdAt).format('HH:mm DD/MM/YYYY')}</p>
                         </div>
                     </div>

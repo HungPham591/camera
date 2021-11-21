@@ -55,10 +55,12 @@ export default function SignUp(props) {
                     </div>
                     <form className="body" onSubmit={handleSubmit(onSubmit)}>
                         <div className="formGroup">
-                            <input type="text" {...register('user_name', { required: true })} placeholder="Email" />
+                            <input type='email' {...register('user_name', { required: true })} placeholder="Email" />
+                            {errors.user_name && <p className='text-danger'>User name is required.</p>}
                         </div>
                         <div className="formGroup">
-                            <input type="text" {...register('user_pass', { required: true })} placeholder="Password" />
+                            <input type='password' {...register('user_pass', { required: true })} placeholder="Password" />
+                            {errors.user_pass && <p className='text-danger'>Password is required.</p>}
                         </div>
                         <div className="formGroup">
                             <button type='submit' className="btnLogin">

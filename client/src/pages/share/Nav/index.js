@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Link, NavLink, withRouter } from "react-router-dom";
 import { BsFillPersonFill, BsFillPlusCircleFill } from "react-icons/bs";
 import { RiNotificationFill } from 'react-icons/ri'
 import "./index.scss";
 import ModalCamera from "./ModalCamera";
 import Notification from "./Notification";
-import Toast from "./Toast";
 import { useHistory, useLocation } from "react-router-dom";
 import { useQuery } from '@apollo/client'
 import { getUser } from '../../../graphql/user';
@@ -15,12 +14,15 @@ export default function NavBar(props) {
     const [toast, setToast] = useState(null);
 
     const onCompleted = ({ user }) => {
-        // if (!user) return;
-        // const socket = io("http://localhost:4007/");
-        // socket.emit('join', user._id);
-        // socket.on('notification', function (data) {
-        //     setToast(data);
-        // })
+        if (!user) return;
+        const socket = io("http://localhost:4007/");
+        socket.emit('join', user._id);
+        socket.on('notification', function (data) {
+            setToast(data);
+            setTimeout(() => {
+                setToast(null);
+            }, 5000);
+        })
     }
 
     const { loading, error, data } = useQuery(getUser, { onCompleted });
@@ -89,7 +91,14 @@ export default function NavBar(props) {
                 google_token={data?.user?.google_token}
             />
             <Notification show={notification} />
-            <Toast data={toast} />
+
+            <div id='Toast' className={toast ? '' : 'd-none'}>
+                <img src={toast?.img} />
+                <div>
+                    <p className='title'>new report</p>
+                    <p className='content'>giới tính {toast?.report_description[0]?.gender}<br></br>tuổi {Math.round(toast?.report_description[0]?.age)}</p>
+                </div>
+            </div>
         </>
     );
 }
