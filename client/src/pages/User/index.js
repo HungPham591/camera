@@ -19,7 +19,7 @@ export default function User(props) {
     const [selectedMenu, setSelectedMenu] = useState(0);
 
     const handleSelectMenu = (id) => {
-        if (id === 7 && data?.user?._id) {
+        if (id === 8 && data?.user?._id) {
             logoutUser({
                 variables: data?.user?._id,
                 refetchQueries: [{ query: getUser }]

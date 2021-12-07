@@ -1,6 +1,16 @@
 const { sendRPCMessage } = require('../../modules/rabbitmq.modules')
 const jwt = require("jsonwebtoken");
 
+const sendCookie = (user, res) => {
+    const payload = { _id: user._id, user_role: user?.user_role }
+    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
+    //httpOnly la khong cho js lay cookie, secure la cih cho su dung trong https
+    res.cookie('access_token', accessToken, {
+        maxAge: 365 * 24 * 60 * 60 * 100,
+        httpOnly: true,
+        // secure: true
+    })
+}
 const resolvers = {
     Query: {
         camera: async (parent, args, { channel }) => await sendRPCMessage(channel, args, 'GET_CAMERA'),
@@ -38,7 +48,11 @@ const resolvers = {
     Mutation: {
         createCamera: async (parent, args, { channel, req }) => await sendRPCMessage(channel, { ...args, user: req?.user }, 'CREATE_CAMERA'),
         updateCamera: async (parent, args, { channel, req }) => await sendRPCMessage(channel, { ...args, user: req?.user }, 'UPDATE_CAMERA'),
-        deleteCamera: async (parent, args, { channel, req }) => await sendRPCMessage(channel, { ...args, user: req?.user }, 'DELETE_CAMERA'),
+        deleteCamera: async (parent, args, { channel, req }) => {
+            sendRPCMessage(channel, { ...args, user: req?.user }, 'DELETE_VIDEOS')
+            sendRPCMessage(channel, { ...args, user: req?.user }, 'DELETE_REPORTS')
+            return await sendRPCMessage(channel, { ...args, user: req?.user }, 'DELETE_CAMERA')
+        },
         createFace: async (parent, args, { channel, req }) => await sendRPCMessage(channel, { ...args, user: req?.user }, 'CREATE_FACE'),
         deleteFace: async (parent, args, { channel, req }) => await sendRPCMessage(channel, { ...args, user: req?.user }, 'DELETE_FACE'),
         createBlog: async (parent, args, { channel, req }) => await sendRPCMessage(channel, args, 'CREATE_BLOG'),
@@ -49,34 +63,17 @@ const resolvers = {
         signin: async (parent, args, { channel, res }) => {
             const user = await sendRPCMessage(channel, args, 'SIGNIN')
             if (!user) return user;
-            const payload = { _id: user._id, user_role: user?.user_role }
-            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
-            //httpOnly la khong cho js lay cookie
-            res.cookie('access_token', accessToken, {
-                maxAge: 365 * 24 * 60 * 60 * 100,
-                httpOnly: true,
-                //secure: true;
-            })
+            sendCookie(user, res);
             return user;
         },
         signup: async (parent, args, { channel, res }) => {
             const user = await sendRPCMessage(channel, args, 'SIGNUP')
             if (!user) return user;
-            const payload = { _id: user._id, user_role: user?.user_role }
-            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
-            res.cookie('access_token', accessToken, {
-                maxAge: 365 * 24 * 60 * 60 * 100,
-                httpOnly: true,
-                //secure: true;
-            })
+            sendCookie(user, res);
             return user;
         },
         logout: async (parent, args, { channel, res }) => {
-            res.cookie('access_token', 'none', {
-                maxAge: 365 * 24 * 60 * 60 * 100,
-                httpOnly: true,
-                //secure: true;
-            })
+            res.clearCookie('access_token')
             return args;
         }
     }

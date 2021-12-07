@@ -29,7 +29,6 @@ const uploadFile = (filePath, fileName, token) => {
             media: media,
             fields: "id",
         })
-        console.log('google drive')
     } catch (err) {
         console.log('google drive error: ' + err)
     }

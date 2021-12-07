@@ -4,6 +4,7 @@ import "./css/index.scss";
 import { AiOutlineArrowDown, AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineArrowUp } from 'react-icons/ai';
 import { BsArrowDownLeft, BsArrowDownRight, BsArrowUpLeft, BsArrowUpRight, BsArrowCounterclockwise } from 'react-icons/bs'
 
+import { getUser } from '../../graphql/user';
 import { getCamera } from '../../graphql/camera';
 import { useQuery } from '@apollo/client';
 
@@ -12,6 +13,7 @@ import Hls from 'hls.js';
 import * as faceapi from "face-api.js";
 
 export default function CameraStream(props) {
+    const numberOfPeople = useRef(null);
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const downloadRef = useRef(null);
@@ -28,7 +30,7 @@ export default function CameraStream(props) {
     }, [])
 
     const onCompleted = ({ camera }) => {
-        let videoSrc = `${process.env.REACT_APP_DOMAIN}\\stream\\${camera._id}\\index.m3u8`;
+        let videoSrc = `${process.env.REACT_APP_DOMAIN}\\${camera.user}\\${camera._id}\\stream\\index.m3u8`;
         const video = videoRef.current;
         if (Hls.isSupported()) {
             hls.current = new Hls();
@@ -63,10 +65,18 @@ export default function CameraStream(props) {
             if (!isMounted.current || videoRef.current?.paused) return clearInterval(interval);
             const data = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks()
             if (!data || !isMounted.current) return;
+            if (data?.length && isMounted.current) speak(`${data.length} person appeared`);
+            if (numberOfPeople.current?.innerHTML) numberOfPeople.current.innerHTML = data?.length || 0;
             const resizedDetections = faceapi.resizeResults(data, displaySize);
             canvasRef.current?.getContext('2d')?.clearRect(0, 0, displaySize.width, displaySize.height);
             faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
         }, 500);
+    }
+    const speak = (message) => {
+        let msg = new SpeechSynthesisUtterance(message);
+        let voices = window.speechSynthesis.getVoices();
+        msg.voice = voices[0];
+        window.speechSynthesis.speak(msg);
     }
     const handleVideoOnPlay = () => {
         detectAllFaces();
@@ -93,6 +103,8 @@ export default function CameraStream(props) {
                 <p className='title'>Trực tiếp</p>
                 <p className='small-title'>Tên camera</p>
                 <p className='small-text'>{data?.camera?.camera_name}</p>
+                <p className='small-title'>Số người xuất hiện</p>
+                <p ref={numberOfPeople} className='small-text'>0</p>
                 <a
                     ref={downloadRef}
                     href="/#"

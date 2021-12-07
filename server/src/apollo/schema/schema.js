@@ -4,7 +4,7 @@ const { gql } = require('apollo-server-express')
 const typeDefs = gql`
     type Camera{
         _id:ID
-        user:User
+        user:String
         location:String
         camera_name:String
         camera_drive:String

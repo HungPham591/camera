@@ -14,9 +14,12 @@ User.pre('save', async function (next) {
     user.user_pass = await bcrypt.hash(user.user_pass, 8);
 })
 
-User.pre('findOne', async (next) => {
-    if (this.user_pass) this.user_pass = await bcrypt.hash(user.user_pass, 8);
-    next();
-})
+User.methods.isCheckPassword = async function (password) {
+    try {
+        return await bcrypt.compare(password, this.user_pass);
+    } catch (err) {
+
+    }
+}
 
 module.exports = mongoose.model("users", User);

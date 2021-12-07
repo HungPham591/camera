@@ -3,12 +3,12 @@ const path = require("path");
 const fs = require('fs');
 
 const Stream = class {
-    constructor(camera) {
+    constructor(camera, dirPath) {
         this.camera = camera;
         this.stream = null;
 
-        this.dirPath = path.join(__dirname, '..', "public", 'stream', this.camera._id.toString());
-        if (!fs.existsSync(this.dirPath)) fs.mkdirSync(this.dirPath);
+        this.dirPath = dirPath;
+        if (!fs.existsSync(this.dirPath)) fs.mkdirSync(this.dirPath, { recursive: true });
         this.filePath = path.join(this.dirPath, 'index.m3u8');
     }
     startStream() {

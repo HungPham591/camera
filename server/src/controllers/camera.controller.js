@@ -22,5 +22,5 @@ exports.updateCamera = async (args) => {
 exports.deleteCamera = async (args) => {
     if (!args.user) return null;
     Event.emit('DELETE_CAMERA', args);
-    return await CameraModel.findByIdAndRemove(args._id);
+    return await CameraModel.findByIdAndDelete(args._id);
 }

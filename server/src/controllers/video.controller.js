@@ -11,7 +11,7 @@ exports.createVideo = async (args) => {
     return await newVideo.save();
 }
 exports.deleteVideo = async (args) => {
-    return await VideoModel.findByIdAndRemove(args._id);
+    return await VideoModel.findByIdAndDelete(args._id);
 }
 exports.deleteVideoByCamera = async (args) => {
     const query = { camera: args._id };

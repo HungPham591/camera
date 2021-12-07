@@ -1,4 +1,3 @@
-// const Stream = require("node-rtsp-stream");
 const Stream = require('./stream.modules');
 const Recorder = require("node-rtsp-recorder").Recorder;
 const { uploadFile } = require("./googledrive.modules");
@@ -22,8 +21,10 @@ const Camera = class {
     constructor(camera) {
         this.camera = camera;
         this.record = null;
-        this.stream = new Stream(this.camera);
-        this.filePath = resolve(`../camera-service/src/public/data/${camera._id}`);
+        this.path = resolve(`../server/src/public/${camera.user}/${camera._id}`);
+        this.videoPath = `${this.path}\\data\\`;
+        this.streamPath = `${this.path}\\stream\\`;
+        this.stream = new Stream(this.camera, this.streamPath);
         this.video = null;
     }
     startStream() {
@@ -35,14 +36,14 @@ const Camera = class {
     startRecord() {
         let time = new Date().getTime();
         this.video = time;
-        this.record = captureVideo(this.camera.camera_link, resolve(`../server/src/public/data/${this.camera._id}`), `${time}`);
+        this.record = captureVideo(this.camera.camera_link, this.videoPath, `${time}`);
     }
     stopRecord() {
         this.record.stopRecording();
         this.record = null;
     }
     uploadDrive() {
-        const filePath = `${this.filePath}\\${this.video}.mp4`;
+        const filePath = `${this.videoPath}\\${this.video}.mp4`;
         const fileName = `${this.camera.camera_name}_${Date(this.video)}`;
         const token = this.camera.google_token;
         if (fs.existsSync(filePath)) {
@@ -50,7 +51,7 @@ const Camera = class {
         }
     }
     uploadYoutube() {
-        const filePath = `${this.filePath}\\${this.video}.mp4`;
+        const filePath = `${this.videoPath}\\${this.video}.mp4`;
         const fileName = `${this.camera.camera_name}_${Date(this.video)}`;
         const token = this.camera.google_token;
         if (fs.existsSync(filePath)) {

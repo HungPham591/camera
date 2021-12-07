@@ -94,7 +94,7 @@ export default function Video(props) {
         video.addEventListener('seeked', async function () {
             if (seekResolve) seekResolve();
         });
-        let currentTime = 0;
+        let currentTime = video.currentTime;
         while (currentTime < timeVideo) {
             video.currentTime = currentTime;
             await new Promise(r => seekResolve = r);// doi seek xong
@@ -158,7 +158,7 @@ export default function Video(props) {
         <div id="VideoDetail">
             <div className="left-pane">
                 <div className='video-pane'>
-                    {videos ? <video ref={videoRef} src={video_path} crossOrigin="anonymous" id='video' controls /> : ''}
+                    {videos ? <video ref={videoRef} src={video_path} id='video' controls /> : ''}
                     <canvas ref={canvasRef} className='result-canvas' />
                 </div>
                 {progressbar()}

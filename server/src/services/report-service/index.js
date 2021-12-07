@@ -15,18 +15,18 @@ const connectAmqserver = async () => {
         channel.assertQueue('GET_REPORTS'),
         channel.assertQueue('CREATE_REPORT'),
         channel.assertQueue('DELETE_REPORT'),
-        channel.assertQueue('DELETE_CAMERA'),
+        channel.assertQueue('DELETE_REPORTS'),
     ])
     channel.consume('GET_REPORT', msg => response(channel, msg, controller.getReport))
     channel.consume('GET_REPORTS', msg => response(channel, msg, controller.getReports))
     channel.consume('CREATE_REPORT', msg => response(channel, msg, controller.createReport))
     channel.consume('DELETE_REPORT', msg => response(channel, msg, controller.deleteReport))
-    channel.consume('DELETE_CAMERA', msg => controller.deleteReportByCamera(JSON.parse(msg.content)))
+    channel.consume('DELETE_REPORTS', msg => response(channel, msg, controller.deleteReportByCamera))
 }
 const response = async (channel, msg, controller) => {
     const data = JSON.parse(msg.content);
     const response = await controller(data);
-    if (!response) return;
+    if (!response) return responseMessage(channel, msg, null);
     responseMessage(channel, msg, response);
 }
 

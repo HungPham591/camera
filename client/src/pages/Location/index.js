@@ -51,7 +51,7 @@ export default function Location(props) {
         handleShowModal();
     }
     const initCameraMap = () => {
-        const imgPath = `http://localhost:4008/map/${data?.location?.user}/${id}.jpg`;
+        const imgPath = `http://localhost:4008/${data?.location?.user}/map/${id}.jpg`;
 
         mapObject.current?.off();
         mapObject.current?.remove();
@@ -73,7 +73,7 @@ export default function Location(props) {
             hls.current.attachMedia(video);
         }
     }
-    const cameraPopup = () => `<video id='videoPopup' crossOrigin="anonymous" controls autoPlay/>`;
+    const cameraPopup = () => `<div id='popup'><p>Xem camera</p><video id='videoPopup' crossOrigin="anonymous" controls autoPlay/></div>`;
 
 
     const loadCameraMarker = () => {

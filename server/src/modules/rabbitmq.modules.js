@@ -1,4 +1,5 @@
 const amqp = require('amqplib');
+const { time } = require('console');
 const EventEmitter = require('events');
 const uuid = require('uuid');
 
@@ -16,7 +17,6 @@ exports.createClient = rabbitmqconn => {
                 msg => {
                     channel.responseEmitter.emit(
                         msg.properties.correlationId,
-                        // msg.content.toString('utf8'),
                         JSON.parse(msg.content)
                     );
                 },
@@ -26,10 +26,12 @@ exports.createClient = rabbitmqconn => {
         });
 }
 exports.sendMessage = (channel, message, queue) => {
+    console.log(queue + ' ' + new Date());
     message = JSON.stringify(message);
     channel.sendToQueue(queue, Buffer.from(message));
 }
 exports.sendRPCMessage = (channel, message, rpcQueue) => {
+    console.log(rpcQueue + ' ' + new Date());
     message = JSON.stringify(message);
     return new Promise(resolve => {
         const correlationId = uuid.v4();

@@ -8,6 +8,7 @@ export const getVideo = gql`
             createdAt
             camera{
                 _id
+                user
                 camera_name
             }
         }

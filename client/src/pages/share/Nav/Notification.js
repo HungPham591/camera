@@ -9,9 +9,8 @@ function Notification(props) {
     const { loading, error, data } = useQuery(getUser);
 
     const listMessage = () => {
-        return data?.user?.cameras?.map((camera, index) => {
+        const listMessage = data?.user?.cameras?.map((camera, index) => {
             return camera.reports?.map((report, index) => {
-                if (index > 4) return;
                 return (
                     <div key={index} className='item'>
                         <IoIosAlert className='icon' />
@@ -23,6 +22,7 @@ function Notification(props) {
                 )
             })
         })
+        return listMessage?.slice(0, 3)
     }
     return (
         <div id='Notification' className={props.show ? '' : 'd-none'}>

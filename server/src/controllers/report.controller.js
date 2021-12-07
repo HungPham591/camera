@@ -1,7 +1,7 @@
 const ReportModel = require("../models/report.model");
 
 exports.getReport = async (args) => {
-    return await ReportModel.findOne(args, {}, { limit: 5 });
+    return await ReportModel.findOne(args);
 }
 exports.getReports = async (args) => {
     if (args.start && args.end) {

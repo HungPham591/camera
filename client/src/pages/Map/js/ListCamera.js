@@ -33,7 +33,7 @@ export default function ListCamera(props) {
     }
     const listCamera = () => {
         return dataLocation?.map((value, index) => {
-            const imgPath = ` http://localhost:4008/map/${data?.user?._id}/${value._id}.jpg`
+            const imgPath = ` http://localhost:4008/${data?.user?._id}/map/${value._id}.jpg`
             return (
                 <div key={index} className="custom-card">
                     <img src={imgPath} />

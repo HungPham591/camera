@@ -24,7 +24,7 @@ export default function CameraModal(props) {
     }
 
     const handleDeleteButton = () => {
-        if (!props?.camera?._id) return
+        if (!props?.camera?._id) return props.handleClose();
         deleteItem({
             variables: { _id: props?.camera?._id },
             refetchQueries: [{ query: getUser }]

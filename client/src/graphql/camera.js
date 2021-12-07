@@ -4,6 +4,7 @@ export const getCameras = gql`
     query($camera_name:String){
         cameras(camera_name:$camera_name){
             _id
+            user
             camera_name
             camera_drive
             camera_link
@@ -16,6 +17,7 @@ export const getCamera = gql`
     query($_id:ID){
         camera(_id:$_id){
             _id
+            user
             camera_name
             camera_drive
             camera_link

@@ -14,7 +14,8 @@ const link_stream = url_stream + "/" + stream_key;
 
 const initAuth = (google_token) => {
     const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
-    let token = { access_token: google_token };
+    //refresh token auto get access token
+    const token = { refresh_token: google_token };
     oAuth2Client.setCredentials(token);
     return oAuth2Client;
 };
@@ -44,10 +45,8 @@ const uploadVideo = (filePath, fileName, user) => {
             },
         },
         (error, data) => {
-            if (error) {
-                console.log(error);
-            }
-            console.log("https://www.youtube.com/watch?v=" + data.data.id);
+            if (error) console.log(error);
+            else console.log("https://www.youtube.com/watch?v=" + data.data.id);
         }
     );
 };

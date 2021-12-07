@@ -5,6 +5,7 @@ import { getUser } from '../../../graphql/user';
 import { useQuery } from '@apollo/client'
 import { useRef } from "react";
 import Hls from 'hls.js';
+import imgNotFound from '../css/broken.jpg'
 
 export default function ListCamera(props) {
     const history = useHistory();
@@ -17,18 +18,27 @@ export default function ListCamera(props) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const onCompleted = ({ user }) => {
-        if (!user?.locations?.length) return;
-        setCamera(user?.locations[0])
-        user?.cameras?.map((value, index) => {
-            let videoSrc = `${process.env.REACT_APP_DOMAIN}\\stream\\${value._id}\\index.m3u8`;
+    const loadVideo = () => {
+        if (!camera?.length) return;
+        camera?.map((value, index) => {
+            if (value?.location !== location) return;
+            let videoSrc = `${process.env.REACT_APP_DOMAIN}\\${value.user}\\${value._id}\\stream\\index.m3u8`;
             const hls = new Hls();
             hls.loadSource(videoSrc);
             hls.attachMedia(refVideo.current[index]);
         })
     }
+
+    const onCompleted = ({ user }) => {
+        if (!user?.locations?.length) return;
+        setLocation(user?.locations[0]?._id)
+        setCamera(user?.cameras);
+    }
     useEffect(() => {
-        if (!location && data?.user?.locations?.length) setCamera(data?.user?.locations[0]?._id);
+        loadVideo();
+    }, [location])
+    useEffect(() => {
+        if (!location && data?.user?.locations?.length) setLocation(data?.user?.locations[0]?._id);
     }, [])
 
     const { loading, error, data } = useQuery(getUser, { onCompleted });
@@ -37,7 +47,7 @@ export default function ListCamera(props) {
         history.push("/Camera/" + id);
     };
     const handleSettingButton = (camera) => {
-        setLocation(camera);
+        setCamera(camera);
         handleShow();
     }
     const handleCustomButton = (camera) => {
@@ -57,13 +67,12 @@ export default function ListCamera(props) {
             </select>
         );
     }
-    //
     const listCamera = () => {
         return data?.user?.cameras?.map((value, index) => {
             if (value?.location !== location) return;
             return (
                 <div key={index} className='custom-card'>
-                    <video ref={el => refVideo.current[index] = el} autoPlay></video>
+                    <video ref={el => refVideo.current[index] = el} poster={imgNotFound} autoPlay muted></video>
                     <p className='title'>Camera {value.camera_name}</p>
                     <div className='group-button'>
                         <button
@@ -94,7 +103,7 @@ export default function ListCamera(props) {
     }
     return (
         <div>
-            <SettingModal show={show} handleClose={handleClose} camera={location} />
+            <SettingModal show={show} handleClose={handleClose} camera={camera} />
             <p className='title'>Camera của bạn</p>
             {dropdown()}
             <div className='grid grid-2'>

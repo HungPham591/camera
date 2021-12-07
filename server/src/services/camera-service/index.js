@@ -34,7 +34,7 @@ const connectAmqserver = async () => {
 const response = async (channel, msg, controller) => {
     const data = JSON.parse(msg.content);
     const response = await controller(data);
-    if (!response) return;
+    if (!response) return responseMessage(channel, msg, null);
     responseMessage(channel, msg, response);
 }
 //controll camera
@@ -68,10 +68,8 @@ Event.on("NEW_CAMERA", function (doc) {
     listCamera.push(doc);
 });
 Event.on("DELETE_CAMERA", function (doc) {
-    const dataPath = path.join(__dirname, '..', '..', "public", 'data', doc?._id);
-    const streamPath = path.join(__dirname, '..', '..', "public", 'stream', doc?._id);
+    const dataPath = path.join(__dirname, '..', '..', "public", doc?.user, doc?._id);
     fs.rmdirSync(dataPath, { recursive: true, force: true });
-    fs.rmdirSync(streamPath, { recursive: true, force: true });
 });
 Event.on("UPDATE_CAMERA", function (doc) {
     console.log('update camera' + doc);

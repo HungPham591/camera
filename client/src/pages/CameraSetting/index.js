@@ -24,7 +24,7 @@ export default function CameraStream(props) {
     }, [])
 
     const onCompleted = ({ camera }) => {
-        let videoSrc = `${process.env.REACT_APP_DOMAIN}\\stream\\${camera._id}\\index.m3u8`;
+        let videoSrc = `${process.env.REACT_APP_DOMAIN}\\${camera.user}\\${camera._id}\\stream\\index.m3u8`;
         const video = videoRef.current;
         if (Hls.isSupported()) {
             hls.current = new Hls();

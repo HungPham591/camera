@@ -58,25 +58,29 @@ const onDeleteCamera = (msg) => {
     if (data._id === camera._id) exit();
 }
 const loadImage = async () => {
-    //khoi tao danh sach nguoi quen
+    try {
+        //khoi tao danh sach nguoi quen
 
-    const dirPath = resolve(`../server/src/public/face/${camera.user}`);
-    let listFile = fs.readdirSync(dirPath)
+        const dirPath = resolve(`../server/src/public/${camera.user}/face/`);
+        let listFile = fs.readdirSync(dirPath)
 
-    listFile = listFile.map((value, index) => {
-        return canvas.loadImage(dirPath + '\\' + value)
-    })
-    listFile = await Promise.all(listFile);
+        listFile = listFile.map((value, index) => {
+            return canvas.loadImage(dirPath + '\\' + value)
+        })
+        listFile = await Promise.all(listFile);
 
-    descriptions = listFile.map((img, index) => {
-        return faceapi
-            .detectSingleFace(img)
-            .withFaceLandmarks()
-            .withFaceDescriptor();
-    })
-    descriptions = await Promise.all(descriptions);
+        descriptions = listFile.map((img, index) => {
+            return faceapi
+                .detectSingleFace(img)
+                .withFaceLandmarks()
+                .withFaceDescriptor();
+        })
+        descriptions = await Promise.all(descriptions);
 
-    listDetect = descriptions;
+        listDetect = descriptions;
+    } catch (err) {
+        console.log(err);
+    }
 }
 const captureFrame = () => {
     const extractFrame = new ExtractFrame(url);

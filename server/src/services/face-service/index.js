@@ -23,7 +23,7 @@ const connectAmqserver = async () => {
 const response = async (channel, msg, controller) => {
     const data = JSON.parse(msg.content);
     const response = await controller(data);
-    if (!response) return;
+    if (!response) return responseMessage(channel, msg, null);
     responseMessage(channel, msg, response);
 }
 

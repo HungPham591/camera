@@ -11,6 +11,8 @@ const CameraSchema = new Schema(
         camera_location: { type: Array },
         camera_public: { type: Boolean },
         google_token: { type: String },
+        working_time: { type: Array },
+        detect_zone: { type: Array }
     },
     { timestamps: true }
 );

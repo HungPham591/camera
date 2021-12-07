@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { getLocation } from '../../../graphql/location';
 import Hls from 'hls.js';
 import { useEffect } from "react";
+import imgNotFound from '../css/broken.jpg';
 
 export default function ListCamera(props) {
     let { id } = useParams();
@@ -15,7 +16,7 @@ export default function ListCamera(props) {
 
     useEffect(() => {
         data?.location?.cameras?.map((value, index) => {
-            let videoSrc = `${process.env.REACT_APP_DOMAIN}\\stream\\${value._id}\\index.m3u8`;
+            let videoSrc = `${process.env.REACT_APP_DOMAIN}\\${value.user}\\${value._id}\\stream\\index.m3u8`;
             const hls = new Hls();
             hls.loadSource(videoSrc);
             hls.attachMedia(refVideo.current[index]);
@@ -32,7 +33,7 @@ export default function ListCamera(props) {
         return data?.location?.cameras?.map((value, index) => {
             return (
                 <div key={index} className="custom-card">
-                    <video ref={el => refVideo.current[index] = el}></video>
+                    <video ref={el => refVideo.current[index] = el} poster={imgNotFound}></video>
                     <div className="card-body">
                         <h5 className="card-title">{value.camera_name}</h5>
                         <p>{moment(value?.updatedAt).format('DD/MM/YYYY')}</p>

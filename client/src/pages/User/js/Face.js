@@ -33,7 +33,7 @@ export default function ListFace(props) {
             <div className='grid'>
                 {
                     data?.user?.faces?.map((value, index) => {
-                        const imgPath = `${process.env.REACT_APP_DOMAIN}\\face\\${data?.user?._id}\\${value?._id}.jpg`
+                        const imgPath = `${process.env.REACT_APP_DOMAIN}\\${data?.user?._id}\\face\\${value?._id}.jpg`
                         return (
                             <div key={index} className='custom-card'>
                                 <img src={imgPath} />

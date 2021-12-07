@@ -53,7 +53,7 @@ function Map(props) {
         }).addTo(mapObject.current);
     };
     const initCameraMap = (id) => {
-        const imgPath = ` http://localhost:4008/map/${data?.user?._id}/${id}.jpg`
+        const imgPath = ` http://localhost:4008/${data?.user?._id}/map/${id}.jpg`
 
         mapObject.current?.off();
         mapObject.current?.remove();
@@ -71,7 +71,7 @@ function Map(props) {
     };
     const handleCameraMarker = (e) => {
         const id = e.sourceTarget.feature.properties._id;
-        let videoSrc = `${process.env.REACT_APP_DOMAIN}\\stream\\${id}\\index.m3u8`;
+        let videoSrc = `${process.env.REACT_APP_DOMAIN}\\${data?.user?._id}\\${id}\\stream\\index.m3u8`;
         const video = document.getElementById("videoPopup");
         if (Hls.isSupported()) {
             hls.current = new Hls();
@@ -79,10 +79,10 @@ function Map(props) {
             hls.current.attachMedia(video);
         }
     }
-    const cameraPopup = () => `<video id='videoPopup' crossOrigin="anonymous" controls autoPlay/>`;
+    const cameraPopup = () => `<div id='popup'><p>Xem camera</p><video id='videoPopup' crossOrigin="anonymous" controls autoPlay/></div>`;
 
     const loadLocationMarker = () => {
-        if (!mapObject.current || !data?.user.locations) return;
+        if (!mapObject.current || !data?.user?.locations) return;
         data?.user?.locations.forEach((value) => {
             let marker = L.marker(
                 [value.location_coordinate[0], value.location_coordinate[1]],

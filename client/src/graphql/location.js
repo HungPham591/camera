@@ -18,6 +18,7 @@ export const getLocation = gql`
             location_coordinate
             cameras{
                 _id
+                user
                 location
                 camera_name
                 camera_drive

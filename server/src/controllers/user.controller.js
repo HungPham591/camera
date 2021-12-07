@@ -1,4 +1,5 @@
 const UserModel = require("../models/user.model");
+const bcrypt = require('bcryptjs');
 
 exports.getUser = async (args) => {
     if (args?._id) return await UserModel.findById(args._id);
@@ -13,12 +14,17 @@ exports.getUsers = async (args) => {
     return await UserModel.find(args);
 }
 exports.signIn = async (args) => {
-    let user = await UserModel.findOne(args);
+    const { user_name, user_pass } = args;
+    let user = await UserModel.findOne({ user_name });
     if (!user) return null;
+    const isValid = await user.isCheckPassword(user_pass);
+    if (!isValid) return null;
     return user;
 }
 exports.signUp = async (args) => {
-    let user = await UserModel.findOne(args);
-    if (!user) user = await new UserModel(args).save();
+    const { user_name, user_pass } = args;
+    let user = await UserModel.findOne({ user_name });
+    const isValid = await user.isCheckPassword(user_pass);
+    if (!isValid) user = await new UserModel(args).save();
     return user;
 }
