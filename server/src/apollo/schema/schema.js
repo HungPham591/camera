@@ -6,6 +6,8 @@ const typeDefs = gql`
         _id:ID
         user:String
         location:String
+        working_time:[String]
+        detect_zone:[Point]
         camera_name:String
         camera_drive:String
         camera_link:String
@@ -15,6 +17,14 @@ const typeDefs = gql`
         createdAt:String
         videos:[Video]
         reports:[Report]
+    }
+    type Point{
+        x:Float
+        y:Float
+    }
+    input PointInput{
+        x:Float
+        y:Float 
     }
     type User{
         _id:ID
@@ -79,7 +89,7 @@ const typeDefs = gql`
     }
     type Mutation{
         createCamera(camera_name:String,camera_link:String,camera_location:[Float],camera_public:Boolean,google_token:String,location:String):Camera
-        updateCamera(_id:ID,camera_name:String,camera_link:String,camera_location:[Float],camera_public:Boolean,location:String):Camera
+        updateCamera(_id:ID,camera_name:String,camera_link:String,camera_location:[Float],camera_public:Boolean,location:String,working_time:[String],detect_zone:[PointInput]):Camera
         deleteCamera(_id:ID):Camera
         deleteVideo(_id:ID):Video
         createBlog(blog_title:String,blog_content:String):Blog

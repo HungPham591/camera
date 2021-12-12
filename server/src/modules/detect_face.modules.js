@@ -26,6 +26,8 @@ module.exports = async (input, callback) => {
     await loadEnvironment();
     await loadImage()
     captureFrame();
+    //
+    refreshListDetect();
 }
 const refreshListDetect = () => {
     setInterval(() => {
@@ -85,13 +87,13 @@ const loadImage = async () => {
 const captureFrame = () => {
     const extractFrame = new ExtractFrame(url);
     setInterval(() => {
-        if (extractFrame.getFrame() !== '') {
+        if (extractFrame.getFrame() !== '' && checkWorkingTime()) {
             const base64 = 'data:image/png;base64,' + extractFrame.getFrame().toString('base64');
             detect(base64);
         }
     }, 1000);
 }
-const checkTimeDetect = () => {
+const checkWorkingTime = () => {
     const currentTime = new Date().getTime();
     if (currentTime >= camera.time_detect[0] && currentTime <= camera.time_detect[1]) return true;
     return false;

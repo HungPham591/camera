@@ -9,14 +9,10 @@ const getTodayAtSpecificHour = (hour = 12) =>
 const selectedStart = getTodayAtSpecificHour()
 const selectedEnd = getTodayAtSpecificHour(14)
 
-const startTime = getTodayAtSpecificHour(7)
+const startTime = getTodayAtSpecificHour(1)
 const endTime = endOfToday()
 
-const disabledIntervals = [
-    { start: getTodayAtSpecificHour(16), end: getTodayAtSpecificHour(17) },
-    { start: getTodayAtSpecificHour(7), end: getTodayAtSpecificHour(12) },
-    { start: getTodayAtSpecificHour(20), end: getTodayAtSpecificHour(24) }
-]
+
 
 export default class TimeSlider extends React.Component {
     state = {
@@ -38,7 +34,6 @@ export default class TimeSlider extends React.Component {
                 timelineInterval={[startTime, endTime]}
                 onUpdateCallback={this.errorHandler}
                 onChangeCallback={this.onChangeCallback}
-                disabledIntervals={disabledIntervals}
             />
         )
     }

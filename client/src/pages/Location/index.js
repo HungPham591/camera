@@ -65,7 +65,8 @@ export default function Location(props) {
 
     const handleCameraMarker = (e) => {
         const id = e.sourceTarget.feature.properties._id;
-        let videoSrc = `${process.env.REACT_APP_DOMAIN}\\stream\\${id}\\index.m3u8`;
+        const user = e.sourceTarget.feature.properties.user;
+        let videoSrc = `${process.env.REACT_APP_DOMAIN}\\${user}\\${id}\\stream\\index.m3u8`;
         const video = document.getElementById("videoPopup");
         if (Hls.isSupported()) {
             hls.current = new Hls();
@@ -89,6 +90,7 @@ export default function Location(props) {
                 type: "Point",
                 properties: {
                     _id: value._id,
+                    user: value.user
                 },
                 geometry: undefined,
             };

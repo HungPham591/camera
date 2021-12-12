@@ -67,11 +67,14 @@ export default function CameraStream(props) {
             if (!data || !isMounted.current) return;
             if (data?.length && isMounted.current) speak(`${data.length} person appeared`);
             if (numberOfPeople.current?.innerHTML) numberOfPeople.current.innerHTML = data?.length || 0;
+            console.log(data[0]?.landmarks?.getNose()[0])
+
             const resizedDetections = faceapi.resizeResults(data, displaySize);
             canvasRef.current?.getContext('2d')?.clearRect(0, 0, displaySize.width, displaySize.height);
             faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
         }, 500);
     }
+
     const speak = (message) => {
         let msg = new SpeechSynthesisUtterance(message);
         let voices = window.speechSynthesis.getVoices();
@@ -133,20 +136,3 @@ export default function CameraStream(props) {
         </div >
     );
 }
-
-/*
-canvas
-x=492
-y=413
-
-faceapi.js
-
-_height: 488.7532639951035
-_width: 501.3050814921979
-
-positions
-0: Point {_x: 803.9741873697252, _y: 207.241702
-
-displaysize
-{width: 1920, height: 1080}
-*/

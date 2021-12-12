@@ -6,7 +6,6 @@ export const getCameras = gql`
             _id
             user
             camera_name
-            camera_drive
             camera_link
             camera_location
             createdAt
@@ -18,6 +17,11 @@ export const getCamera = gql`
         camera(_id:$_id){
             _id
             user
+            working_time
+            detect_zone{
+                x
+                y
+            }
             camera_name
             camera_drive
             camera_link
@@ -47,8 +51,8 @@ export const createCamera = gql`
     }
 `
 export const updateCamera = gql`
-    mutation($_id:ID,$camera_name:String,$camera_location:[Float],$camera_link:String,$camera_public:Boolean){
-        updateCamera(_id:$_id,camera_name:$camera_name,camera_location:$camera_location,camera_link:$camera_link,camera_public:$camera_public){
+    mutation($_id:ID,$camera_name:String,$camera_location:[Float],$camera_link:String,$camera_public:Boolean,$working_time:[String],$detect_zone:[PointInput]){
+        updateCamera(_id:$_id,camera_name:$camera_name,camera_location:$camera_location,camera_link:$camera_link,camera_public:$camera_public,working_time:$working_time,detect_zone:$detect_zone){
             _id
             camera_name
             camera_link
