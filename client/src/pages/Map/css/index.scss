@@ -4,6 +4,7 @@
   height: 92vh;
   display: flex;
   .left-pane {
+    border-right: 0.5px solid rgba(31, 45, 61, 0.12);
     overflow-y: scroll;
     width: 50%;
     height: 100%;
@@ -11,6 +12,11 @@
   }
   .right-pane {
     width: 50%;
+    transition: 1s;
+  }
+  .right-pane-active {
+    width: 90%;
+    transition: 1s;
   }
   .custom-card {
     width: 100%;
@@ -61,6 +67,19 @@
     height: 100%;
     width: 100%;
     position: relative;
+    .legend {
+      color: #333333;
+      padding: 10 14px;
+      background-color: rgba(245, 245, 220, 0.8);
+      box-shadow: 0 0 15px rgpa(0, 0, 0, 0.2);
+      border-radius: 5px;
+      border: 1px solid grey;
+      padding: 10px 14px;
+      p {
+        font-weight: 600;
+        font-size: 16px;
+      }
+    }
     #map {
       height: 100%;
       width: 100%;
@@ -133,8 +152,8 @@
       }
     }
     button {
+      width: 18%;
       height: 50px;
-      padding: 0 30px;
       border-radius: 10px;
       font-weight: 500;
       border: 0;

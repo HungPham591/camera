@@ -12,8 +12,8 @@ const io = new Server(server, { cors: 'http://localhost:3000' });
 
 
 createClient(amqserver).then(async channel => {
-    await channel.assertQueue('CREATE_REPORT');
-    channel.consume('CREATE_REPORT', msg => {
+    await channel.assertQueue('NEW_NOTIFICATION');
+    channel.consume('NEW_NOTIFICATION', msg => {
         const data = JSON.parse(msg.content);
         io.to(data.user).emit('notification', data);
     })

@@ -33,13 +33,14 @@ export default function ListCamera(props) {
     }
     const listCamera = () => {
         return dataLocation?.map((value, index) => {
-            const imgPath = ` http://localhost:4008/${data?.user?._id}/map/${value._id}.jpg`
+            const imgPath = ` http://localhost:4008/${data?.user?._id}/map/${value._id}.jpg`;
+            const numberOfCameras = data?.user?.cameras?.filter(camera => camera.location === value._id)?.length;
             return (
                 <div key={index} className="custom-card">
                     <img src={imgPath} />
                     <div className="card-body">
                         <h5 className="card-title">{value.location_name}</h5>
-                        <p>{moment(value?.updatedAt).format('DD/MM/YYYY')}</p>
+                        <p>Số camera: {numberOfCameras}</p>
                         <button
                             className="btn btn-primary"
                             onClick={() => openLocation(value._id)}
@@ -54,7 +55,7 @@ export default function ListCamera(props) {
 
     return (
         <div>
-            <p className='title'>Địa điểm xung quanh đây</p>
+            <p className='title'>Địa điểm gắn camera</p>
             <div className='search'>
                 <input ref={refInput} onKeyDown={handleKeyDown} placeholder="Nhập tên địa điểm..." />
                 <button className='btn btn-primary' onClick={handleSearchButton}>Search</button>

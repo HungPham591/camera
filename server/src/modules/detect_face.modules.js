@@ -3,7 +3,7 @@ const fs = require("fs");
 const faceapi = require("face-api.js");
 const ExtractFrame = require('./extract_frame.modules')
 require('@tensorflow/tfjs-node')
-const { createClient, sendMessage } = require('./rabbitmq.modules')
+const { createClient, sendRPCMessage, sendMessage } = require('./rabbitmq.modules')
 const resolve = require('path').resolve
 
 const { Canvas, Image, ImageData } = canvas;
@@ -95,8 +95,9 @@ const captureFrame = () => {
 }
 const checkWorkingTime = () => {
     const currentTime = new Date().getTime();
-    if (currentTime >= camera.time_detect[0] && currentTime <= camera.time_detect[1]) return true;
-    return false;
+    if (!camera?.working_time) return true;
+    if (currentTime >= camera?.working_time[0] && currentTime <= camera?.working_time[1]) return true;
+    return true;
 }
 
 const checkFaceInsidePolygon = (point, polygon) => {
@@ -142,9 +143,20 @@ const detect = async (base64) => {
     }
 }
 
-const createReport = (resultDetect, base64) => {
+const createReport = async (resultDetect, base64) => {
     const report_description = resultDetect.map(value => {
         return { gender: value.gender, age: value.age };
     })
-    sendMessage(channel, { camera: camera._id, report_description, img: base64, user: camera.user }, 'CREATE_REPORT')
+    const report = { camera: camera._id, report_description, img: base64, user: camera.user }
+    sendMessage(channel, report, 'NEW_NOTIFICATION')
+    const newReport = await sendRPCMessage(channel, report, 'CREATE_REPORT');
+
+    base64ToFile(base64, newReport?._id)
+}
+const base64ToFile = (base64, id) => {
+    const base64Data = base64.replace(/^data:image\/png;base64,/, "");
+    const dirPath = resolve(`../server/src/public/${camera.user}/${camera._id}/report/`);
+    const filePath = `${dirPath}\\${id}.png`;
+    if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath, { recursive: true });
+    fs.writeFile(filePath, base64Data, 'base64', () => { });
 }

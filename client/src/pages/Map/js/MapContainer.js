@@ -21,6 +21,15 @@ function Map(props) {
             html: `<span class="greenMarker"></span><div class='textMarker'>${name}</div>`,
         });
     };
+    const addMapTitle = (title) => {
+        let legend = L.control({ position: "topleft" });
+        legend.onAdd = () => {
+            let div = L.DomUtil.create('div', 'legend');
+            div.innerHTML = `<p>Bản đồ ${title}</p>`;
+            return div;
+        }
+        legend.addTo(mapObject.current);
+    }
     useEffect(() => {
         if (!mapObject?.current) initLocationMap();
         return () => { hls.current?.destroy() }
@@ -31,6 +40,7 @@ function Map(props) {
     const handleButtonBack = () => {
         initLocationMap();
         loadLocationMarker();
+        document.getElementsByClassName('right-pane')[0].className = 'right-pane'
     }
     const initLocationMap = () => {
         mapObject.current?.off();
@@ -52,22 +62,25 @@ function Map(props) {
                 'www.openstreetmap.org/copyright">OpenStreetMap</a>',
         }).addTo(mapObject.current);
     };
-    const initCameraMap = (id) => {
+    const initCameraMap = (id, name) => {
         const imgPath = ` http://localhost:4008/${data?.user?._id}/map/${id}.jpg`
 
         mapObject.current?.off();
         mapObject.current?.remove();
 
-        mapObject.current = L.map("map", { crs: L.CRS.Simple });
+        mapObject.current = L.map("map", { crs: L.CRS.Simple, zoomControl: false });
         const bounds = [[0, 0], [1000, 1000]];
         L.imageOverlay(imgPath, bounds).addTo(mapObject.current);
         mapObject.current.fitBounds(bounds);
 
+        addMapTitle(name)
         loadCameraMarker(id);
     }
     const handleLocationMarker = (e) => {
         const id = e.sourceTarget.feature.properties._id;
-        initCameraMap(id);
+        const name = e.sourceTarget.feature.properties.name;
+        document.getElementsByClassName('right-pane')[0].className = 'right-pane right-pane-active'
+        initCameraMap(id, name);
     };
     const handleCameraMarker = (e) => {
         const id = e.sourceTarget.feature.properties._id;
@@ -94,6 +107,7 @@ function Map(props) {
                 type: "Point",
                 properties: {
                     _id: value._id,
+                    name: value.location_name
                 },
                 geometry: undefined,
             };

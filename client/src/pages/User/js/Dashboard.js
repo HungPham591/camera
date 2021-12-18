@@ -1,11 +1,18 @@
 import { Line } from 'react-chartjs-2';
+import { useState } from "react";
 import { useQuery } from '@apollo/client';
 import { getUser } from '../../../graphql/user';
+import ReportModal from "./ReportModal";
 import moment from 'moment';
 
 export default function ListCamera(props) {
     const { loading, error, data } = useQuery(getUser);
 
+    //modal
+    const [report, setReport] = useState(null);
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const dataChart = () => {
         let rs = [];
@@ -84,6 +91,11 @@ export default function ListCamera(props) {
         rs = Math.round(rs / arr.length);
         return rs;
     }
+    const handleRowClick = (report, camera) => {
+        const reportData = { ...report, camera }
+        setReport(reportData);
+        handleShow();
+    }
     const table = () => {
         return (
             <table className="table table-borderless">
@@ -106,7 +118,7 @@ export default function ListCamera(props) {
                                 age = age / (report?.report_description?.length || 1);
                                 age = Math.round(age / report?.report_description?.length)
                                 return (
-                                    <tr key={index}>
+                                    <tr key={index} onClick={() => handleRowClick(report, camera)}>
                                         <th scope="row">{index + 1}</th>
                                         <td>{moment(report?.createdAt).format('DD/MM/YYYY HH:mm')}</td>
                                         <td>{male}</td>
@@ -169,6 +181,7 @@ export default function ListCamera(props) {
                 {table()}
 
             </div>
+            <ReportModal show={show} handleClose={handleClose} report={report} user={data?.user} />
         </div>
     )
 }
