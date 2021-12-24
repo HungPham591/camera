@@ -24,3 +24,8 @@ exports.deleteCamera = async (args) => {
     Event.emit('DELETE_CAMERA', args);
     return await CameraModel.findByIdAndDelete(args._id);
 }
+exports.deleteCamerasByLocation = async (args) => {
+    const query = { location: args._id };
+    Event.emit('DELETE_CAMERAS', args);
+    return await CameraModel.deleteMany(query);
+}

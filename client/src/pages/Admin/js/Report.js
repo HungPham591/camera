@@ -3,32 +3,17 @@ import { getReports } from '../../../graphql/report';
 import { useQuery } from '@apollo/client';
 import moment from 'moment';
 
-export default function Report(props) {
-    const { loading, error, data } = useQuery(getReports);
-    const [page, setPage] = useState(1);
-    const [modal, setModal] = useState(false);
-    const [selected, setSelected] = useState({})
-    const listColumn = ['#', 'camera_id', 'createdAt'];
+import { SelectPageContext } from "../index";
 
-    const renderModal = () => {
-        return (
-            <div className={'modal ' + (modal ? '' : 'd-none')}>
-                <p className='title'>VIDEO</p>
-                {
-                    listColumn.map((value, index) => {
-                        if (index === 0) return;
-                        return (
-                            <div key={index}>
-                                <p className='label'>{value}</p>
-                                <input type='text' value={Object.values(selected)[index - 1] || ''} readOnly />
-                            </div>
-                        )
-                    })
-                }
-                <button className='custom-button' onClick={() => setModal(false)}>close</button>
-            </div>
-        )
-    }
+export default function Report(props) {
+    let { setPageSelected, setCamera } = React.useContext(SelectPageContext);
+
+    const { data } = useQuery(getReports);
+    const [page, setPage] = useState(1);
+    const listColumn = ['#', 'camera_id', 'male', 'female', 'age', 'createdAt'];
+
+
+
     const handlePrevPage = () => {
         if (page !== 1) setPage(page - 1);
     }
@@ -36,8 +21,8 @@ export default function Report(props) {
         setPage(page + 1);
     }
     const handleRowClick = (item) => {
-        setSelected(item);
-        setModal(true);
+        setCamera(item?.camera_id)
+        setPageSelected(8)
     }
     return (
         <div>
@@ -57,10 +42,18 @@ export default function Report(props) {
                     <tbody>
                         {
                             data?.reports?.map((value, index) => {
+                                const male = value?.report_description?.filter(item => item?.gender === 'male').length || 0;
+                                const female = value?.report_description?.filter(item => item?.gender === 'female').length || 0;
+                                let age = value?.report_description?.reduce(((pre, cur) => pre + cur.age), 0);
+                                age = age / (value?.report_description?.length || 1);
+                                age = Math.round(age / value?.report_description?.length)
                                 return (
                                     <tr key={index} onClick={() => handleRowClick(value)}>
                                         <th scope="row">{index + 1}</th>
                                         <td>{value._id}</td>
+                                        <td>{male}</td>
+                                        <td>{female}</td>
+                                        <td>{age}</td>
                                         <td>{moment(value.createdAt).format('HH:mm DD/MM/YYYY')}</td>
                                     </tr>
                                 )
@@ -74,7 +67,6 @@ export default function Report(props) {
                 <li className="page-item"><p className="page-link">{page}</p></li>
                 <li className="page-item" onClick={handleNextPage}><p className="page-link">Next</p></li>
             </ul>
-            {renderModal()}
         </div>
     )
 }

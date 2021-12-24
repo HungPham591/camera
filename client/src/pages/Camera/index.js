@@ -65,7 +65,7 @@ export default function CameraStream(props) {
             if (!isMounted.current || videoRef.current?.paused) return clearInterval(interval);
             const data = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks()
             if (!data || !isMounted.current) return;
-            if (data?.length && isMounted.current) speak(`${data.length} person appeared`);
+            // if (data?.length && isMounted.current) speak(`${data.length} person appeared`);
             if (numberOfPeople.current?.innerHTML) numberOfPeople.current.innerHTML = data?.length || 0;
             console.log(data[0]?.landmarks?.getNose()[0])
 

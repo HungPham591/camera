@@ -27,6 +27,7 @@ export default function Location(props) {
     const handleShowModal = () => setShowModal(true);
 
     useEffect(() => {
+        console.log(1)
         if (!mapObject.current && data?.location) initCameraMap();
         if (data?.location?.cameras) loadCameraMarker();
     }, [data])

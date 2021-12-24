@@ -15,13 +15,17 @@ const connectAmqserver = async () => {
         channel.assertQueue('SIGNIN'),
         channel.assertQueue('SIGNUP'),
         channel.assertQueue('GET_USER'),
+        channel.assertQueue('CREATE_USER'),
         channel.assertQueue('UPDATE_USER'),
-        channel.assertQueue('GET_USERS')
+        channel.assertQueue('DELETE_USER'),
+        channel.assertQueue('GET_USERS'),
     ])
     channel.consume('SIGNIN', msg => response(channel, msg, controller.signIn))
     channel.consume('SIGNUP', msg => response(channel, msg, controller.signUp))
     channel.consume('GET_USER', msg => response(channel, msg, controller.getUser))
+    channel.consume('CREATE_USER', msg => response(channel, msg, controller.createUser))
     channel.consume('UPDATE_USER', msg => response(channel, msg, controller.updateUser))
+    channel.consume('DELETE_USER', msg => response(channel, msg, controller.deleteUser))
     channel.consume('GET_USERS', msg => response(channel, msg, controller.getUsers))
 }
 const response = async (channel, msg, controller) => {

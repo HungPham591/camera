@@ -35,6 +35,10 @@ export const getCamera = gql`
             reports{
                 _id
                 report_time
+                report_description{
+                    age
+                    gender
+                }
                 createdAt
             }
         }

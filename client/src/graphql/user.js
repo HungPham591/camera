@@ -7,6 +7,7 @@ export const getUsers = gql`
             _id
             user_name
             user_pass
+            user_role
             google_token
             createdAt
         }
@@ -61,6 +62,41 @@ export const getUser = gql`
         }
     }
 `
+export const createUser = gql`
+    mutation($user_name:String!,$user_pass:String!,$user_role:Boolean){
+        createUser(user_name:$user_name,user_pass:$user_pass,user_role:$user_role){
+            _id
+            user_name
+            user_pass
+            user_role
+            createdAt
+        }
+    }
+`
+export const updateUser = gql`
+    mutation($_id:ID,$user_name:String,$user_pass:String,$user_role:Boolean){
+        updateUser(_id:$_id,user_name:$user_name,user_pass:$user_pass,user_role:$user_role){
+            _id
+            user_name
+            user_pass
+            user_role
+            google_token
+            createdAt
+        }
+    }
+`
+export const deleteUser = gql`
+    mutation($_id:ID){
+        deleteUser(_id:$_id){
+            _id
+            user_name
+            user_pass
+            user_role
+            google_token
+            createdAt
+        }
+    }
+`
 export const signin = gql`
     mutation($user_name:String!,$user_pass:String!){
         signin(user_name:$user_name,user_pass:$user_pass){
@@ -85,6 +121,7 @@ export const signup = gql`
         }
     }
 `
+
 export const logout = gql`
     mutation($_id:ID){
         logout(_id:$_id){

@@ -12,12 +12,12 @@ export default function Blog(props) {
     const { loading, error, data } = useQuery(getBlogs);
     const tags = ['CAMERA', 'RECORDING', 'ENVIRONMENT', 'API', 'MOBILE'];
     const HtmlParserOptions = {
-        replace: domNode => {
-            if (domNode.attribs && domNode.name !== 'p') {
-                const props = attributesToProps(domNode.attribs);
-                return <span>{domNode.children[0].data}</span>;
-            }
-        }
+        // replace: domNode => {
+        //     if (domNode.attribs && domNode.name !== 'p') {
+        //         const props = attributesToProps(domNode.attribs);
+        //         return <span>{domNode.children[0].data}</span>;
+        //     }
+        // }
     };
 
     const handleWatchMoreButton = (item) => {

@@ -59,7 +59,13 @@ const resolvers = {
         updateBlog: async (parent, args, { channel, req }) => await sendRPCMessage(channel, args, 'UPDATE_BLOG'),
         deleteBlog: async (parent, args, { channel, req }) => await sendRPCMessage(channel, args, 'DELETE_BLOG'),
         createLocation: async (parent, args, { channel, req }) => await sendRPCMessage(channel, { ...args, user: req?.user }, 'CREATE_LOCATION'),
-        deleteLocation: async (parent, args, { channel, req }) => await sendRPCMessage(channel, { ...args, user: req?.user }, 'DELETE_LOCATION'),
+        deleteLocation: async (parent, args, { channel, req }) => {
+            sendRPCMessage(channel, { ...args, user: req?.user }, 'DELETE_CAMERAS')
+            return await sendRPCMessage(channel, { ...args, user: req?.user }, 'DELETE_LOCATION')
+        },
+        createUser: async (parent, args, { channel, req }) => await sendRPCMessage(channel, args, 'CREATE_USER'),
+        updateUser: async (parent, args, { channel, req }) => await sendRPCMessage(channel, args, 'UPDATE_USER'),
+        deleteUser: async (parent, args, { channel, req }) => await sendRPCMessage(channel, args, 'DELETE_USER'),
         signin: async (parent, args, { channel, res }) => {
             const user = await sendRPCMessage(channel, args, 'SIGNIN')
             if (!user) return user;

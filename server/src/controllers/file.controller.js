@@ -28,7 +28,7 @@ exports.uploadMap = async (req, res) => {
     }
 }
 exports.streamVideo = async (req, res) => {
-    let user = req.user;
+    let user = req.params.user_id;
     let camera_id = req.params.camera_id;
     let video_time = req.params.video_time;
     const range = req.headers.range;

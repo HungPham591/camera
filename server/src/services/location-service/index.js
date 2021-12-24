@@ -2,6 +2,9 @@ require('dotenv').config({ path: './.env.location-service' });
 const app = require('./app');
 const { createClient, responseMessage } = require('../../modules/rabbitmq.modules')
 const controller = require('../../controllers/location.controller.js');
+const Event = require('../../events/camera.event').eventBus;
+const fs = require('fs');
+const path = require("path");
 
 const port = process.env.PORT || 4008;
 const amqserver = 'amqp://localhost:5672/'
@@ -34,6 +37,11 @@ const startServer = async () => {
     connectAmqserver();
 }
 startServer();
+
+Event.on("DELETE_LOCATION", function (doc) {
+    const dataPath = path.join(__dirname, '..', '..', "public", doc?.user, "map", doc?._id + ".jpg");
+    fs.unlink(dataPath, err => console.log(err))
+});
 
 app.listen(port, () => {
     console.log('location service listen at port ' + port)

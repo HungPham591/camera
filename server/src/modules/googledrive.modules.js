@@ -33,15 +33,27 @@ const uploadFile = (filePath, fileName, token) => {
         console.log('google drive error: ' + err)
     }
 };
-const generateRefreshToken = async (code) => {
+
+const generatePublicUrl = (fileId) => {
+    const auth = initAuth(token);
+    const drive = google.drive("v3");
     try {
-        const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
-        return await oAuth2Client.getToken(code);
+        await drive.permissions.create({
+            auth,
+            fileId,
+            requestBody: {
+                role: 'reader',
+                type: "anyone",
+            }
+        })
+        const result = await drive.files.get({
+            fileId,
+            fields: 'webViewLink,webContentLink'
+        })
+        return result.data;
     } catch (err) {
-        console.log(err);
-        return null;
+        console.log(err)
     }
 }
 
-
-module.exports = { uploadFile, generateRefreshToken };
+module.exports = { uploadFile, generatePublicUrl };

@@ -2,6 +2,9 @@ require('dotenv').config({ path: './.env.face-service' });
 const app = require('./app');
 const { createClient, responseMessage } = require('../../modules/rabbitmq.modules')
 const controller = require('../../controllers/face.controller.js');
+const Event = require('../../events/camera.event').eventBus;
+const fs = require('fs');
+const path = require("path");
 
 const port = process.env.PORT || 4006;
 const amqserver = 'amqp://localhost:5672/'
@@ -32,6 +35,11 @@ const startServer = async () => {
     connectAmqserver()
 }
 startServer();
+
+Event.on("DELETE_FACE", function (doc) {
+    const dataPath = path.join(__dirname, '..', '..', "public", doc?.user, "face", doc?._id + ".jpg");
+    fs.unlink(dataPath, err => console.log(err))
+});
 
 app.listen(port, () => {
     console.log('face service listen at port ' + port)

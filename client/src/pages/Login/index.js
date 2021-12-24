@@ -11,7 +11,7 @@ export default function LogIn(props) {
     const [progress, setProgress] = useState(0);
 
     const onCompleted = ({ signin }) => {
-        if (signin?.user_role) history.replace('/Admin');
+        if (signin?.user_role) window.location.assign('http://localhost:3000/Admin');
         else if (signin) window.location.assign('http://localhost:3000');
         else onError();
     }
@@ -53,7 +53,7 @@ export default function LogIn(props) {
                     </div>
                     <form className="body" onSubmit={handleSubmit(onSubmit)}>
                         <div className="formGroup">
-                            <input type='email' {...register('user_name', { required: true })} placeholder="Name" />
+                            <input type='email' {...register('user_name', { required: true })} placeholder="Email" />
                             {errors.user_name && <p className='text-danger'>User name is required.</p>}
                         </div>
                         <div className="formGroup">

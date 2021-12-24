@@ -2,17 +2,22 @@ import { Line } from 'react-chartjs-2';
 import { useState } from "react";
 import { useQuery } from '@apollo/client';
 import { getUser } from '../../../graphql/user';
-import ReportModal from "./ReportModal";
 import moment from 'moment';
 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 export default function ListCamera(props) {
+    const currentDate = new Date()
+
+    const [startDate, setStartDate] = useState(currentDate.setFullYear(currentDate.getFullYear() - 1));
+    const [endDate, setEndDate] = useState(new Date());
+
     const { loading, error, data } = useQuery(getUser);
 
-    //modal
-    const [report, setReport] = useState(null);
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const [location, setLocation] = useState(0);
+
+
 
     const dataChart = () => {
         let rs = [];
@@ -31,7 +36,7 @@ export default function ListCamera(props) {
         return rs;
     }
     const datasets = [{
-        label: 'Number of reports',
+        label: 'Number of peoples per report',
         data: dataChart(),
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
@@ -91,10 +96,20 @@ export default function ListCamera(props) {
         rs = Math.round(rs / arr.length);
         return rs;
     }
-    const handleRowClick = (report, camera) => {
-        const reportData = { ...report, camera }
-        setReport(reportData);
-        handleShow();
+
+    const handleDropdown = (e) => {
+        setLocation(e.target.value);
+    }
+    const dropdown = () => {
+        const listOption = data?.user?.locations?.map((value, index) => {
+            return <option key={index} value={value._id}>Camera ở {value.location_name}</option>
+        })
+        return (
+            <select onChange={handleDropdown}>
+                <option value={0}>Tất cả khu vực</option>
+                {listOption}
+            </select>
+        );
     }
     const table = () => {
         return (
@@ -102,31 +117,43 @@ export default function ListCamera(props) {
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Time</th>
+                        <th scope="col">Camera</th>
+                        <th scope="col">Total</th>
                         <th scope="col">Male</th>
                         <th scope="col">Female</th>
-                        <th scope="col">Age</th>
+                        <th scope="col">
+                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+                                <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} />
+                            </div></th>
                     </tr>
                 </thead>
                 <tbody>
                     {
                         data?.user?.cameras?.map((camera, index) => {
-                            return camera.reports?.map((report, index) => {
-                                const male = report?.report_description?.filter(item => item?.gender === 'male').length || 0;
-                                const female = report?.report_description?.filter(item => item?.gender === 'female').length || 0;
-                                let age = report?.report_description?.reduce(((pre, cur) => pre + cur.age), 0);
-                                age = age / (report?.report_description?.length || 1);
-                                age = Math.round(age / report?.report_description?.length)
-                                return (
-                                    <tr key={index} onClick={() => handleRowClick(report, camera)}>
-                                        <th scope="row">{index + 1}</th>
-                                        <td>{moment(report?.createdAt).format('DD/MM/YYYY HH:mm')}</td>
-                                        <td>{male}</td>
-                                        <td>{female}</td>
-                                        <td>{age}</td>
-                                    </tr>
-                                )
+                            if (location != 0 && camera?.location !== location) return;
+                            let human = 0;
+                            let male = 0;
+                            let female = 0;
+                            camera.reports?.forEach(report => {
+                                const date1 = moment(report?.createdAt)
+                                const date2 = moment(startDate);
+                                const date3 = moment(endDate)
+                                if (date1 < date2 || date1 > date3) return;
+                                male += report?.report_description?.filter(item => item?.gender === 'male').length || 0;
+                                female += report?.report_description?.filter(item => item?.gender === 'female').length || 0;
                             })
+                            human = male + female;
+                            return (
+                                <tr key={index}>
+                                    <th scope="row">{index + 1}</th>
+                                    <td>{camera?.camera_name}</td>
+                                    <td>{human}</td>
+                                    <td>{male}</td>
+                                    <td>{female}</td>
+                                    <td>{moment(camera?.createdAt).format('DD/MM/YYYY HH:mm')}</td>
+                                </tr>
+                            )
                         })
                     }
                 </tbody>
@@ -178,10 +205,10 @@ export default function ListCamera(props) {
                 </div>
             </div>
             <div className='pane3'>
+                {dropdown()}
                 {table()}
 
             </div>
-            <ReportModal show={show} handleClose={handleClose} report={report} user={data?.user} />
         </div>
     )
 }

@@ -6,39 +6,16 @@ import moment from 'moment';
 export default function Video(props) {
     const { loading, error, data } = useQuery(getVideos);
     const [page, setPage] = useState(1);
-    const [modal, setModal] = useState(false);
-    const [selected, setSelected] = useState({})
     const listColumn = ['#', 'video_id', 'camera_id', 'createdAt'];
 
-    const renderModal = () => {
-        return (
-            <div className={'modal ' + (modal ? '' : 'd-none')}>
-                <p className='title'>VIDEO</p>
-                {
-                    listColumn.map((value, index) => {
-                        if (index === 0) return;
-                        return (
-                            <div key={index}>
-                                <p className='label'>{value}</p>
-                                <input type='text' value={Object.values(selected)[index - 1] || ''} readOnly />
-                            </div>
-                        )
-                    })
-                }
-                <button className='custom-button' onClick={() => setModal(false)}>close</button>
-            </div>
-        )
-    }
+
     const handlePrevPage = () => {
         if (page !== 1) setPage(page - 1);
     }
     const handleNextPage = () => {
         setPage(page + 1);
     }
-    const handleRowClick = (item) => {
-        setSelected(item);
-        setModal(true);
-    }
+
     return (
         <div>
             <input className='search-input' placeholder='Type in to Search...' />
@@ -58,7 +35,7 @@ export default function Video(props) {
                         {
                             data?.videos?.map((value, index) => {
                                 return (
-                                    <tr key={index} onClick={() => handleRowClick(value)}>
+                                    <tr key={index}>
                                         <th scope="row">{index + 1}</th>
                                         <td>{value._id}</td>
                                         <td>{value.camera._id}</td>
@@ -75,7 +52,6 @@ export default function Video(props) {
                 <li className="page-item"><p className="page-link">{page}</p></li>
                 <li className="page-item" onClick={handleNextPage}><p className="page-link">Next</p></li>
             </ul>
-            {renderModal()}
         </div>
     )
 }

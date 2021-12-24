@@ -6,6 +6,10 @@ export const getReport = gql`
             _id
             report_time
             report_description
+            report_description{
+                age
+                gender
+            }
             createdAt
         }
     }

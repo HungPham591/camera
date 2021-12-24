@@ -48,7 +48,7 @@ export default function ListVideo(props) {
         return data?.user?.cameras?.map((value, index) => {
             if (value?._id !== camera) return;
             return value?.videos?.map((value, index) => {
-                const video_path = `${process.env.REACT_APP_DOMAIN}\\video\\${value?.camera?._id}\\${value?.video_time}`;
+                const video_path = `${process.env.REACT_APP_DOMAIN}\\video\\${data?.user?._id}\\${value?.camera?._id}\\${value?.video_time}`;
                 return (
                     <div key={index} className='custom-card'>
                         <video src={video_path} />
@@ -66,7 +66,7 @@ export default function ListVideo(props) {
                                     style={{ marginLeft: "5%" }}
                                     onClick={() => handleDeleteButton(value?.camera?._id)}
                                 >
-                                    Xoa
+                                    Xóa
                                 </button>
                             </div>
                         </div>

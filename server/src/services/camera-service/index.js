@@ -23,13 +23,15 @@ const connectAmqserver = async () => {
         channelAmq.assertQueue('GET_CAMERAS'),
         channelAmq.assertQueue('CREATE_CAMERA'),
         channelAmq.assertQueue('UPDATE_CAMERA'),
-        channelAmq.assertQueue('DELETE_CAMERA')
+        channelAmq.assertQueue('DELETE_CAMERA'),
+        channelAmq.assertQueue('DELETE_CAMERAS')
     ])
     channelAmq.consume('GET_CAMERA', msg => response(channelAmq, msg, controller.getCamera))
     channelAmq.consume('GET_CAMERAS', msg => response(channelAmq, msg, controller.getCameras))
     channelAmq.consume('CREATE_CAMERA', msg => response(channelAmq, msg, controller.createCamera))
     channelAmq.consume('UPDATE_CAMERA', msg => response(channelAmq, msg, controller.updateCamera))
     channelAmq.consume('DELETE_CAMERA', msg => response(channelAmq, msg, controller.deleteCamera))
+    channelAmq.consume('DELETE_CAMERAS', msg => response(channelAmq, msg, controller.deleteCamerasByLocation))
 }
 const response = async (channel, msg, controller) => {
     const data = JSON.parse(msg.content);
@@ -65,14 +67,32 @@ startServer();
 Event.on("NEW_CAMERA", function (doc) {
     let camera = new Camera(doc);
     camera.startStream();
-    listCamera.push(doc);
+    // camera.startRecord()
+    // camera.backup();
+    // camera.detect();
+    listCamera.push(camera);
 });
 Event.on("DELETE_CAMERA", function (doc) {
+    const index = listCamera.findIndex(camera => camera?.camera?._id?.toString() === doc?._id);
+    if (index === -1) return;
+    const camera = listCamera[index];
+    camera.stopStream();
+    camera.stopRecord();
+    listCamera.slice(index, 1);
+
     const dataPath = path.join(__dirname, '..', '..', "public", doc?.user, doc?._id);
     fs.rmdirSync(dataPath, { recursive: true, force: true });
 });
 Event.on("UPDATE_CAMERA", function (doc) {
-    console.log('update camera' + doc);
+    const index = listCamera.findIndex(camera => camera?.camera?._id?.toString() === doc?._id);
+    if (index === -1) return;
+    const camera = listCamera[index];
+    if (doc.camera_link === camera?.camera?.camera_link || !camera) return;
+    camera.stopStream();
+    camera.stopRecord();
+    camera.camera = doc;
+    camera.startStream();
+    camera.startRecord();
 });
 Event.on("CREATE_VIDEO", function (doc) {
     if (!channelAmq && typeof doc !== 'object') return;

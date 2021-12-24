@@ -99,6 +99,9 @@ const typeDefs = gql`
         deleteFace(_id:ID):Face
         createLocation(location_name:String,location_coordinate:[Float]):Location
         deleteLocation(_id:ID):Location
+        createUser(user_name:String!,user_pass:String!,user_role:Boolean):User
+        updateUser(_id:ID,user_name:String,user_pass:String,user_role:Boolean):User
+        deleteUser(_id:ID):User
         signin(user_name:String!,user_pass:String!):User
         signup(user_name:String,user_pass:String,google_token:String):User
         logout(_id:ID):User

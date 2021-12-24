@@ -11,7 +11,7 @@ export default function Dashboard() {
     const { data: dataCamera } = useQuery(getCameras);
     const { data: dataReport } = useQuery(getReports);
     const { data: dataVideo } = useQuery(getVideos);
-    const listColumn = ['#', 'user_id', 'user_name', 'user_pass', 'create_at'];
+    const listColumn = ['#', 'user_id', 'user_name', 'create_at'];
 
     const handleRowClick = (item) => {
 
@@ -53,7 +53,6 @@ export default function Dashboard() {
                                         <th scope="row">{index + 1}</th>
                                         <td>{value._id}</td>
                                         <td>{value.user_name}</td>
-                                        <td>{value.user_pass}</td>
                                         <td>{moment(value.createdAt).format('HH:mm DD/MM/YYYY')}</td>
                                     </tr>
                                 )

@@ -132,7 +132,9 @@ const detect = async (base64) => {
 
     let bestMatch = 'unknown';
 
+
     listDetect.forEach(face => {
+        if (!face?.descriptor) return;
         if (faceMatcher.findBestMatch(face?.descriptor).label !== "unknown")
             bestMatch = '';
     })

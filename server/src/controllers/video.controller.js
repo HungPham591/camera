@@ -4,7 +4,7 @@ exports.getVideo = async (args) => {
     return await VideoModel.findOne(args);
 }
 exports.getVideos = async (args) => {
-    return await VideoModel.find(args, {}, { limit: 5 });
+    return await VideoModel.find(args);
 }
 exports.createVideo = async (args) => {
     const newVideo = new VideoModel(args);

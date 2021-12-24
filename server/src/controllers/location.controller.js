@@ -1,4 +1,5 @@
 const LocationModel = require("../models/location.model");
+const Event = require('../events/camera.event').eventBus;
 
 exports.getLocation = async (args) => {
     return await LocationModel.findOne(args);
@@ -14,5 +15,6 @@ exports.createLocation = async (args) => {
     return await Location.save();
 }
 exports.deleteLocation = async (args) => {
+    Event.emit('DELETE_LOCATION', args);
     return await LocationModel.findByIdAndDelete(args);
 }

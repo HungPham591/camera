@@ -24,14 +24,14 @@ const Camera = class {
         this.path = resolve(`../server/src/public/${camera.user}/${camera._id}`);
         this.videoPath = `${this.path}\\data\\`;
         this.streamPath = `${this.path}\\stream\\`;
-        this.stream = new Stream(this.camera, this.streamPath);
         this.video = null;
     }
     startStream() {
-        this.stream.startStream();
+        this.stream = new Stream(this.camera, this.streamPath);
+        this.stream?.startStream();
     }
     stopStream() {
-        this.stream.stopStream();
+        this.stream?.stopStream();
     }
     startRecord() {
         let time = new Date().getTime();
@@ -39,7 +39,7 @@ const Camera = class {
         this.record = captureVideo(this.camera.camera_link, this.videoPath, `${time}`);
     }
     stopRecord() {
-        this.record.stopRecording();
+        this.record?.stopRecording();
         this.record = null;
     }
     uploadDrive() {

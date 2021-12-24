@@ -2,7 +2,7 @@ import React from "react";
 import moment from 'moment';
 
 export default function ReportModal(props) {
-    const imgUri = `${process.env.REACT_APP_DOMAIN}\\${props?.user?._id}\\${props?.report?.camera?._id}\\report\\${props?.report?._id}.png`;
+    const imgUri = `${process.env.REACT_APP_DOMAIN}\\${props?.report?.user?._id}\\${props?.report?.camera?._id}\\report\\${props?.report?._id}.png`;
     return (
         <form className={'modal ' + (props.show ? '' : 'modal-hide')}>
             <div className='header'>

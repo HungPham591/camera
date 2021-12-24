@@ -5,7 +5,8 @@ import "./css/index.scss";
 import * as faceapi from "face-api.js";
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { getVideo } from '../../graphql/video';
-import { getReports } from '../../graphql/report'
+import { getReports } from '../../graphql/report';
+import { getUser } from '../../graphql/user';
 import moment from 'moment';
 
 export default function Video(props) {
@@ -31,10 +32,11 @@ export default function Video(props) {
         skip: id === null,
         onCompleted
     });
+    const { data: user } = useQuery(getUser);
     const [fetchReports, { data: reports }] = useLazyQuery(getReports);
 
-    const video_path = `${process.env.REACT_APP_DOMAIN}\\video\\${videos?.video?.camera?._id}\\${videos?.video?.video_time}`;
-
+    const video_path = `${process.env.REACT_APP_DOMAIN}\\video\\${user?.user?._id}\\${videos?.video?.camera?._id}\\${videos?.video?.video_time}`;
+    console.log(video_path)
     useEffect(() => {
         loadModels()
         return () => { isMounted.current = false; };
@@ -128,25 +130,12 @@ export default function Video(props) {
         video.currentTime = time;
     }
     const progressbar = () => {
-        if (!videos?.video?.createdAt || !reports) return;
-        const listReport = (
-            reports?.reports?.map((value, index) => {
-                if (new Date(value.createdAt).getTime() < start || new Date(value.createdAt).getTime() > end) return;
-                let time = new Date(value.createdAt).getTime();
-                const point = (time - start) * 100 / (end - start);
-                return (
-                    <div key={index}>
-                        <li style={{ left: `${point}%` }} onClick={() => handleButtonSeek(time - start)}></li>
-                        <p style={{ left: `${point}%` }}>{moment(value.createdAt).format('HH:mm')}</p>
-                    </div>
-                )
-            })
-        )
+        if (!videos?.video?.createdAt) return;
+
         return (
             <ul className="progressbar">
                 <li style={{ left: 0 }} onClick={() => handleButtonSeek(0)}></li>
                 <p style={{ left: 0 }}>{moment(start).format('DD/MM/YYYY')}</p>
-                {listReport}
                 <li style={{ right: 0 }} onClick={() => handleButtonSeek(end - start)}></li>
                 <p style={{ right: 0 }}>{moment(end).format('DD/MM/YYYY')}</p>
             </ul >
@@ -158,7 +147,7 @@ export default function Video(props) {
         <div id="VideoDetail">
             <div className="left-pane">
                 <div className='video-pane'>
-                    {videos ? <video ref={videoRef} src={video_path} id='video' controls /> : ''}
+                    {videos ? <video ref={videoRef} src={video_path} id='video' controls crossOrigin="anonymous" /> : ''}
                     <canvas ref={canvasRef} className='result-canvas' />
                 </div>
                 {progressbar()}

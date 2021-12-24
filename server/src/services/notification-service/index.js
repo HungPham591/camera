@@ -1,6 +1,6 @@
 require('dotenv').config({ path: './.env.notification-service' });
 const app = require('./app');
-const { createClient } = require('../../modules/rabbitmq.modules');
+const { createClient, responseMessage } = require('../../modules/rabbitmq.modules');
 
 const port = process.env.PORT || 4007;
 const amqserver = 'amqp://localhost:5672/';
@@ -16,6 +16,7 @@ createClient(amqserver).then(async channel => {
     channel.consume('NEW_NOTIFICATION', msg => {
         const data = JSON.parse(msg.content);
         io.to(data.user).emit('notification', data);
+        responseMessage(channel, msg, null);
     })
 });
 

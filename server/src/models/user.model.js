@@ -6,7 +6,7 @@ const User = new Schema({
     user_name: { type: String },
     user_pass: { type: String },
     google_token: { type: String },
-    user_role: { type: Boolean, default: false },
+    user_role: { type: Boolean },
 }, { timestamps: true });
 
 User.pre('save', async function (next) {

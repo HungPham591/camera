@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { getCameras } from '../../../graphql/camera';
-import { useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client';
+
+import { SelectPageContext } from "../index";
 
 export default function Camera(props) {
+    let { setPageSelected, setCamera } = React.useContext(SelectPageContext);
+
     const { loading, error, data } = useQuery(getCameras);
     const [page, setPage] = useState(1);
     const [modal, setModal] = useState(false);
@@ -19,7 +23,7 @@ export default function Camera(props) {
                         return (
                             <div key={index}>
                                 <p className='label'>{value}</p>
-                                <input type='text' value={Object.values(selected)[index - 1] || ''} readOnly />
+                                <input type='text' value={Object.values(selected)[index + 1] || ''} readOnly />
                             </div>
                         )
                     })
@@ -35,8 +39,10 @@ export default function Camera(props) {
         setPage(page + 1);
     }
     const handleRowClick = (item) => {
-        setSelected(item);
-        setModal(true);
+        // setSelected(item);
+        // setModal(true);
+        setCamera(item)
+        setPageSelected(8)
     }
     return (
         <div>
@@ -62,7 +68,7 @@ export default function Camera(props) {
                                         <td>{value._id}</td>
                                         <td>{value.camera_name}</td>
                                         <td>{value.camera_link}</td>
-                                        <td>{value.camera_public ? 'co' : 'khong'}</td>
+                                        <td>{value.camera_public ? 'có' : 'không'}</td>
                                     </tr>
                                 )
                             })
